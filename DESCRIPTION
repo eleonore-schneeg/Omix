@@ -6,17 +6,26 @@ Authors@R:
     person(given = "Eléonore",
            family = "Schneegans",
            role = c("aut", "cre"),
-           email = "your-email",
+           email = "your@email",
            comment = c(ORCID = "YOUR-ORCID-ID")),
     person(given = "Nurun",
            family = "Fancy",
-           role = c("aut", "cre"),
+           role = c("aut"),
            email = "n.fancy@imperial.ac.uk",
            comment = c(ORCID = "0000-0002-6481-6266"))
     )
-Description: A complete workflow to perform single-omics analysis prior to 
-integrate multi-omics data for an integrated analysis. 
+Maintainer: Eléonore Schneegans <your@email>
+Description: A complete workflow to perform single-omics analysis prior to integrating multi-omics data for an integrated analysis. 
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
+Imports: 
+    cli,
+    magrittr,
+    MultiAssayExperiment,
+    SummarizedExperiment
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
