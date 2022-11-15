@@ -34,11 +34,13 @@ library(Omix)
 The goal of Omix is to provide tools in R to build a complete analysis workflow 
 for integrative analysis of data generated from multi-omics platform.
 
+-   Generate a multi-omics object using `MultiAssayExperiment`.
+
 -   Quality control of single-omics data.
 
 -   Formatting, normalisation, denoising of single-omics data.
 
--   Separate single-omics analysis.
+-   Separate single-omics analyses.
 
 -   Integration of multi-omics data for combined analysis. 
 
@@ -67,6 +69,214 @@ The `Omix` pipeline requires the following input:
 
 Call required packages for vignette:
 ```{r}
-# library(Omix)
+library(Omix)
+```
+
+First we must get the data from Omix for the vignette:
+
+```{r}
+rawdata_rna <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/rawdata_rna.rds')
+rawdata_protein <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/rawdata_protein.rds')
+map_rna <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/map_rna.rds')
+map_protein <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/map_protein.rds')
+metadata_rna<- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/metadata_rna.rds')
+metadata_protein <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/metadata_protein.rds')
+sample_metadata <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/sample_metadata.rds')
+rna_qc_data_matrix <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/rna_qc_data_matrix.rds')
+```
+
+Input files structure
+
+# Raw rna counts
+
+Raw RNA is a data frame of raw counts, with features as rows and samples as columns
+
+```{r}
+print(rawdata_rna)
+```
+
+# Raw protein abundance
+
+Raw protein is a data frame of raw counts, with features as rows and samples as columns
+
+```{r}
+print(rawdata_protein)
+```
+# Maps
+
+Maps are data frame containing two columns: `primary` and `colname`. 
+The `primary` column should be the individual ID the individual metadata, and the 
+`colname` the matched sample names from the raw matrices columns. If sample and
+individual ids are the same, maps aren't needed (primary and colnames are the same).
+```{r}
+print(map_protein)
+print(map_rna)
+```
+# Technical metadata
+
+Technical metadata are data frames contain the column `colname` that should match
+the sample names in the raw matrices, and any additional columns related to technical artefacts like batches 
+```{r}
+print(metadata_rna)
+```
+# Sample metadata
+
+Sample metadata should contain individual level metadata, where one column matches the `primary` column in maps.
+```{r}
+print(sample_metadata)
+```
+# Optional inputs
+
+Optional inputs contain additional data frame used for QC visualisation purposes 
+```{r}
+print(rna_qc_data_matrix)
+```
+
+
+# Generate a multiassay experiment object 
+
+To run Omix, we first need to generate a multi-omics object
+
+```{r}
+multiassay=generate_multiassay(rawdata_rna = rawdata_rna,
+                  rawdata_protein = rawdata_protein,
+                  individual_to_sample=FALSE,
+                  map_rna = map_rna,
+                  map_protein = map_protein,
+                  metadata_rna = metadata_rna,
+                  metadata_protein = metadata_protein,
+                  individual_metadata = individual_metadata,
+                  map_by_column = 'individualID',
+                  rna_qc_data=TRUE,
+                  rna_qc_data_matrix=rna_qc_data_matrix,
+                  organism='human')
+          
+```
+
+The MultiAssayExperiment object was succesfully created. 
+The following steps will process and perform QC on each omic layers of the 
+`multiassay` object.
+
+### Step two - Process transcriptomics data
+```{r}
+multiassay=process_rna(multiassay=multiassay,
+            transformation='vst',
+            protein_coding=TRUE,
+            min_count = 10,
+            min_sample = 0.6,
+            dependent= 'diagnosis',
+            levels=c('Control','Mid','Late'),
+            covariates=c('pmi','msex','age_death'),
+            filter=TRUE,
+            batch_correction=TRUE,
+            batch="libraryBatch",
+            remove_sample_outliers= TRUE)
+```
+
+
+
+### Optional - Add custom processed transcriptomics slot
+```{r}
+multiassay=processed_rna(multiassay=multiassay,
+                         custom_processed_df=custom_rna)
+```
+
+
+
+### Step three - Process proteomics data
+
+
+```{r}
+multiassay=process_protein(
+    multiassay=multiassay,
+    min_sample = 0.5,
+    dependent =  "diagnosis",
+    levels = c('Control','Mid','Late'),
+    imputation = 'distribution',
+    remove_feature_outliers= FALSE,
+    batch_correction= TRUE,
+    batch="Batch",
+    correction_method="Median_centering",
+    remove_sample_outliers=TRUE,
+    denoise=TRUE,
+    covariates=c('pmi','msex','age_death'))
+```
+
+
+### Optional - Add custom processed transcriptomics slot
+```{r}
+multiassay=processed_protein(multiassay=multiassay,
+                         custom_processed_df=custom_protein)
+```
+
+# Processed multiassay object
+
+```{r}
+print(multiassay)
+```
+
+```{r}
+upsetSamples(multiassay)
+```
+
+### Step Four - Generate QC dashboards 
+
+
+### Step Five - Single omic analyses 
+
+```{r}
+multiassay=protein_single_analysis(multiassay,
+                         slot="protein_processed",
+                         dependent='diagnosis',
+                         covariates=c('pmi','msex','age_death'),
+                         levels=c('Control','Mid','Late'))
+```
+
+
+```{r}
+multiassay@metadata[["DEP"]][["plot"]][["LatevsControl"]]
+```
+
+
+```{r}
+multiassay=rna_single_analysis(multiassay,
+                    dependent='diagnosis',
+                    levels=c('Control','Mid','Late'))
+```
+
+```{r}
+multiassay@metadata[["DEG"]][["plot"]][["LatevsControl"]]
+```
+
+### Step Five - Multi-omics integration using DIABLO
+
+```{r}
+multiassay=vertical_integration(multiassay,
+                                 slots=c('rna_processed',
+                                         'protein_processed'),
+                                 dependent='Group',
+                                 map_by_column='individualID',
+                                 integration='DIABLO',
+                                 ncomp=2,
+                                 range=seq(5,100,by=10))
+```
+
+### Step Five - Multi-omics integration using MOFA
+
+```{r}
+multiassay=vertical_integration(multiassay,
+                                 slots=c('rna_processed',
+                                         'protein_processed'),
+                                 integration='MOFA')
+```
+
+
+### Step Six - Multi-omics analyses 
+```{r}
+int_results=integrative_results-supervised(multiassay,
+                                integration = "DIABLO",
+                                component = 1,
+                                correlation_threshold=0.5,
+                                disease_id='MONDO_0004975')
 ```
 
