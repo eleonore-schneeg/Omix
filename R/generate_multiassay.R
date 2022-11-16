@@ -9,7 +9,8 @@
 #' @param rawdata_protein A data-frame containing raw protein abundance where
 #' rows and columns correspond to genes and samples respectively
 #' @param individual_to_sample Logical whether individual ID and sample names in
-#' raw data matrices are the same. If they are different, `mpa_rna` and `map_protein`
+#' raw data matrices are the same. If they are different, `mpa_rna` and
+#'  `map_protein`
 #' dataframes should be provided. Default to `FALSE`.
 #' @param map_rna A data-frame of two columns named `primary` and `colname`
 #' where primary should contain unique ID name with a link to individual
@@ -40,17 +41,17 @@
 #' @importFrom AnnotationDbi select
 #' @export
 generate_multiassay <- function(rawdata_rna,
-                         rawdata_protein,
-                         individual_to_sample=FALSE,
-                         map_rna,
-                         map_protein,
-                         metadata_rna,
-                         metadata_protein,
-                         individual_metadata,
-                         map_by_column,
-                         rna_qc_data = FALSE,
-                         rna_qc_data_matrix,
-                         organism='human') {
+                                rawdata_protein,
+                                individual_to_sample = FALSE,
+                                map_rna,
+                                map_protein,
+                                metadata_rna,
+                                metadata_protein,
+                                individual_metadata,
+                                map_by_column,
+                                rna_qc_data = FALSE,
+                                rna_qc_data_matrix,
+                                organism = "human") {
   if (!all(colnames(rawdata_rna) == rownames(metadata_rna))) {
     stop(cli::cli_alert_danger(
       paste("The columns in the", cli::style_bold("rawdata_rna"),
@@ -96,23 +97,25 @@ generate_multiassay <- function(rawdata_rna,
     ))
   }
 
-  if(individual_to_sample==TRUE){
+  if (individual_to_sample == TRUE) {
+    map_rna <- data.frame(
+      primary = colnames(rawdata_rna),
+      colname = colnames(rawdata_rna),
+      stringsAsFactors = FALSE
+    )
 
-    map_rna <- data.frame(primary = colnames(rawdata_rna),
-                          colname = colnames(rawdata_rna),
-                          stringsAsFactors = FALSE)
-
-    map_protein <- data.frame(primary = colnames(rawdata_protein),
-                              colname = colnames(rawdata_protein),
-                              stringsAsFactors = FALSE)
-
+    map_protein <- data.frame(
+      primary = colnames(rawdata_protein),
+      colname = colnames(rawdata_protein),
+      stringsAsFactors = FALSE
+    )
   }
 
-  if(individual_to_sample==FALSE){
-  map_l <- list(
-    map_rna,
-    map_protein
-  )
+  if (individual_to_sample == FALSE) {
+    map_l <- list(
+      map_rna,
+      map_protein
+    )
   }
 
   names(map_l) <- c(
@@ -137,13 +140,13 @@ generate_multiassay <- function(rawdata_rna,
 
   se_rna@metadata$metadata <- metadata_rna
 
-  if(organism=='human'){
+  if (organism == "human") {
     library("EnsDb.Hsapiens.v86")
-    EnsDb=EnsDb.Hsapiens.v86
+    EnsDb <- EnsDb.Hsapiens.v86
   }
-  if(organism=='mouse'){
+  if (organism == "mouse") {
     library(org.Mm.eg.db)
-    EnsDb=org.Mm.eg.db
+    EnsDb <- org.Mm.eg.db
   }
 
   if (rna_id_type == "ensembl_gene_id") {
@@ -154,30 +157,30 @@ generate_multiassay <- function(rawdata_rna,
     rna_values <- se_rna@elementMetadata@listData[[paste(rna_id_type)]]
 
     rna_df <- AnnotationDbi::select(EnsDb,
-                                     keys = rna_values,
-                                     columns = c("SYMBOL",'GENEBIOTYPE')
+      keys = rna_values,
+      columns = c("SYMBOL", "GENEBIOTYPE")
     )
 
     se_rna@elementMetadata@listData$gene_name <- rna_df$SYMBOL[match(
-      rna_values,rna_df$GENEID)]
+      rna_values, rna_df$GENEID
+    )]
 
 
     se_rna@elementMetadata@listData$gene_biotype <- rna_df$GENEBIOTYPE[match(
-      rna_values,rna_df$GENEID)]
-
-
+      rna_values, rna_df$GENEID
+    )]
   }
 
   if (rna_id_type == "gene_name") {
     cli::cli_alert_success("Retrieval of gene biotype")
     rna_df <- AnnotationDbi::select(EnsDb,
-                                    keys = rna_values,
-                                    columns = c("SYMBOL",'GENEBIOTYPE')
+      keys = rna_values,
+      columns = c("SYMBOL", "GENEBIOTYPE")
     )
 
     se_rna@elementMetadata@listData$gene_biotype <- rna_df$GENEBIOTYPE[match(
-      rna_values,rna_df$GENEID)]
-
+      rna_values, rna_df$GENEID
+    )]
   }
 
   if (rna_qc_data) {
@@ -202,13 +205,13 @@ generate_multiassay <- function(rawdata_rna,
     # ID conversion using biomart
     cli::cli_alert_success("UniProt ID conversion to gene name ")
     protein_values <- se_protein@elementMetadata@listData[[paste(protein_id_type)]]
-    protein_values <- sub("\\-.*", "", protein_values) # remove potential isoforms
+    protein_values <- sub("\\-.*", "", protein_values)
 
 
     protein_df <- AnnotationDbi::select(EnsDb,
-                                     keys = protein_values,
-                                     keytype = "UNIPROTID",
-                                     columns = c("SYMBOL")
+      keys = protein_values,
+      keytype = "UNIPROTID",
+      columns = c("SYMBOL")
     )
 
     se_protein@elementMetadata@listData$gene_name <- protein_df$SYMBOL[match(
@@ -228,9 +231,9 @@ generate_multiassay <- function(rawdata_rna,
     sampleMap = dfmap
   )
 
-  cli::cli_alert_success('RNA raw data loaded')
+  cli::cli_alert_success("RNA raw data loaded")
   print(se_rna)
-  cli::cli_alert_success('Protein raw data loaded')
+  cli::cli_alert_success("Protein raw data loaded")
   print(se_protein)
   cli::cli_alert_success("MultiAssayExperiment object generated!")
 
