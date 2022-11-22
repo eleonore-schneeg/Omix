@@ -162,7 +162,7 @@ process_protein <- function(multiassay,
     }))
     matrix <- matrix[, colnames(matrix) %!in% outliers]
     dim6 <- dim(matrix)[2]
-    cli::cli_alert_success(paste(dim6, "sample outliers out of",
+    cli::cli_alert_success(paste(dim5-dim6, "sample outliers out of",
                                  dim5, " samples detected and dropped"))
 
     metadata(multiassay)$OutliersFlags$protein <- outliers

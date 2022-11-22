@@ -69,11 +69,23 @@
   return(new_id)
 }
 
-.get_background <- function(multiassay) {
+.get_background <- function(multiassay,
+                            of=c('full','protein','rna')) {
+  if(of=='full'){
   background <- union(
     multiassay@ExperimentList@listData[["rna_raw"]]@elementMetadata@listData[["gene_name"]],
     multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData[["gene_name"]]
   )
+  }
+
+  if(of=='rna'){
+    background=multiassay@ExperimentList@listData[["rna_raw"]]@elementMetadata@listData[["gene_name"]]
+
+  }
+  if(of=='protein'){
+  background= multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData[["gene_name"]]
+
+  }
 
   return(background)
 }
@@ -115,7 +127,8 @@
                                      "rna_processed",
                                      "protein_processed"
                                    ),
-                                   intersect_genes=FALSE
+                                   intersect_genes=FALSE,
+                                   ID_type=c('gene_name','original')
                                    ){
 
   multi <- multiassay[, , c(slots[1], slots[2])]
@@ -143,10 +156,33 @@
     CompleteMulti<- intersectRows(CompleteMulti[, ,slots])
 
   }
-  metadata <- data.frame(CompleteMulti@colData@listData)
+
+  metadata <- data.frame(colData(CompleteMulti))
+  multimodal_omics <- lapply(CompleteMulti@ExperimentList@listData, as.matrix)
+  multimodal_omics <- lapply(multimodal_omics, "colnames<-", rownames(metadata))
+
+  if(ID_type=='gene_name'){
+
+    rownames(multimodal_omics[[1]])=
+      make.unique(.get_ID_names(rownames(
+        CompleteMulti@ExperimentList@listData[["rna_processed"]]),
+        omic = "rna",
+        from = "ensembl_gene_id",
+        to = "gene_name"
+      ))
+
+    rownames(multimodal_omics[[2]])=
+      make.unique(.get_ID_names(rownames(
+      CompleteMulti@ExperimentList@listData[["protein_processed"]]),
+      omic = "protein",
+      from = "uniprot_id",
+      to = "gene_name"
+    ))
+  }
 
 
-  return(list(multimodal_object=  CompleteMulti,
+  return(list(multimodal_object=    multimodal_omics,
               metadata=   metadata))
 
 }
+

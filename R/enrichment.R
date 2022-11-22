@@ -40,6 +40,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
                                      ),
                                      is_output = FALSE,
                                      output_dir = ".",
+                                     min_overlap= 3,
                                      plot_n = 20) {
   library(enrichR)
   library(stringr)
@@ -129,7 +130,8 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 #' Format result table
 #' @keywords internal
 
-.format_res_table_enrichr <- function(res) {
+.format_res_table_enrichr <- function(res,
+                                      min_overlap=3) {
   res_table <- res %>%
     as.data.frame() %>%
     dplyr::transmute(
@@ -143,6 +145,8 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
       FDR = as.numeric(format(Adjusted.P.value, format = "e", digits = 2)),
       Genes = Genes
     )
+
+  res_table<- res_table[which(res_table$overlap >=min_overlap),]
 }
 # res_table$geneset <- ifelse(is.na(res_table$geneset),
 #   res_table$description,
@@ -184,7 +188,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 
 .dotplot_enrichr <- function(dt, plot_n = 20) {
   dt <- na.omit(dt)
-  dt <- top_n(dt, plot_n, -pval)
+  dt <- top_n(dt, plot_n, -FDR)
   dt$description <- stringr::str_wrap(dt$description, 40)
 
   ggplot2::ggplot(dt, aes(

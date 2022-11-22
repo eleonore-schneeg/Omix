@@ -1,6 +1,6 @@
 integrative_results_unsupervised <- function(multiassay,
                                            integration = "MOFA",
-                                           dependent='Group',
+                                           dependent='diagnosis',
                                            correlation_threshold=0.5,
                                            disease_id='MONDO_0004975') {
 
@@ -12,8 +12,9 @@ integrative_results_unsupervised <- function(multiassay,
                                          return_data = T)
 
 
-
-  plot_variance_explained(model)
+  correlate_factors_with_covariates(model,covariates = covariates,plot="r")
+  plot_variance_explained(model, max_r2 = 10)
+  plot_variance_explained()
   selected_factor=MOFA_get_relevant_factor(MOFAobject=model, covariate=dependent)
 
   sign=MOFA_sign_relevant_factor(model,

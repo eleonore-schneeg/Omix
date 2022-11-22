@@ -9,7 +9,7 @@
 #' @param ylim
 #'
 #' @return
-#' @importFrom dplyr filter
+#' @importFrom dplyr filter arrange pull
 #' @export
 #'
 #' @examples
@@ -24,7 +24,7 @@ format_res_limma <- function(dt,
   }
 
   dt$de[dt$adj.P.Val <= padj & dt$logFC > log2FoldChange] <- "Up"
-  dt$de[dt$adj.P.Val <= padj & dt$logFC < log2FoldChange] <- "Down"
+  dt$de[dt$adj.P.Val <= padj & dt$logFC < -log2FoldChange] <- "Down"
   dt$de[dt$adj.P.Val > padj] <- "Not sig"
   dt$de <- factor(dt$de, levels = c("Up", "Down", "Not sig"))
   n_up <- sum(dt$de == "Up", na.rm = TRUE)
@@ -65,7 +65,7 @@ format_res_limma <- function(dt,
 #' @param filter_protein_coding
 #'
 #' @return
-#' @importFrom dplyr filter
+#' @importFrom dplyr filter arrange pull
 #' @export
 #'
 #' @examples
@@ -73,13 +73,14 @@ format_res_deseq <- function(dt,
                              log2FoldChange = 0,
                              padj = 0.05,
                              n_label = 10,
-                             gene_id_conversion = NULL) {
+                             gene_id_conversion = NULL,
+                             filter_protein_coding = TRUE) {
 
   dt <- dt %>%
     as.data.frame() %>%
     mutate(ensembl_name = rownames(.)) %>%
     dplyr::filter(!is.na(padj), !is.na(log2FoldChange)) %>%
-    arrange(padj)
+    dplyr::arrange(padj)
 
   if (!is.null(gene_id_conversion)) {
     dt$gene_name <- gene_id_conversion$gene_name[match(dt$ensembl_name, gene_id_conversion$ensembl_gene_id)]
@@ -88,7 +89,7 @@ format_res_deseq <- function(dt,
 
 
   dt$de[dt$padj <= padj & dt$log2FoldChange > log2FoldChange] <- "Up"
-  dt$de[dt$padj <= padj & dt$log2FoldChange < log2FoldChange] <- "Down"
+  dt$de[dt$padj <= padj & dt$log2FoldChange < -log2FoldChange] <- "Down"
   dt$de <- factor(dt$de, levels = c("Up", "Down", "Not sig"))
   n_up <- sum(dt$de == "Up" & dt$gene_type == "protein_coding", na.rm = TRUE)
   n_down <- sum(dt$de == "Down" & dt$gene_type == "protein_coding", na.rm = TRUE)
@@ -102,7 +103,7 @@ format_res_deseq <- function(dt,
     top_up <- dt %>%
       dplyr::filter(de == "Up" & gene_type == "protein_coding") %>%
       dplyr::top_n(min(n_up, n_label), wt = -padj) %>%
-      pull(gene_name)
+      dplyr::pull(gene_name)
 
     dt$label[dt$gene_name %in% top_up] <- "Yes"
   }
@@ -110,24 +111,24 @@ format_res_deseq <- function(dt,
     top_down <- dt %>%
       dplyr::filter(de == "Down" & gene_type == "protein_coding") %>%
       dplyr::top_n(min(n_down, n_label), wt = -padj) %>%
-      pull(gene_name)
+      dplyr::pull(gene_name)
     dt$label[dt$gene_name %in% top_down] <- "Yes"
   }
 
   top_protein_coding_gene <- dt %>%
     dplyr::filter(label == "Yes") %>%
-    pull(gene_name)
+    dplyr::pull(gene_name)
 
   attr(dt, "top_protein_coding_gene") <- top_protein_coding_gene
 
   n_up <- dt %>%
     dplyr::filter(de == "Up") %>%
-    pull(gene_name) %>%
+    dplyr::pull(gene_name) %>%
     length()
 
   n_down <- dt %>%
     dplyr::filter(de == "Down") %>%
-    pull(gene_name) %>%
+    dplyr::pull(gene_name) %>%
     length()
 
 
@@ -176,7 +177,7 @@ volcano_plot_limma <- function(dt,
     xlab(bquote(Log[2] * " (fold-change)")) +
     ylab(bquote("-" * Log[10] * " (adjusted p-value)")) +
     geom_vline(
-      xintercept = c(-1, 1),
+      xintercept = c(-log2FoldChange, log2FoldChange),
       linetype = 2, size = 0.2, alpha = 0.5
     ) +
     geom_hline(
@@ -222,7 +223,7 @@ volcano_plot_deseq <- function(dt,
     xlab(bquote(Log[2] * " (fold-change)")) +
     ylab(bquote("-" * Log[10] * " (adjusted p-value)")) +
     geom_vline(
-      xintercept = c(-1, 1),
+      xintercept = c(-log2FoldChange, log2FoldChange),
       linetype = 2, size = 0.2, alpha = 0.5
     ) +
     geom_hline(
@@ -230,3 +231,29 @@ volcano_plot_deseq <- function(dt,
       linetype = 2, size = 0.2, alpha = 0.5
     )
 }
+
+volcano_interactive<-function(data,log2FoldChange=0.25){
+  volcano=ggplot2::ggplot(data, aes(x = log2FoldChange, y = -log10(padj),label= gene_name, colour = de, text=paste('Gene:', gene_name, '<br>',
+                                                                                                                   'Log2FC:',log2FoldChange, '<br>',
+                                                                                                                   'Adjust pval;', padj))) +
+    geom_point() +
+    geom_text(
+      data = data,
+      aes(log2FoldChange - 0.05, y = -log10(padj)+0.6, label = ifelse(label == "Yes", gene_name, "")))+
+    geom_vline(
+      xintercept = c(-log2FoldChange, log2FoldChange),
+      linetype = 2, size = 0.2, alpha = 0.5
+    ) +
+    geom_hline(
+      yintercept = -log10(0.05),
+      linetype = 2, size = 0.2, alpha = 0.5
+    )+
+    scale_color_manual(values=c("Up" = "#DC0000FF",
+                                "Down"="#3C5488FF",
+                                "Not sig"="grey"))
+
+  plot<-ggplotly(volcano, tooltip=c('text'))
+  plot
+
+}
+
