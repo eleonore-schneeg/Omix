@@ -578,5 +578,27 @@ int_results$detrimental$open_targets
 ```
 ### Step Seven - Multi-omics analyses (Clustering example using iCluster)
 
+```{r}
+int_results_clustering=integrative_results_clustering(multiassay=Early_multiassay,
+                                           intersect_genes = FALSE,
+                                           slots = c(
+                                             "rna_processed",
+                                             "protein_processed"
+                                           ),
+                                           ID_type = "gene_name",
+                                           integration = "iCluster",
+                                           enrichment_method='enrichr',
+                                           annotations_continuous = c("amyloid","nft", "gpath"),
+                                           annotations_cat = c("braaksc","progression","cogdx"),
+                                           res.path = "~/RDS_ukdri/multiomics/Omix_test_env/figures_OMIX_clustering/",
+                                           correlation_threshold = 0.5) 
+```
 
+
+```{r}
+  dotplot(comp$`CS1-CS2`$rna)
+  cnetplot(comp$`CS1-CS2`$rna)
+  xx <- pairwise_termsim(comp$`CS1-CS2`$protein)                     
+  emapplot(xx)
+```
 

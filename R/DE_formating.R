@@ -23,6 +23,10 @@ format_res_limma <- function(dt,
     dt$gene_name <- gene_id_conversion$gene_name[match(dt$Identifier, gene_id_conversion$uniprot_id)]
   }
 
+  if(is.null(gene_id_conversion)) {
+    dt$gene_name <- dt$Identifier
+  }
+
   dt$de[dt$adj.P.Val <= padj & dt$logFC > log2FoldChange] <- "Up"
   dt$de[dt$adj.P.Val <= padj & dt$logFC < -log2FoldChange] <- "Down"
   dt$de[dt$adj.P.Val > padj] <- "Not sig"

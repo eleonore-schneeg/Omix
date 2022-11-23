@@ -183,7 +183,7 @@ protein_DE_analysis <- function(multiassay,
   list_DEP_limma <- list()
   list_DEP_limma <- lapply(res, function(x) {
     up=x$gene_name[which(x$adj.P.Val <= 0.05 & x$de=='Up')]
-    down=x$gene_namer[which(x$adj.P.Val <= 0.05 & x$de=='Down')]
+    down=x$gene_name[which(x$adj.P.Val <= 0.05 & x$de=='Down')]
     return(list(up=up,
                 down=down))
   })

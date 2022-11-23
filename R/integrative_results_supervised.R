@@ -13,7 +13,8 @@ integrative_results_supervised <- function(multiassay,
                                            integration = "DIABLO",
                                            component = 1,
                                            correlation_threshold = 0.2,
-                                           disease_id = "MONDO_0004975") {
+                                           disease_id = "MONDO_0004975",
+                                           enrichment_method='enrichr') {
   cli::cli_alert_success("RETRIEVAL OF PROTECTIVE AND DETRIMENTAL MULTI-OMICS SIGNATURE")
   signature <- extract_multiomic_signature(multiassay,
     integration = integration,
@@ -33,14 +34,9 @@ integrative_results_supervised <- function(multiassay,
     list = detrimental,
     correlation_threshold = correlation_threshold
   )
-  .interactive_network(protective_network)
-  .interactive_network(detrimental_network)
-  cli::cli_alert_success("ID MAPPING")
-
 
   cli::cli_alert_success("DETECTION OF NETWORK COMMUNITIES")
   detrimental_communities <- .communities_network(detrimental_network)
-
   protective_communities <- .communities_network(protective_network)
 
 
@@ -57,7 +53,6 @@ integrative_results_supervised <- function(multiassay,
   )
 
   cli::cli_alert_success("FUNCTIONAL ENRICHMENT")
-  background <- .get_background(multiassay, of = "full")
 
   protective=lapply(protective, function(x) {
     sub("*\\.[0-9]", "", x)
@@ -68,13 +63,17 @@ integrative_results_supervised <- function(multiassay,
   })
 
 
+  background <- .get_background(multiassay, of = "full")
+
+  if(enrichment_method=='enrichr'){
   enrichr_detrimental <- lapply(detrimental, pathway_analysis_enrichr)
   enrichr_protective <- lapply(protective, pathway_analysis_enrichr)
+  }
 
+
+  if(enrichment_method=='enrichGO'){
   library(org.Hs.eg.db)
-  enrichGO_detrimental <- lapply(
-    detrimental,
-    function(x) {
+  enrichGO_detrimental <- lapply(detrimental, function(x) {
       clusterProfiler::enrichGO(
         gene = x,
         OrgDb = org.Hs.eg.db,
@@ -87,8 +86,7 @@ integrative_results_supervised <- function(multiassay,
         minGSSize = 2,
         maxGSSize = 500
       )
-    }
-  )
+    })
 
   enrichGO_protective <- lapply(protective, function(x) {
     clusterProfiler::enrichGO(
@@ -104,11 +102,17 @@ integrative_results_supervised <- function(multiassay,
       maxGSSize = 500
     )
   })
+}
 
+
+  # Comparison of communities
+  cli::cli_alert_success("FUNCTIONALLY COMPARING MULTIOMICS NETWORKS COMMUNITIES")
+
+  detrimental_communities_x <- lapply(detrimental_communities, function(x) x[length(x) >= 2])
+  detrimental_communities_x  <-   detrimental_communities[lapply(detrimental_communities , length) > 0]
 
   detrimental_comp <- clusterProfiler::compareCluster(
-    geneCluster =
-      detrimental_communities,
+    geneCluster = detrimental_communities_x,
     fun = "enrichGO",
     OrgDb = "org.Hs.eg.db",
     keyType = "SYMBOL",
@@ -122,9 +126,11 @@ integrative_results_supervised <- function(multiassay,
 
   detrimental_comp <- enrichplot::pairwise_termsim(detrimental_comp)
 
+  protective_communities_x <- lapply(protective_communities, function(x) x[length(x) >= 2])
+  protective_communities_x  <-   protective_communities[lapply(protective_communities, length) > 0]
+
   protective_comp <- clusterProfiler::compareCluster(
-    geneCluster =
-      protective_communities,
+    geneCluster = protective_communities_x,
     fun = "enrichGO",
     OrgDb = "org.Hs.eg.db",
     keyType = "SYMBOL",
@@ -138,18 +144,17 @@ integrative_results_supervised <- function(multiassay,
 
   protective_comp <- enrichplot::pairwise_termsim(protective_comp)
 
-  ### OPEN TARGETS
+  ### Open Targets Platform
+
   cli::cli_alert_success("TESTING MULTI_OMICS SIGNATURE ASSOCIATION
                            WITH DISEASE OF INTEREST VIA THE OPENTARGETS API")
 
   opentarget <- get_diseaseAssociations_df(disease_id = disease_id, size = 3000)
   opentarget_detrimental <- plot_filter_OpenTarget(
-    opentarget_results =
-      opentarget, genes = unlist(detrimental)
+    opentarget_results = opentarget, genes = unlist(detrimental)
   )
   opentarget_protective <- plot_filter_OpenTarget(
-    opentarget_results =
-      opentarget, genes = unlist(protective)
+    opentarget_results = opentarget, genes = unlist(protective)
   )
 
 

@@ -139,3 +139,107 @@
   names(communities) <- names
   return(communities)
 }
+
+
+.multiomics_network_cluster <- function(multiassay,
+                                integration = "iCluster",
+                                cluster=1,
+                                list,
+                                correlation_threshold = 0.5) {
+  library(igraph)
+  features_interest <- c(list[[1]], list[[2]])
+  multimodal_object <- multiassay@metadata$multimodal_object
+
+  clusters <- multiassay@metadata$integration[[paste(integration)]]$clust.res$clust
+  keep=clusters==cluster
+
+  matrix1 <- t(multimodal_object[[1]])
+  matrix1 <- matrix1[keep,]
+  matrix1 <- matrix1[, colnames(matrix1) %in% list[[1]]]
+
+  matrix2 <- t(multimodal_object[[2]])
+  matrix2 <- matrix2[keep,]
+  matrix2 <- matrix2[, colnames(matrix2) %in% list[[2]]]
+
+  matrix <- cbind(matrix1, matrix2)
+
+  rho <- cor(matrix)
+  thr_cor <- correlation_threshold
+  rho <- ifelse(abs(rho) >= thr_cor, yes = rho, no = 0)
+  A <- ifelse(rho != 0, yes = 1, no = 0)
+  diag(A) <- 0
+
+
+  a <- apply(rho, 1, function(x) {
+    .color.gradient(x)
+  })
+  rownames(a) <- colnames(a)
+
+  pk <- c(length(list[[1]]), length(list[[2]]))
+  mynode_colours <- c(rep("#B39DDB", pk[1]), rep("#00796B", pk[2]))
+  mynode_labels <- sub("*\\.[0-9]", "", features_interest)
+
+  mygraph <- .GetGraph(adjacency = A, node_color = mynode_colours, node_label = mynode_labels)
+
+  data <- as_edgelist(mygraph)
+  V1 <- data[, 1]
+  V2 <- data[, 2]
+  b <- numeric()
+
+  for (i in 1:length(V1)) {
+    b[i] <- a[which(rownames(a) == V1[i]), which(colnames(a) == V2[i])]
+  }
+
+  V(mygraph)$name <- mynode_labels
+  E(mygraph)$color <- b
+  E(mygraph)$width <- 3
+  set.seed(1)
+
+  return(mygraph)
+}
+
+.color.gradient <- function(x, colors = c("blue", "white", "red"), colsteps = 100) {
+  return(colorRampPalette(colors)(colsteps)[findInterval(x, seq(-1, 1, length.out = colsteps))])
+}
+
+.GetGraph <- function(calib_object = NULL, adjacency = NULL,
+                      node_label = NULL, node_color = NULL, node_shape = NULL,
+                      weighted = NULL, satellites = FALSE) {
+  # either out or adjacency have to be provided
+
+  if (is.null(adjacency)) {
+    if (is.null(calib_object)) {
+      stop("Either 'calib_object' or 'adjacency' needs to be provided.")
+    }
+    adjacency <- CalibratedAdjacency(calib_object)
+  }
+
+  if (is.null(node_color)) {
+    node_color <- rep("skyblue", ncol(adjacency))
+  }
+
+  if (is.null(node_shape)) {
+    node_shape <- rep("circle", ncol(adjacency))
+  }
+
+  if (is.null(node_label)) {
+    node_label <- colnames(adjacency)
+  }
+
+  names(node_color) <- colnames(adjacency)
+  names(node_label) <- colnames(adjacency)
+  names(node_shape) <- colnames(adjacency)
+
+  mygraph <- igraph::graph_from_adjacency_matrix(adjacency, mode = "undirected", weighted = weighted)
+  V(mygraph)$label <- node_label[V(mygraph)$name]
+  V(mygraph)$color <- node_color[V(mygraph)$name]
+  V(mygraph)$shape <- node_shape[V(mygraph)$name]
+  V(mygraph)$frame.color <- V(mygraph)$color
+  V(mygraph)$label.family <- "sans"
+  E(mygraph)$color <- "grey60"
+  V(mygraph)$label.color <- "grey20"
+  E(mygraph)$width <- 0.5
+
+  return(mygraph)
+}
+

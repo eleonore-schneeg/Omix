@@ -16,7 +16,7 @@
 #' @param ncomp Number of components in `DIABLO`,`sMBPLS`
 #' @param range List of the range of numbers of features to keep in the tuning phase.
 #' First element must be for rna, second for proteins
-#'
+#' @param try.N.clust number of cluster to tune in `iCluster`
 #' @return Returns an integrated object in `multiassay@metadata$integration` to
 #' be used for further analysis
 #' @export
@@ -27,7 +27,7 @@ vertical_integration <- function(multiassay,
                                    "rna_processed",
                                    "protein_processed"
                                  ),
-                                 integration = c("MOFA", "DIABLO", "sMBPLS"),
+                                 integration = c("MOFA", "DIABLO", "sMBPLS","iCluster"),
                                  intersect_genes = FALSE,
                                  ID_type = "gene_name",
                                  dependent = "Group",
@@ -38,7 +38,8 @@ vertical_integration <- function(multiassay,
                                    mRNA = seq(5, 100, by = 10),
                                    proteins = seq(5, 100, by = 10)
                                  ),
-                                 list.keepX = list(mRNA = c(50), proteins = c(50))) {
+                                 list.keepX = list(mRNA = c(50), proteins = c(50)),
+                                 try.N.clust= 2:4) {
   multimodal_object <- .get_multimodal_object(
     multiassay,
     slots,
@@ -46,7 +47,7 @@ vertical_integration <- function(multiassay,
     ID_type = ID_type
   )
 
-  multimodal <- multimodal_object[[1]]
+  multimodal_omics <- multimodal_object[[1]]
   metadata <- multimodal_object[[2]]
 
   Y <- metadata[[paste(dependent)]]
@@ -81,9 +82,17 @@ vertical_integration <- function(multiassay,
     int <- integrate_with_MOFA(multimodal_omics)
   }
 
+  if (integration == "iCluster") {
+    cli::cli_alert_success("VERTICAL INTEGRATION CLUSTERING WITH ICLUSTER")
+    multimodal<- lapply(multimodal, data.frame)
+    int <- integrate_with_iCluster(multimodal_omics=multimodal_omics,
+                                   try.N.clust=try.N.clust)
+  }
+
   multiassay@metadata$multimodal_object <- int[[1]]
   multiassay@metadata$integration[[paste(integration)]] <- int[[2]]
   print(int[[2]])
 
   return(multiassay)
 }
+

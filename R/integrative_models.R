@@ -17,9 +17,11 @@
 integrate_with_DIABLO <- function(multimodal_omics,
                                   Y,
                                   ncomp,
-                                  design=c('cor','full'),
-                                  range = list(mRNA=seq(5,100,by=10),
-                                               proteins=seq(5,100,by=10))) {
+                                  design = c("cor", "full"),
+                                  range = list(
+                                    mRNA = seq(5, 100, by = 10),
+                                    proteins = seq(5, 100, by = 10)
+                                  )) {
   multimodal_omics <- lapply(multimodal_omics, t)
   X <- list(
     mRNA = multimodal_omics[[1]],
@@ -32,20 +34,20 @@ integrate_with_DIABLO <- function(multimodal_omics,
   slot1 <- "mRNA"
   slot2 <- "proteins"
 
-  if(design=='cor'){
-  Apca <- prcomp(A, rank. = 1)
-  Bpca <- prcomp(B, rank. = 1)
-  cor <- cor(Apca$x, Bpca$x)
+  if (design == "cor") {
+    Apca <- prcomp(A, rank. = 1)
+    Bpca <- prcomp(B, rank. = 1)
+    cor <- cor(Apca$x, Bpca$x)
 
-  design <- matrix(cor,
-    ncol = length(X), nrow = length(X),
-    dimnames = list(names(X), names(X))
-  )
-  diag(design) <- 0
+    design <- matrix(cor,
+      ncol = length(X), nrow = length(X),
+      dimnames = list(names(X), names(X))
+    )
+    diag(design) <- 0
   }
 
-  if(design=='full'){
-  design='full'
+  if (design == "full") {
+    design <- "full"
   }
 
   Y <- factor(Y)
@@ -63,7 +65,6 @@ integrate_with_DIABLO <- function(multimodal_omics,
   )
 
   list.keepX <- tune$choice.keepX
-  #cli::cli_h2("VERTICAL INTEGRATION IN PROCESS")
   tuned.diablo <- mixOmics::block.splsda(
     X = X,
     Y = Y,
@@ -84,10 +85,9 @@ integrate_with_DIABLO <- function(multimodal_omics,
 
 integrate_with_sMBPLS <- function(multimodal_omics,
                                   Y,
-                                  design=c('cor','full'),
+                                  design = c("cor", "full"),
                                   ncomp,
-                                  list.keepX=list(mRNA = c(50), proteins = c(50))) {
-
+                                  list.keepX = list(mRNA = c(50), proteins = c(50))) {
   multimodal_omics <- lapply(multimodal_omics, t)
   X <- list(
     mRNA = multimodal_omics[[1]],
@@ -96,27 +96,26 @@ integrate_with_sMBPLS <- function(multimodal_omics,
 
   A <- multimodal_omics[[1]]
   B <- multimodal_omics[[2]]
-  if(design=='cor'){
-  Apca <- prcomp(A, rank. = 1)
-  Bpca <- prcomp(B, rank. = 1)
-  cor <- cor(Apca$x, Bpca$x)
+  if (design == "cor") {
+    Apca <- prcomp(A, rank. = 1)
+    Bpca <- prcomp(B, rank. = 1)
+    cor <- cor(Apca$x, Bpca$x)
 
-  design <- matrix(cor,
-    ncol = length(X), nrow = length(X),
-    dimnames = list(names(X), names(X))
-  )
-  diag(design) <- 0
+    design <- matrix(cor,
+      ncol = length(X), nrow = length(X),
+      dimnames = list(names(X), names(X))
+    )
+    diag(design) <- 0
 
-  design <- matrix(cor,
-    ncol = length(X), nrow = length(X),
-    dimnames = list(names(X), names(X))
-  )
-  diag(design) <- 0
-  }else{
-    design='full'
+    design <- matrix(cor,
+      ncol = length(X), nrow = length(X),
+      dimnames = list(names(X), names(X))
+    )
+    diag(design) <- 0
+  } else {
+    design <- "full"
   }
-  #cli::cli_h2("VERTICAL INTEGRATION IN PROCESS")
-  tuned.diablo <-  mixOmics::block.spls(
+  tuned.diablo <- mixOmics::block.spls(
     X = X,
     Y = Y,
     keepX = list.keepX,
@@ -134,7 +133,7 @@ integrate_with_sMBPLS <- function(multimodal_omics,
 }
 
 integrate_with_MOFA <- function(multimodal_omics) {
-  #cli::cli_h2("VERTICAL INTEGRATION IN PROCESS")
+  # cli::cli_h2("VERTICAL INTEGRATION IN PROCESS")
   X <- list(
     mRNA = multimodal_omics[[1]],
     proteins = multimodal_omics[[2]]
@@ -169,20 +168,34 @@ integrate_with_MOFA <- function(multimodal_omics) {
 }
 
 
-integrate_with_iCluster <- function(){
+integrate_with_iCluster <- function(multimodal_omics,
+                                    try.N.clust = 2:8) {
+  cli::cli_alert_success("Optimising the number of cluster (this make take a while")
 
-  optk.brca <- getClustNum(data        = mo.data,
-                           is.binary   = c(F,F,F,T), # note: the 4th data is somatic mutation which is a binary matrix
-                           try.N.clust = 2:8, # try cluster number from 2 to 8
-                           fig.name    = "CLUSTER NUMBER OF TCGA-BRCA")
+  optk.i <- MOVICS::getClustNum(
+    data = multimodal_omics,
+    is.binary = c(F, F),
+    try.N.clust = try.N.clust,
+    fig.name = "Cluster number tuning"
+  )
 
-  # perform iClusterBayes (may take a while)
-  iClusterBayes.res <- getiClusterBayes(data        = mo.data,
-                                        N.clust     = 5,
-                                        type        = c("gaussian","gaussian","gaussian","binomial"),
-                                        n.burnin    = 1800,
-                                        n.draw      = 1200,
-                                        prior.gamma = c(0.5, 0.5, 0.5, 0.5),
-                                        sdev        = 0.05,
-                                        thin        = 3)
+
+  optimal_n <- optk.i$N.clust
+
+  cli::cli_alert_success("Integration in progress (this make take a while)")
+  model <- MOVICS::getiClusterBayes(
+    data = multimodal_omics,
+    N.clust = optimal_n,
+    type = c("gaussian", "gaussian"),
+    n.burnin = 1800,
+    n.draw = 1200,
+    prior.gamma = c(0.5, 0.5),
+    sdev = 0.05,
+    thin = 3
+  )
+
+  return(list(
+    multimodal_object = multimodal_omics,
+    model = model
+  ))
 }
