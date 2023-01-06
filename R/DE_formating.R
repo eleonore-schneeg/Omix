@@ -9,7 +9,7 @@
 #' @param ylim
 #'
 #' @return
-#' @importFrom dplyr filter arrange pull
+#' @importFrom dplyr filter arrange pull top_n
 #' @export
 #'
 #' @examples
@@ -82,7 +82,7 @@ format_res_deseq <- function(dt,
 
   dt <- dt %>%
     as.data.frame() %>%
-    mutate(ensembl_name = rownames(.)) %>%
+    dplyr::mutate(ensembl_name = rownames(.)) %>%
     dplyr::filter(!is.na(padj), !is.na(log2FoldChange)) %>%
     dplyr::arrange(padj)
 
@@ -164,8 +164,8 @@ volcano_plot_limma <- function(dt,
                                ylim = c(0, 10)) {
   library(ggplot2)
 
-  ggplot2::ggplot(dt, aes(x = logFC, y = -log10(padj), label = gene_name, colour = de, repel = TRUE)) +
-    geom_point(aes(x = logFC, y = -log10(padj), fill = de, colour = de), show.legend = T, alpha = 0.5) +
+  ggplot2::ggplot(dt, aes(x = logFC, y = -log10(adj.P.Val ), label = gene_name, colour = de, repel = TRUE)) +
+    geom_point(aes(x = logFC, y = -log10(adj.P.Val), fill = de, colour = de), show.legend = T, alpha = 0.5) +
     theme_classic() +
     scale_colour_manual(
       name = NULL,
@@ -176,7 +176,7 @@ volcano_plot_limma <- function(dt,
     ) +
     ggrepel::geom_text_repel(
       data = dt,
-      aes(logFC, y = -log10(padj), label = ifelse(label == "Yes", gene_name, "")), max.overlaps = 2000
+      aes(logFC, y = -log10(adj.P.Val ), label = ifelse(label == "Yes", gene_name, "")), max.overlaps = 2000
     ) +
     xlab(bquote(Log[2] * " (fold-change)")) +
     ylab(bquote("-" * Log[10] * " (adjusted p-value)")) +
@@ -185,7 +185,7 @@ volcano_plot_limma <- function(dt,
       linetype = 2, size = 0.2, alpha = 0.5
     ) +
     geom_hline(
-      yintercept = -log10(0.05),
+      yintercept = -log10(padj),
       linetype = 2, size = 0.2, alpha = 0.5
     )
 }

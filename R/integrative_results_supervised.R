@@ -14,7 +14,8 @@ integrative_results_supervised <- function(multiassay,
                                            component = 1,
                                            correlation_threshold = 0.2,
                                            disease_id = "MONDO_0004975",
-                                           enrichment_method='enrichr') {
+                                           enrichment_method='enrichr',
+                                           simplify=TRUE) {
   cli::cli_alert_success("RETRIEVAL OF PROTECTIVE AND DETRIMENTAL MULTI-OMICS SIGNATURE")
   signature <- extract_multiomic_signature(multiassay,
     integration = integration,
@@ -66,15 +67,15 @@ integrative_results_supervised <- function(multiassay,
   background <- .get_background(multiassay, of = "full")
 
   if(enrichment_method=='enrichr'){
-  enrichr_detrimental <- lapply(detrimental, pathway_analysis_enrichr)
-  enrichr_protective <- lapply(protective, pathway_analysis_enrichr)
+  pathways_detrimental <- lapply(detrimental, pathway_analysis_enrichr)
+  pathways_protective <- lapply(protective, pathway_analysis_enrichr)
   }
 
 
   if(enrichment_method=='enrichGO'){
   library(org.Hs.eg.db)
-  enrichGO_detrimental <- lapply(detrimental, function(x) {
-      clusterProfiler::enrichGO(
+  pathways_detrimental <- lapply(detrimental, function(x) {
+      pathways <- clusterProfiler::enrichGO(
         gene = x,
         OrgDb = org.Hs.eg.db,
         universe = background,
@@ -86,10 +87,14 @@ integrative_results_supervised <- function(multiassay,
         minGSSize = 2,
         maxGSSize = 500
       )
+
+    if(simplify==TRUE){
+    pathways <-clusterProfiler::simplify(pathways, cutoff=0.7, by="p.adjust", select_fun=min)
+    }
     })
 
-  enrichGO_protective <- lapply(protective, function(x) {
-    clusterProfiler::enrichGO(
+  pathways_protective <- lapply(protective, function(x) {
+    pathways <- clusterProfiler::enrichGO(
       gene = x,
       OrgDb = org.Hs.eg.db,
       universe = background,
@@ -101,7 +106,12 @@ integrative_results_supervised <- function(multiassay,
       minGSSize = 2,
       maxGSSize = 500
     )
+    if(simplify==TRUE){
+    pathways <-clusterProfiler::simplify(pathways, cutoff=0.7, by="p.adjust", select_fun=min)
+    }
   })
+
+
 }
 
 
@@ -123,7 +133,9 @@ integrative_results_supervised <- function(multiassay,
     pvalueCutoff = 0.05,
     qvalueCutoff = 0.05
   )
-
+  if(simplify==TRUE){
+  detrimental_comp <-clusterProfiler::simplify(detrimental_comp, cutoff=0.7, by="p.adjust", select_fun=min)
+  }
   detrimental_comp <- enrichplot::pairwise_termsim(detrimental_comp)
 
   protective_communities_x <- lapply(protective_communities, function(x) x[length(x) >= 2])
@@ -141,7 +153,9 @@ integrative_results_supervised <- function(multiassay,
     pvalueCutoff = 0.05,
     qvalueCutoff = 1
   )
-
+  if(simplify==TRUE){
+  protective_comp <-clusterProfiler::simplify(protective_comp, cutoff=0.7, by="p.adjust", select_fun=min)
+  }
   protective_comp <- enrichplot::pairwise_termsim(protective_comp)
 
   ### Open Targets Platform
@@ -166,7 +180,7 @@ integrative_results_supervised <- function(multiassay,
       network = detrimental_network,
       network_communities = detrimental_communities,
       cell_type_communities = detrimental_cell_type,
-      enrichment = enrichr_detrimental,
+      enrichment = pathways_detrimental,
       open_targets = opentarget_detrimental
     ),
     protective = list(
@@ -174,7 +188,7 @@ integrative_results_supervised <- function(multiassay,
       network = protective_network,
       network_communities = protective_communities,
       cell_type_communities = protective_cell_type,
-      enrichment = enrichr_protective,
+      enrichment = pathways_protective,
       open_targets = opentarget_protective
     ),
     comparison = list(

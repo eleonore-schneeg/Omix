@@ -32,16 +32,18 @@ vertical_integration <- function(multiassay,
                                  ID_type = "gene_name",
                                  dependent = "Group",
                                  levels = c("Control", "Case"),
-                                 design,
+                                 design=c("cor", "full"),
                                  ncomp = 2,
                                  range = list(
                                    mRNA = seq(5, 100, by = 10),
                                    proteins = seq(5, 100, by = 10)
                                  ),
                                  list.keepX = list(mRNA = c(50), proteins = c(50)),
+                                 num_factors = 10,
+                                 scale_views = TRUE,
                                  try.N.clust= 2:4) {
   multimodal_object <- .get_multimodal_object(
-    multiassay,
+  multiassay,
     slots,
     intersect_genes,
     ID_type = ID_type
@@ -54,6 +56,7 @@ vertical_integration <- function(multiassay,
 
   if (integration == "DIABLO") {
     cli::cli_alert_success("VERTICAL INTEGRATION WITH DIABLO")
+
     Y <- factor(Y, levels = levels)
     int <- integrate_with_DIABLO(
       multimodal_omics = multimodal_omics,
@@ -77,9 +80,24 @@ vertical_integration <- function(multiassay,
     )
   }
 
+  if (integration == "MBPLS") {
+    cli::cli_alert_success("VERTICAL INTEGRATION WITH MBPLS")
+    Y <- as.matrix(Y)
+    rownames(Y) <- rownames(metadata)
+    int <- integrate_with_MBPLS(
+      multimodal_omics = multimodal_omics,
+      Y = Y,
+      design = design,
+      ncomp = ncomp
+    )
+  }
+
+
   if (integration == "MOFA") {
     cli::cli_alert_success("VERTICAL INTEGRATION WITH MOFA")
-    int <- integrate_with_MOFA(multimodal_omics)
+    int <- integrate_with_MOFA(multimodal_omics,
+                               num_factors = num_factors,
+                               scale_views = scale_views )
   }
 
   if (integration == "iCluster") {
@@ -91,7 +109,6 @@ vertical_integration <- function(multiassay,
 
   multiassay@metadata$multimodal_object <- int[[1]]
   multiassay@metadata$integration[[paste(integration)]] <- int[[2]]
-  print(int[[2]])
 
   return(multiassay)
 }

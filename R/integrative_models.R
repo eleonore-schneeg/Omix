@@ -11,6 +11,10 @@
 #' First element must be for rna, second for proteins
 #'
 #' @return
+#'
+#' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
+#'  getWithColData sampleMap
+#' @importFrom mixOmics block.splsda tune.block.splsda
 #' @export
 #'
 #' @examples
@@ -22,6 +26,7 @@ integrate_with_DIABLO <- function(multimodal_omics,
                                     mRNA = seq(5, 100, by = 10),
                                     proteins = seq(5, 100, by = 10)
                                   )) {
+
   multimodal_omics <- lapply(multimodal_omics, t)
   X <- list(
     mRNA = multimodal_omics[[1]],
@@ -64,6 +69,7 @@ integrate_with_DIABLO <- function(multimodal_omics,
     progressBar = TRUE
   )
 
+
   list.keepX <- tune$choice.keepX
   tuned.diablo <- mixOmics::block.splsda(
     X = X,
@@ -83,9 +89,22 @@ integrate_with_DIABLO <- function(multimodal_omics,
   ))
 }
 
+#' Vertical integration with SMBPLS
+#'
+#' @param multimodal_omics
+#' @param Y
+#' @param design
+#' @param ncomp
+#' @param list.keepX
+#'
+#' @return
+#' @importFrom mixOmics block.spls
+#' @export
+#'
+#' @examples
 integrate_with_sMBPLS <- function(multimodal_omics,
                                   Y,
-                                  design = c("cor", "full"),
+                                  design = c("cor", "full","avg"),
                                   ncomp,
                                   list.keepX = list(mRNA = c(50), proteins = c(50))) {
   multimodal_omics <- lapply(multimodal_omics, t)
@@ -112,6 +131,13 @@ integrate_with_sMBPLS <- function(multimodal_omics,
       dimnames = list(names(X), names(X))
     )
     diag(design) <- 0
+
+    if (design == "avg") {
+    design = matrix(0.3, ncol = length(X), nrow = length(X),
+                    dimnames = list(names(X), names(X)))
+    diag(design) <- 0
+    }
+
   } else {
     design <- "full"
   }
@@ -119,7 +145,7 @@ integrate_with_sMBPLS <- function(multimodal_omics,
     X = X,
     Y = Y,
     keepX = list.keepX,
-    ncomp = 1,
+    ncomp = ncomp,
     design = design
   )
   model <- tuned.diablo
@@ -132,18 +158,101 @@ integrate_with_sMBPLS <- function(multimodal_omics,
   ))
 }
 
-integrate_with_MOFA <- function(multimodal_omics) {
+
+#' Vertical integration with MBPLS
+#'
+#' @param multimodal_omics
+#' @param Y
+#' @param design
+#' @param ncomp
+#'
+#' @return
+#' @importFrom mixOmics block.pls
+#' @export
+#'
+#' @examples
+integrate_with_MBPLS <- function(multimodal_omics,
+                                  Y,
+                                  design = c("cor", "full","avg"),
+                                  ncomp) {
+  multimodal_omics <- lapply(multimodal_omics, t)
+  X <- list(
+    mRNA = multimodal_omics[[1]],
+    proteins = multimodal_omics[[2]]
+  )
+
+  A <- multimodal_omics[[1]]
+  B <- multimodal_omics[[2]]
+  if (design == "cor") {
+    Apca <- prcomp(A, rank. = 1)
+    Bpca <- prcomp(B, rank. = 1)
+    cor <- cor(Apca$x, Bpca$x)
+
+    design <- matrix(cor,
+                     ncol = length(X), nrow = length(X),
+                     dimnames = list(names(X), names(X))
+    )
+    diag(design) <- 0
+
+    design <- matrix(cor,
+                     ncol = length(X), nrow = length(X),
+                     dimnames = list(names(X), names(X))
+    )
+    diag(design) <- 0
+
+    if (design == "avg") {
+      design = matrix(0.3, ncol = length(X), nrow = length(X),
+                      dimnames = list(names(X), names(X)))
+      diag(design) <- 0
+    }
+
+  } else {
+    design <- "full"
+  }
+  tuned.diablo <- mixOmics::block.pls(
+    X = X,
+    Y = Y,
+    ncomp = ncomp,
+    design = design
+  )
+  model <- tuned.diablo
+  X <- lapply(X, t)
+
+
+  return(list(
+    multimodal_object = X,
+    model = model
+  ))
+}
+
+
+#' Vertical integration with MOFA
+#'
+#' @param multimodal_omics
+#' @param num_factors
+#' @param scale_views
+#'
+#' @return
+#' @export
+#' @importFrom MOFA2 create_mofa get_default_data_options
+#' get_default_model_options get_default_training_options prepare_mofa run_mofa
+#'
+#' @examples
+integrate_with_MOFA <- function(multimodal_omics,
+                                num_factors = 5,
+                                scale_views = T) {
   # cli::cli_h2("VERTICAL INTEGRATION IN PROCESS")
   X <- list(
     mRNA = multimodal_omics[[1]],
     proteins = multimodal_omics[[2]]
   )
+
   MOFAobject <- MOFA2::create_mofa(X)
   data_opts <- MOFA2::get_default_data_options(MOFAobject)
-  data_opts$scale_views <- FALSE
+  data_opts$scale_views <-  scale_views
 
   model_opts <- MOFA2::get_default_model_options(MOFAobject)
-  model_opts$num_factors <- 10
+  model_opts$num_factors <- num_factors
 
   train_opts <- MOFA2::get_default_training_options(MOFAobject)
   train_opts$convergence_mode <- "medium"
@@ -168,8 +277,19 @@ integrate_with_MOFA <- function(multimodal_omics) {
 }
 
 
+#'  Vertical integration with iCluster
+#'
+#' @param multimodal_omics
+#' @param try.N.clust
+#'
+#' @return
+
+#' @importFrom MOVICS getClustNum getiClusterBayes
+#' @export
+#'
+#' @examples
 integrate_with_iCluster <- function(multimodal_omics,
-                                    try.N.clust = 2:8) {
+                                    try.N.clust = 2:4) {
   cli::cli_alert_success("Optimising the number of cluster (this make take a while")
 
   optk.i <- MOVICS::getClustNum(

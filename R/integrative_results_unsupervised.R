@@ -10,11 +10,20 @@ integrative_results_unsupervised <- function(multiassay,
                                          covariates = covariates,
                                          plot="r",
                                          return_data = T)
-
+  plot_factor_cor(model)
+  plot_factor(model,
+              factors = 4,
+              color_by = "gpath",
+              add_violin = TRUE,
+              dodge = TRUE
+  )
+  # 2 progression check estimates
+  # 3 microglia?
+  # 4 pathology
 
   correlate_factors_with_covariates(model,covariates = covariates,plot="r")
-  plot_variance_explained(model, max_r2 = 10)
-  plot_variance_explained()
+  plot_variance_explained(model, max_r2 = 5)
+
   selected_factor=MOFA_get_relevant_factor(MOFAobject=model, covariate=dependent)
 
   sign=MOFA_sign_relevant_factor(model,

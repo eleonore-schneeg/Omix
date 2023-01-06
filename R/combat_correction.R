@@ -21,6 +21,6 @@ combat_correction <- function(matrix, batch_map) {
     batch_col = paste(batch)
   )
   combat <- proBatch::long_to_matrix(comBat_df)
-  combat <- data.frame(combat)
+  combat <- as.data.frame(combat)
   return(combat)
 }

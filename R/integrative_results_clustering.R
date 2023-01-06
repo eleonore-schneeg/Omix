@@ -22,8 +22,9 @@ integrative_results_clustering <- function(multiassay,
                                            annotations_continuous,
                                            annotations_cat,
                                            res.path,
-                                           correlation_threshold = 0.5) {
-  print('begin')
+                                           correlation_threshold = 0.5,
+                                           geneset=NULL) {
+
   multimodal_object <- .get_multimodal_object(
     multiassay=multiassay,
     slots=slots,
@@ -105,21 +106,20 @@ integrative_results_clustering <- function(multiassay,
   # )
 
   annCol <- mutate_if(annCol, is.character, as.factor)
-  #annCol$braaksc <- as.factor(annCol$braaksc)
 
   surv.info<- annCol
   surv.info$Subtype <- cluster$clust.res$clust
 
   cli::cli_alert_success("RELATING CLUSTERS TO CLINICAL INFORMATION")
-  # clinical.clust <- MOVICS::compClinvar(
-  #   moic.res = cluster,
-  #   var2comp = surv.info, # data.frame needs to summarize (must has row names of samples)
-  #   strata = "Subtype",
-  #   factorVars = c('var1','var2','var3','var4'),
-  #   doWord = TRUE,
-  #   includeNA = F, # generate .docx file in local path
-  #   tab.name = "Clinical features per clusters"
-  # )
+  clinical.clust <- MOVICS::compClinvar(
+    moic.res = cluster,
+    var2comp = surv.info, # data.frame needs to summarize (must has row names of samples)
+    strata = "Subtype",
+    factorVars = c('var1','var2','var3','var4'),
+    doWord = TRUE,
+    includeNA = F, # generate .docx file in local path
+    tab.name = "Clinical features per clusters"
+  )
 
   surv.info$Cluster=paste0('CS',surv.info$Subtype)
 
@@ -233,6 +233,39 @@ integrative_results_clustering <- function(multiassay,
     for(i in names(Up)){
     enrichr_Down[[i]] <- lapply(Down[[i]], pathway_analysis_enrichr)
     enrichr_Up[[i]] <- lapply(Up[[i]], pathway_analysis_enrichr)
+    }
+  }
+
+  if(enrichment_method=='enrichKEGG'){
+    df=DE_res[["rna"]][["CS1-CS2"]]
+    df=df[which(df$de !='Not sig'),]
+    entrez=mapIds(org.Hs.eg.db, df$gene_name, 'ENTREZID', 'SYMBOL')
+    kk <- clusterProfiler::enrichKEGG(gene         = entrez,
+                                      organism     = 'hsa',
+                                      pvalueCutoff = 0.05)
+
+    top_kk=top_n(kk@result,1,Count)
+    top_kk_id=top_kk$ID
+    list=df$log2FoldChange
+    names(list)=mapIds(org.Hs.eg.db, df$gene_name, 'ENTREZID', 'SYMBOL')
+
+    top_kk_id<- pathview(gene.data  = list,
+                         pathway.id = paste(top_kk_id),
+                         species    = "hsa",
+                         limit      = list(gene=round(max(abs(list)),1)))
+  }
+
+  if(!is.null(custom_geneset)){
+
+    custom_Down=list()
+    custom_Up=list()
+
+    for(i in names(Up)){
+     custom_Down[[i]] <- lapply(Down[[i]], function(x){
+       enrichment_custom(x, background, geneset, adj = "fdr", verbose = FALSE)})
+
+     custom_Up[[i]] <- lapply(Down[[i]], function(x){
+       enrichment_custom(x, background, geneset, adj = "fdr", verbose = FALSE)})
     }
   }
 

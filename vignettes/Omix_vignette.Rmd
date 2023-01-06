@@ -72,6 +72,13 @@ Call required packages for vignette:
 library(Omix)
 ```
 
+```{r}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install('proBatch','mixOmix')
+```
+
+
 First we must get the data from Omix for the vignette:
 
 ```{r}
@@ -81,7 +88,7 @@ map_rna <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/map_rna.rds')
 map_protein <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/map_protein.rds')
 metadata_rna<- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/metadata_rna.rds')
 metadata_protein <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/metadata_protein.rds')
-sample_metadata <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/sample_metadata.rds')
+individual_metadata <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/individual_metadata.rds')
 rna_qc_data_matrix <- readRDS('~/RDS_ukdri/multiomics/Omix_test_env/data/rna_qc_data_matrix.rds')
 ```
 
@@ -421,6 +428,7 @@ enrichGO=clusterProfiler::enrichGO(gene = up_proteins,
 
 enrichGO@result<-enrichGO@result[enrichGO@result$Count>=3,]
 enrichplot::dotplot(enrichGO, showCategory=10) 
+enrichplot::heatplot(enrichGO, showCategory=10)
 ```
 ```{r}
 xx <- enrichplot::pairwise_termsim(enrichGO)                     
@@ -454,8 +462,8 @@ multiassay=vertical_integration(multiassay,
                                 levels= c("Control", "Case"),
                                 design='cor',
                                 ncomp=2,
-                                range=list(mRNA=seq(5,100,by=10),
-                                              proteins=seq(5,100,by=10)))
+                                range=list(mRNA=seq(50,500,by=50),
+                                              proteins=seq(50,500,by=50)))
 ```
 
 
@@ -468,8 +476,8 @@ multiassay=vertical_integration(multiassay,
                                 levels= c("Control", "Mid","Late"),
                                 design='cor',
                                 ncomp=2,
-                                range=list(mRNA=seq(5,100,by=10),
-                                              proteins=seq(5,100,by=10)))
+                                range=list(mRNA=seq(50,500,by=50),
+                                              proteins=seq(50,500,by=50)))
 ```
 
 ### Step Five - Multi-omics integration using sMBPLS
@@ -492,7 +500,10 @@ All default parameters are models default parameters.
 
 ```{r}
 multiassay=vertical_integration(multiassay,
-                                integration='MOFA')
+                                integration='MOFA',
+                                dependent='diagnosis',
+                                num_factors = 5,
+                                scale_views = TRUE)
 ```
 
  
@@ -528,7 +539,8 @@ int_results=integrative_results_supervised(multiassay,
                                 component = 1,
                                 correlation_threshold=0.5,
                                 enrichment_method='enrichr',
-                                disease_id='MONDO_0004975')
+                                disease_id='MONDO_0004975',
+                                simplify=TRUE)
 ```
 
 ### Exploring results I - Multiomics signatures 
@@ -596,9 +608,50 @@ int_results_clustering=integrative_results_clustering(multiassay=Early_multiassa
 
 
 ```{r}
-  dotplot(comp$`CS1-CS2`$rna)
-  cnetplot(comp$`CS1-CS2`$rna)
-  xx <- pairwise_termsim(comp$`CS1-CS2`$protein)                     
-  emapplot(xx)
+int_results_clustering$clinical
 ```
 
+
+```{r}
+int_results_clustering$DE$rna$plot
+```
+```{r}
+int_results_clustering$DE$proteins$plot
+```
+```{r}
+
+.interactive_network(int_results_clustering$Up$network$`CS1-CS2`)
+```
+
+```{r}
+dotplot(int_results_clustering$comparison$`CS1-CS2`$rna)
+treeplot(xx2,showCategory=15,nWords=1,fontsize=3,offset_tiplab=4,
+         offset = 1.4)
+         
+
+```
+
+
+```{r}
+  xx <- pairwise_termsim(int_results_clustering$comparison$`CS1-CS2`$rna)                     
+  emapplot(xx)
+```
+```{r}
+simplified=clusterProfiler::simplify(int_results_clustering$comparison$`CS1-CS2`$rna, cutoff=0.6, by="p.adjust", select_fun=min)
+
+xx2 <- pairwise_termsim(simplified)                     
+treeplot(xx2,showCategory = 15)
+emapplot(xx2,showCategory = 15)
+
+```
+
+```{r}
+dotplot(simplified,showCategory = 40)
+```
+
+
+### Step eight - Comparing single omic & multiomic results 
+
+
+- Significant features comparison
+- Geneset clusters 

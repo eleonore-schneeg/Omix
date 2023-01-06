@@ -22,6 +22,6 @@ median_centering_correction <- function(matrix, batch_map, batch) {
     batch_col = paste(batch)
   )
   median_center <- proBatch::long_to_matrix(featurelevel_centering)
-  median_center <- data.frame(median_center)
+  median_center <- as.data.frame(median_center)
   return(median_center)
 }

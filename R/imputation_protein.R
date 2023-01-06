@@ -7,6 +7,16 @@
 # standard deviation that is a fraction of the standard deviation of
 # the sample distribution.
 
+#' Imputation of missing values based on distribution
+#'
+#' @param df
+#' @param width
+#' @param downshift
+#'
+#' @return
+#' @export
+#'
+#' @examples
 .impute_distribution <- function(df, width = 0.3, downshift = 1.8) {
   for (i in colnames(df)) {
     non_missing <- !is.na(df[[i]])
@@ -19,6 +29,17 @@
   return(df)
 }
 
+#' Imputation of missing values based on minimum value
+
+#'
+#' @param df
+#'
+#' @return
+#'
+#' @importFrom matrixStats rowMins
+#' @export
+#'
+#' @examples
 .impute_minimum_value <- function(df) {
   for (i in colnames(df)) {
     protein_minimum_imputation <- matrixStats::rowMins(as.matrix(df), na.rm = T)

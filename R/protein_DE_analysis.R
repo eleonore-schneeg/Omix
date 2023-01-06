@@ -1,4 +1,4 @@
-#' Title
+#' Performs single omic analysis of proteomic layer.
 #'
 #' @param multiassay
 #' @param slot
@@ -7,6 +7,12 @@
 #' @param reference
 #'
 #' @return
+#' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
+#' @importFrom SummarizedExperiment SummarizedExperiment colData
+#' @importFrom stats as.formula
+#' @importFrom lme4
+#' @importFrom limma makeContrasts lmFit contrasts.fit eBayes topTable
+#' @importFrom dplyr
 #' @export
 #'
 #' @examples
@@ -16,11 +22,6 @@ protein_DE_analysis <- function(multiassay,
                                     covariates = NA,
                                     levels = c("Control", "Mid", "Late"),
                                     log2FoldChange = 0.5 ) {
-  library(MultiAssayExperiment)
-  library(stats)
-  library(lme4)
-  library(limma)
-  library(dplyr)
 
   abundance <- multiassay@ExperimentList@listData[[paste(slot)]]
 
@@ -146,7 +147,7 @@ protein_DE_analysis <- function(multiassay,
     if(is.na(cov_var)){
         model_formula <- stats::as.formula(
           sprintf(
-            "~0+ %s",
+            "~0 + %s",
             dependent_var
           )
         )
