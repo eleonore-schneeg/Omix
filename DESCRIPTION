@@ -52,7 +52,6 @@ Imports:
       ghql,
       tidyr,
       visNetwork
-    
 Suggests: 
     knitr,
     rmarkdown
