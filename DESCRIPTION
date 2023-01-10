@@ -20,6 +20,7 @@ License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
+biocViews:
 Imports: 
       cli,
       DESeq2,
@@ -28,7 +29,6 @@ Imports:
       MultiAssayExperiment,
       SummarizedExperiment,
       AnnotationDbi,
-      DESeq2,
       ClassDiscovery,
       stats,
       limma,
@@ -38,7 +38,6 @@ Imports:
       mixOmics,
       matrixStats,
       MOFA2,
-      MOVICS,
       ComplexHeatmap,
       circlize,
       enrichR,
@@ -52,6 +51,8 @@ Imports:
       ghql,
       tidyr,
       visNetwork
+Remotes:
+      xlucpu/MOVICS
 Suggests: 
     knitr,
     rmarkdown
