@@ -26,7 +26,6 @@ integrate_with_DIABLO <- function(multimodal_omics,
                                     mRNA = seq(5, 100, by = 10),
                                     proteins = seq(5, 100, by = 10)
                                   )) {
-
   multimodal_omics <- lapply(multimodal_omics, t)
   X <- list(
     mRNA = multimodal_omics[[1]],
@@ -104,7 +103,7 @@ integrate_with_DIABLO <- function(multimodal_omics,
 #' @examples
 integrate_with_sMBPLS <- function(multimodal_omics,
                                   Y,
-                                  design = c("cor", "full","avg"),
+                                  design = c("cor", "full", "avg"),
                                   ncomp,
                                   list.keepX = list(mRNA = c(50), proteins = c(50))) {
   multimodal_omics <- lapply(multimodal_omics, t)
@@ -133,11 +132,12 @@ integrate_with_sMBPLS <- function(multimodal_omics,
     diag(design) <- 0
 
     if (design == "avg") {
-    design = matrix(0.3, ncol = length(X), nrow = length(X),
-                    dimnames = list(names(X), names(X)))
-    diag(design) <- 0
+      design <- matrix(0.3,
+        ncol = length(X), nrow = length(X),
+        dimnames = list(names(X), names(X))
+      )
+      diag(design) <- 0
     }
-
   } else {
     design <- "full"
   }
@@ -172,9 +172,9 @@ integrate_with_sMBPLS <- function(multimodal_omics,
 #'
 #' @examples
 integrate_with_MBPLS <- function(multimodal_omics,
-                                  Y,
-                                  design = c("cor", "full","avg"),
-                                  ncomp) {
+                                 Y,
+                                 design = c("cor", "full", "avg"),
+                                 ncomp) {
   multimodal_omics <- lapply(multimodal_omics, t)
   X <- list(
     mRNA = multimodal_omics[[1]],
@@ -189,23 +189,24 @@ integrate_with_MBPLS <- function(multimodal_omics,
     cor <- cor(Apca$x, Bpca$x)
 
     design <- matrix(cor,
-                     ncol = length(X), nrow = length(X),
-                     dimnames = list(names(X), names(X))
+      ncol = length(X), nrow = length(X),
+      dimnames = list(names(X), names(X))
     )
     diag(design) <- 0
 
     design <- matrix(cor,
-                     ncol = length(X), nrow = length(X),
-                     dimnames = list(names(X), names(X))
+      ncol = length(X), nrow = length(X),
+      dimnames = list(names(X), names(X))
     )
     diag(design) <- 0
 
     if (design == "avg") {
-      design = matrix(0.3, ncol = length(X), nrow = length(X),
-                      dimnames = list(names(X), names(X)))
+      design <- matrix(0.3,
+        ncol = length(X), nrow = length(X),
+        dimnames = list(names(X), names(X))
+      )
       diag(design) <- 0
     }
-
   } else {
     design <- "full"
   }
@@ -249,7 +250,7 @@ integrate_with_MOFA <- function(multimodal_omics,
 
   MOFAobject <- MOFA2::create_mofa(X)
   data_opts <- MOFA2::get_default_data_options(MOFAobject)
-  data_opts$scale_views <-  scale_views
+  data_opts$scale_views <- scale_views
 
   model_opts <- MOFA2::get_default_model_options(MOFAobject)
   model_opts$num_factors <- num_factors

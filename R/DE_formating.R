@@ -23,7 +23,7 @@ format_res_limma <- function(dt,
     dt$gene_name <- gene_id_conversion$gene_name[match(dt$Identifier, gene_id_conversion$uniprot_id)]
   }
 
-  if(is.null(gene_id_conversion)) {
+  if (is.null(gene_id_conversion)) {
     dt$gene_name <- dt$Identifier
   }
 
@@ -79,7 +79,6 @@ format_res_deseq <- function(dt,
                              n_label = 10,
                              gene_id_conversion = NULL,
                              filter_protein_coding = TRUE) {
-
   dt <- dt %>%
     as.data.frame() %>%
     dplyr::mutate(ensembl_name = rownames(.)) %>%
@@ -164,7 +163,7 @@ volcano_plot_limma <- function(dt,
                                ylim = c(0, 10)) {
   library(ggplot2)
 
-  ggplot2::ggplot(dt, aes(x = logFC, y = -log10(adj.P.Val ), label = gene_name, colour = de, repel = TRUE)) +
+  ggplot2::ggplot(dt, aes(x = logFC, y = -log10(adj.P.Val), label = gene_name, colour = de, repel = TRUE)) +
     geom_point(aes(x = logFC, y = -log10(adj.P.Val), fill = de, colour = de), show.legend = T, alpha = 0.5) +
     theme_classic() +
     scale_colour_manual(
@@ -176,7 +175,7 @@ volcano_plot_limma <- function(dt,
     ) +
     ggrepel::geom_text_repel(
       data = dt,
-      aes(logFC, y = -log10(adj.P.Val ), label = ifelse(label == "Yes", gene_name, "")), max.overlaps = 2000
+      aes(logFC, y = -log10(adj.P.Val), label = ifelse(label == "Yes", gene_name, "")), max.overlaps = 2000
     ) +
     xlab(bquote(Log[2] * " (fold-change)")) +
     ylab(bquote("-" * Log[10] * " (adjusted p-value)")) +
@@ -236,14 +235,17 @@ volcano_plot_deseq <- function(dt,
     )
 }
 
-volcano_interactive<-function(data,log2FoldChange=0.25){
-  volcano=ggplot2::ggplot(data, aes(x = log2FoldChange, y = -log10(padj),label= gene_name, colour = de, text=paste('Gene:', gene_name, '<br>',
-                                                                                                                   'Log2FC:',log2FoldChange, '<br>',
-                                                                                                                   'Adjust pval;', padj))) +
+volcano_interactive <- function(data, log2FoldChange = 0.25) {
+  volcano <- ggplot2::ggplot(data, aes(x = log2FoldChange, y = -log10(padj), label = gene_name, colour = de, text = paste(
+    "Gene:", gene_name, "<br>",
+    "Log2FC:", log2FoldChange, "<br>",
+    "Adjust pval;", padj
+  ))) +
     geom_point() +
     geom_text(
       data = data,
-      aes(log2FoldChange - 0.05, y = -log10(padj)+0.6, label = ifelse(label == "Yes", gene_name, "")))+
+      aes(log2FoldChange - 0.05, y = -log10(padj) + 0.6, label = ifelse(label == "Yes", gene_name, ""))
+    ) +
     geom_vline(
       xintercept = c(-log2FoldChange, log2FoldChange),
       linetype = 2, size = 0.2, alpha = 0.5
@@ -251,13 +253,13 @@ volcano_interactive<-function(data,log2FoldChange=0.25){
     geom_hline(
       yintercept = -log10(0.05),
       linetype = 2, size = 0.2, alpha = 0.5
-    )+
-    scale_color_manual(values=c("Up" = "#DC0000FF",
-                                "Down"="#3C5488FF",
-                                "Not sig"="grey"))
+    ) +
+    scale_color_manual(values = c(
+      "Up" = "#DC0000FF",
+      "Down" = "#3C5488FF",
+      "Not sig" = "grey"
+    ))
 
-  plot<-ggplotly(volcano, tooltip=c('text'))
+  plot <- ggplotly(volcano, tooltip = c("text"))
   plot
-
 }
-

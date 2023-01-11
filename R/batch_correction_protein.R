@@ -14,9 +14,11 @@ batch_correction_protein <- function(matrix,
                                      batch_map,
                                      batch,
                                      correction_method) {
-  args <- list(matrix = matrix,
-               batch_map = batch_map,
-               batch = batch)
+  args <- list(
+    matrix = matrix,
+    batch_map = batch_map,
+    batch = batch
+  )
   if (correction_method == "Combat") {
     cli::cli_alert_success("Performing combat batch correction")
     res <- do.call(combat_correction, args)

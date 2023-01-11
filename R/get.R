@@ -15,20 +15,22 @@
 #' @examples
 .get_metadata <- function(multiassay,
                           omic,
-                          slot=c('rna_processed','protein_processed')) {
+                          slot = c("rna_processed", "protein_processed")) {
   data <- multiassay@ExperimentList@listData[[paste(slot)]]
 
   if (omic == "protein") {
     raw <- MultiAssayExperiment::getWithColData(multiassay,
-                                                i = "protein_raw",
-                                                mode = "replace",
-                                                verbose = F)
+      i = "protein_raw",
+      mode = "replace",
+      verbose = F
+    )
   }
   if (omic == "rna") {
     raw <- MultiAssayExperiment::getWithColData(multiassay,
-                                                i = "rna_raw",
-                                                mode = "replace",
-                                                verbose = F)
+      i = "rna_raw",
+      mode = "replace",
+      verbose = F
+    )
   }
   colData <- data.frame(SummarizedExperiment::colData(raw))
   if (omic == "protein") {
@@ -87,24 +89,20 @@
 #' @export
 #'
 #' @examples
-#'
-#'
 .get_background <- function(multiassay,
-                            of='full') {
-  if(of=='full'){
-  background <- union(
-    multiassay@ExperimentList@listData[["rna_raw"]]@elementMetadata@listData[["gene_name"]],
-    multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData[["gene_name"]]
-  )
+                            of = "full") {
+  if (of == "full") {
+    background <- union(
+      multiassay@ExperimentList@listData[["rna_raw"]]@elementMetadata@listData[["gene_name"]],
+      multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData[["gene_name"]]
+    )
   }
 
-  if(of=='rna'){
-    background=multiassay@ExperimentList@listData[["rna_raw"]]@elementMetadata@listData[["gene_name"]]
-
+  if (of == "rna") {
+    background <- multiassay@ExperimentList@listData[["rna_raw"]]@elementMetadata@listData[["gene_name"]]
   }
-  if(of=='protein'){
-  background= multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData[["gene_name"]]
-
+  if (of == "protein") {
+    background <- multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData[["gene_name"]]
   }
 
   return(background)
@@ -119,31 +117,34 @@
 #' @export
 #'
 #' @examples
-.get_ID_type <- function(character_vector){
+.get_ID_type <- function(character_vector) {
+  test <- character_vector[1]
 
-  test=character_vector[1]
-
-  if(isTRUE(grepl('^[A-Z0-9-]+$|^C[0-9XY]+orf[0-9]+$',
-           test))){
-    ID_type='gene_name'
+  if (isTRUE(grepl(
+    "^[A-Z0-9-]+$|^C[0-9XY]+orf[0-9]+$",
+    test
+  ))) {
+    ID_type <- "gene_name"
   }
 
-  if(isTRUE(grepl('ENS',test))){
-    ID_type='ensembl_gene_id'
+  if (isTRUE(grepl("ENS", test))) {
+    ID_type <- "ensembl_gene_id"
   }
 
-  if(isTRUE(!grepl("\\D", test))){
-    ID_type='entrez_gene_id'
+  if (isTRUE(!grepl("\\D", test))) {
+    ID_type <- "entrez_gene_id"
   }
 
-  if(isTRUE(grepl('[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}',
-        test))){
-    ID_type='uniprot_id'
+  if (isTRUE(grepl(
+    "[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}",
+    test
+  ))) {
+    ID_type <- "uniprot_id"
   }
 
-  if(isTRUE(!exists('ID_type'))){
-    ID_type='not_identified'
-    cli::cli_warn('ID type not identified!')
+  if (isTRUE(!exists("ID_type"))) {
+    ID_type <- "not_identified"
+    cli::cli_warn("ID type not identified!")
   }
 
   return(ID_type)
@@ -168,62 +169,65 @@
                                      "rna_processed",
                                      "protein_processed"
                                    ),
-                                   intersect_genes=FALSE,
-                                   ID_type='gene_name'
-                                   ){
-
+                                   intersect_genes = FALSE,
+                                   ID_type = "gene_name") {
   multi <- multiassay[, , c(slots[1], slots[2])]
   complete <- complete.cases(multi)
   CompleteMulti <- multi[, complete.cases(multi), ]
 
-  if(intersect_genes==TRUE){
+  if (intersect_genes == TRUE) {
+    rownames(CompleteMulti@ExperimentList@listData[[paste(slots[1])]]) <-
+      make.unique(.get_ID_names(
+        rownames(
+          CompleteMulti@ExperimentList@listData[[paste(slots[1])]]
+        ),
+        omic = "rna",
+        from = "ensembl_gene_id",
+        to = "gene_name"
+      ))
 
-    rownames(CompleteMulti@ExperimentList@listData[[paste(slots[1])]])=
-      make.unique(.get_ID_names(rownames(
-        CompleteMulti@ExperimentList@listData[[paste(slots[1])]]),
-                  omic = "rna",
-                  from = "ensembl_gene_id",
-                  to = "gene_name"
-    ))
+    rownames(CompleteMulti@ExperimentList@listData[[paste(slots[2])]]) <-
+      make.unique(.get_ID_names(
+        rownames(
+          CompleteMulti@ExperimentList@listData[[paste(slots[2])]]
+        ),
+        omic = "protein",
+        from = "uniprot_id",
+        to = "gene_name"
+      ))
 
-    rownames(CompleteMulti@ExperimentList@listData[[paste(slots[2])]])=
-      make.unique(.get_ID_names(rownames(
-      CompleteMulti@ExperimentList@listData[[paste(slots[2])]]),
-                  omic = "protein",
-                  from = "uniprot_id",
-                  to = "gene_name"
-    ))
-
-    CompleteMulti<- intersectRows(CompleteMulti[, ,slots])
-
+    CompleteMulti <- intersectRows(CompleteMulti[, , slots])
   }
 
   metadata <- data.frame(colData(CompleteMulti))
   multimodal_omics <- lapply(CompleteMulti@ExperimentList@listData, as.matrix)
   multimodal_omics <- lapply(multimodal_omics, "colnames<-", rownames(metadata))
 
-  if(ID_type=='gene_name'){
-
-    rownames(multimodal_omics[[1]])=
-      make.unique(.get_ID_names(rownames(
-        CompleteMulti@ExperimentList@listData[[paste(slots[1])]]),
+  if (ID_type == "gene_name") {
+    rownames(multimodal_omics[[1]]) <-
+      make.unique(.get_ID_names(
+        rownames(
+          CompleteMulti@ExperimentList@listData[[paste(slots[1])]]
+        ),
         omic = "rna",
         from = "ensembl_gene_id",
         to = "gene_name"
       ))
 
-    rownames(multimodal_omics[[2]])=
-      make.unique(.get_ID_names(rownames(
-      CompleteMulti@ExperimentList@listData[[paste(slots[2])]]),
-      omic = "protein",
-      from = "uniprot_id",
-      to = "gene_name"
-    ))
+    rownames(multimodal_omics[[2]]) <-
+      make.unique(.get_ID_names(
+        rownames(
+          CompleteMulti@ExperimentList@listData[[paste(slots[2])]]
+        ),
+        omic = "protein",
+        from = "uniprot_id",
+        to = "gene_name"
+      ))
   }
 
 
-  return(list(multimodal_object=    multimodal_omics,
-              metadata=   metadata))
-
+  return(list(
+    multimodal_object = multimodal_omics,
+    metadata = metadata
+  ))
 }
-

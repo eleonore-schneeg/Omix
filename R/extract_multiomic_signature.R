@@ -1,3 +1,13 @@
+#' Title
+#'
+#' @param multiassay
+#' @param integration
+#' @param component
+#'
+#' @return
+#' @export
+#'
+#' @examples
 extract_multiomic_signature <- function(multiassay,
                                         integration = "DIABLO",
                                         component = 1) {

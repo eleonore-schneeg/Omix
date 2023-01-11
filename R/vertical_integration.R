@@ -27,12 +27,12 @@ vertical_integration <- function(multiassay,
                                    "rna_processed",
                                    "protein_processed"
                                  ),
-                                 integration = c("MOFA", "DIABLO", "sMBPLS","iCluster"),
+                                 integration = c("MOFA", "DIABLO", "sMBPLS", "iCluster"),
                                  intersect_genes = FALSE,
                                  ID_type = "gene_name",
                                  dependent = "Group",
                                  levels = c("Control", "Case"),
-                                 design=c("cor", "full"),
+                                 design = c("cor", "full"),
                                  ncomp = 2,
                                  range = list(
                                    mRNA = seq(5, 100, by = 10),
@@ -41,9 +41,9 @@ vertical_integration <- function(multiassay,
                                  list.keepX = list(mRNA = c(50), proteins = c(50)),
                                  num_factors = 10,
                                  scale_views = TRUE,
-                                 try.N.clust= 2:4) {
+                                 try.N.clust = 2:4) {
   multimodal_object <- .get_multimodal_object(
-  multiassay,
+    multiassay,
     slots,
     intersect_genes,
     ID_type = ID_type
@@ -96,15 +96,18 @@ vertical_integration <- function(multiassay,
   if (integration == "MOFA") {
     cli::cli_alert_success("VERTICAL INTEGRATION WITH MOFA")
     int <- integrate_with_MOFA(multimodal_omics,
-                               num_factors = num_factors,
-                               scale_views = scale_views )
+      num_factors = num_factors,
+      scale_views = scale_views
+    )
   }
 
   if (integration == "iCluster") {
     cli::cli_alert_success("VERTICAL INTEGRATION CLUSTERING WITH ICLUSTER")
-    multimodal<- lapply(multimodal, data.frame)
-    int <- integrate_with_iCluster(multimodal_omics=multimodal_omics,
-                                   try.N.clust=try.N.clust)
+    multimodal <- lapply(multimodal, data.frame)
+    int <- integrate_with_iCluster(
+      multimodal_omics = multimodal_omics,
+      try.N.clust = try.N.clust
+    )
   }
 
   multiassay@metadata$multimodal_object <- int[[1]]
@@ -112,4 +115,3 @@ vertical_integration <- function(multiassay,
 
   return(multiassay)
 }
-

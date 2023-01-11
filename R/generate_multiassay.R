@@ -172,7 +172,6 @@ generate_multiassay <- function(rawdata_rna,
   }
 
   if (rna_id_type == "gene_name") {
-
     rna_values <- se_rna@elementMetadata@listData[[paste(rna_id_type)]]
     cli::cli_alert_success("Retrieval of gene biotype")
     rna_df <- AnnotationDbi::select(EnsDb,

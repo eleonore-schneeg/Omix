@@ -8,10 +8,9 @@
 #' @export
 #'
 #' @examples
-#'
-.multiomics_network_matrix <- function( multimodal_object,
-                                list,
-                                correlation_threshold = 0.5) {
+.multiomics_network_matrix <- function(multimodal_object,
+                                       list,
+                                       correlation_threshold = 0.5) {
   library(igraph)
   features_interest <- c(list[[1]], list[[2]])
   pk <- c(length(list[[1]]), length(list[[2]]))
@@ -24,8 +23,8 @@
 
   matrix <- cbind(matrix1, matrix2)
 
-  colnames(matrix)[1:pk[1]]=paste0(colnames(matrix)[1:pk[1]],'_rna')
-  colnames(matrix)[(pk[1]+1):(pk[1]+pk[2])]=paste0( colnames(matrix)[(pk[1]+1):(pk[1]+pk[2])],'_protein')
+  colnames(matrix)[1:pk[1]] <- paste0(colnames(matrix)[1:pk[1]], "_rna")
+  colnames(matrix)[(pk[1] + 1):(pk[1] + pk[2])] <- paste0(colnames(matrix)[(pk[1] + 1):(pk[1] + pk[2])], "_protein")
 
   rho <- cor(matrix)
   thr_cor <- correlation_threshold
@@ -41,7 +40,7 @@
 
 
   mynode_colours <- c(rep("#B39DDB", pk[1]), rep("#00796B", pk[2]))
-  #mynode_labels <- sub("*\\.[0-9]", "", features_interest)
+  # mynode_labels <- sub("*\\.[0-9]", "", features_interest)
   mynode_labels <- colnames(matrix)
   mygraph <- .GetGraph(adjacency = A, node_color = mynode_colours, node_label = mynode_labels)
 
@@ -59,8 +58,10 @@
   E(mygraph)$width <- 3
   set.seed(1)
 
-  list=list(graph=mygraph,
-            matrix=matrix)
+  list <- list(
+    graph = mygraph,
+    matrix = matrix
+  )
   return(list)
 }
 
@@ -229,23 +230,23 @@
 
 
 .multiomics_network_cluster <- function(multiassay,
-                                integration = "iCluster",
-                                cluster=1,
-                                list,
-                                correlation_threshold = 0.5) {
+                                        integration = "iCluster",
+                                        cluster = 1,
+                                        list,
+                                        correlation_threshold = 0.5) {
   library(igraph)
   features_interest <- c(list[[1]], list[[2]])
   multimodal_object <- multiassay@metadata$multimodal_object
 
   clusters <- multiassay@metadata$integration[[paste(integration)]]$clust.res$clust
-  keep=clusters==cluster
+  keep <- clusters == cluster
 
   matrix1 <- t(multimodal_object[[1]])
-  matrix1 <- matrix1[keep,]
+  matrix1 <- matrix1[keep, ]
   matrix1 <- matrix1[, colnames(matrix1) %in% list[[1]]]
 
   matrix2 <- t(multimodal_object[[2]])
-  matrix2 <- matrix2[keep,]
+  matrix2 <- matrix2[keep, ]
   matrix2 <- matrix2[, colnames(matrix2) %in% list[[2]]]
 
   matrix <- cbind(matrix1, matrix2)

@@ -4,6 +4,7 @@
 #' @param slot
 #' @param dependent
 #' @param covariates
+#' @param levels
 #' @param reference
 #'
 #' @return
@@ -17,25 +18,24 @@
 #'
 #' @examples
 protein_DE_analysis <- function(multiassay,
-                                    slot = "protein_processed",
-                                    dependent = "diagnosis",
-                                    covariates = NA,
-                                    levels = c("Control", "Mid", "Late"),
-                                    log2FoldChange = 0.5 ) {
-
+                                slot = "protein_processed",
+                                dependent = "diagnosis",
+                                covariates = NULL,
+                                levels = c("Control", "Mid", "Late"),
+                                log2FoldChange = 0.5) {
   abundance <- multiassay@ExperimentList@listData[[paste(slot)]]
 
 
   if (("parameters_processing_protein" %in% names(multiassay@metadata)) == FALSE) {
     stop(cli::cli_alert_danger(
       paste("parameters_processing_protein not found in metadata, please run",
-            cli::style_bold("process_protein"),
-            sep = " "
+        cli::style_bold("process_protein"),
+        sep = " "
       )
     ))
   }
-  denoised <-multiassay@metadata$parameters_processing_protein$denoise
-  cov <-multiassay@metadata$parameters_processing_protein$covariates
+  denoised <- multiassay@metadata$parameters_processing_protein$denoise
+  cov <- multiassay@metadata$parameters_processing_protein$covariates
 
 
   if (isTRUE(denoised & isTRUE(cov == covariates))) {
@@ -44,24 +44,23 @@ protein_DE_analysis <- function(multiassay,
     ))
   }
 
-  covariates <- setdiff(covariates,cov)
+  covariates <- setdiff(covariates, cov)
   protein_raw <- MultiAssayExperiment::getWithColData(multiassay, i = "protein_raw", mode = "replace", verbose = F)
   colData <- data.frame(SummarizedExperiment::colData(protein_raw))
   order <- map_protein$primary[match(colnames(abundance), map_protein$colname)]
   colData <- colData[order, ]
   colData <- colData %>% mutate(across(where(is.character), as.factor))
 
-  if(!is.na(covariates)){
-  cov_var <- paste(covariates, collapse = " + ")
+  if (!is.null(covariates)) {
+    cov_var <- paste(covariates, collapse = " + ")
 
-  if (any(is.na(colData[cov_var]))) {
-    stop(cli::cli_alert_danger(
-      paste("Missing value in covariates, please use other covariates")
-    ))
-  }
-
-  }else{
-    cov_var <- NA
+    if (any(is.na(colData[covariates]))) {
+      stop(cli::cli_alert_danger(
+        paste("Missing value in covariates, please use other covariates")
+      ))
+    }
+  } else {
+    cov_var <- NULL
   }
 
   dependent_var <- paste(dependent, collapse = " + ")
@@ -75,31 +74,33 @@ protein_DE_analysis <- function(multiassay,
   }
 
 
+  #### CATEGORICAL DEPENDENT VARIABLE
+
   if (!is.numeric(colData[, dependent])) {
-    if(!is.na(cov_var)){
-    model_formula <- stats::as.formula(
-      sprintf(
-        "~0+ %s + %s",
-        dependent_var,
-        cov_var
-      )
-    )
-   }
-    if(is.na(cov_var)){
-        model_formula <- stats::as.formula(
-          sprintf(
-            "~0+ %s",
-            dependent_var
-          )
+    if (!is.na(cov_var)) {
+      model_formula <- stats::as.formula(
+        sprintf(
+          "~0+ %s + %s",
+          dependent_var,
+          cov_var
         )
+      )
+    }
+    if (is.na(cov_var)) {
+      model_formula <- stats::as.formula(
+        sprintf(
+          "~0+ %s",
+          dependent_var
+        )
+      )
     }
 
     design <- model.matrix(model_formula)
 
 
-    if(!is.na(cov_var)){
-    colnames(design) <- c(levels(colData[, dependent]), cov_var)
-    }else{
+    if (!is.null(cov_var)) {
+      colnames(design) <- c(levels(colData[, dependent]), covariates)
+    } else {
       colnames(design) <- c(levels(colData[, dependent]))
     }
 
@@ -116,7 +117,7 @@ protein_DE_analysis <- function(multiassay,
 
     x <- unlist(expressions)
 
-    contr.matrix <- limma::makeContrasts(contrasts = x, levels = colnames(design))
+    contr.matrix <- limma::makeContrasts(contrasts = c(x, covariates), levels = colnames(design))
 
     fit <- limma::lmFit(abundance, design)
     vfit <- limma::contrasts.fit(fit, contrasts = contr.matrix)
@@ -133,25 +134,27 @@ protein_DE_analysis <- function(multiassay,
     names(list_results) <- colnames(topTable(efit))[1:length(perCombs)]
   }
 
+  #### NUMERIC DEPENDENT VARIABLE
+
   if (is.numeric(colData[, dependent])) {
-    if(!is.na(cov_var)){
-    model_formula <- stats::as.formula(
-      sprintf(
-        "~%s + %s",
-        dependent_var,
-        cov_var
+    if (!is.na(cov_var)) {
+      model_formula <- stats::as.formula(
+        sprintf(
+          "~%s + %s",
+          dependent_var,
+          cov_var
+        )
       )
-    )
     }
 
-    if(is.na(cov_var)){
-        model_formula <- stats::as.formula(
-          sprintf(
-            "~0 + %s",
-            dependent_var
-          )
+    if (is.na(cov_var)) {
+      model_formula <- stats::as.formula(
+        sprintf(
+          "~%s",
+          dependent_var
         )
-      }
+      )
+    }
 
 
     design <- model.matrix(model_formula)
@@ -177,20 +180,25 @@ protein_DE_analysis <- function(multiassay,
   })
   gene_id_conversion <- as.data.frame(multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData)
 
-  res <- lapply(list_results, format_res_limma, n_label = 10,
-                gene_id_conversion = gene_id_conversion,
-                log2FoldChange = log2FoldChange )
+  res <- lapply(list_results, format_res_limma,
+    n_label = 10,
+    gene_id_conversion = gene_id_conversion,
+    log2FoldChange = log2FoldChange
+  )
 
   list_DEP_limma <- list()
   list_DEP_limma <- lapply(res, function(x) {
-    up=x$gene_name[which(x$adj.P.Val <= 0.05 & x$de=='Up')]
-    down=x$gene_name[which(x$adj.P.Val <= 0.05 & x$de=='Down')]
-    return(list(up=up,
-                down=down))
+    up <- x$gene_name[which(x$adj.P.Val <= 0.05 & x$de == "Up")]
+    down <- x$gene_name[which(x$adj.P.Val <= 0.05 & x$de == "Down")]
+    return(list(
+      up = up,
+      down = down
+    ))
   })
 
   res$plot <- lapply(res, volcano_plot_limma,
-                     log2FoldChange =log2FoldChange )
+    log2FoldChange = log2FoldChange
+  )
   res$sig_protein <- list_DEP_limma
 
   names(res) <- gsub(pattern = ".", replacement = "vs", x = names(res), fixed = TRUE)

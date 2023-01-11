@@ -27,7 +27,7 @@ filter_protein <- function(matrix,
       df2 <- df[, cond.names[[i]]]
       df2 <- as.matrix(df2)
       sums <- rowSums(is.finite(df2))
-      sums >=min_sample * length(cond.names[[i]])
+      sums >= min_sample * length(cond.names[[i]])
     })
 
     if (at_least_one) {
@@ -39,7 +39,7 @@ filter_protein <- function(matrix,
   }
 
   if (is.null(groups)) {
-    idx <- rowSums(is.finite(as.matrix(df))) >= dim(df)[2] *min_sample
+    idx <- rowSums(is.finite(as.matrix(df))) >= dim(df)[2] * min_sample
     df <- df[idx, ]
   }
 

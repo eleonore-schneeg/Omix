@@ -40,13 +40,8 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
                                      ),
                                      is_output = FALSE,
                                      output_dir = ".",
-                                     min_overlap= 3,
+                                     min_overlap = 3,
                                      plot_n = 20) {
-  library(enrichR)
-  library(stringr)
-  library(dplyr)
-  library(ggplot2)
-
   dbs <- enrichR::listEnrichrDbs()
 
   res <- enrichR::enrichr(
@@ -131,7 +126,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 #' @keywords internal
 
 .format_res_table_enrichr <- function(res,
-                                      min_overlap=3) {
+                                      min_overlap = 3) {
   res_table <- res %>%
     as.data.frame() %>%
     dplyr::transmute(
@@ -146,7 +141,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
       Genes = Genes
     )
 
-  res_table<- res_table[which(res_table$overlap >=min_overlap),]
+  res_table <- res_table[which(res_table$overlap >= min_overlap), ]
 }
 # res_table$geneset <- ifelse(is.na(res_table$geneset),
 #   res_table$description,
@@ -415,7 +410,6 @@ enrichment_custom <- function(genes, reference, genesets, adj = "fdr", verbose =
 
 cell_type_enrichment <- function(multiassay,
                                  communities) {
-
   background_genes <- .get_background(multiassay)
   load(file = "~/RDS_ukdri/multiomics/multiomics/pipeline_17_05/3_UNI_OMIC/CellTypeData_all_ds.rda") # loads ctd
 

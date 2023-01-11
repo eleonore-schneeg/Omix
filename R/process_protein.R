@@ -85,7 +85,8 @@ process_protein <- function(multiassay,
 
   if (imputation == "distribution") {
     cli::cli_alert_success(
-    "Imputation of remaining missing values based on distribution")
+      "Imputation of remaining missing values based on distribution"
+    )
     matrix <- .impute_distribution(matrix)
   }
   if (imputation == "minimum_value") {
@@ -124,10 +125,12 @@ process_protein <- function(multiassay,
 
   if (denoise == TRUE) {
     cli::cli_alert_success("DENOISING BIOLOGICAL COVARIATES")
-    cli::cli_alert_success(paste("Using Limma on", covariates,
-                                 "as biological confounders"))
+    cli::cli_alert_success(paste(
+      "Using Limma on", covariates,
+      "as biological confounders"
+    ))
 
-    covariates_data <- MultiAssayExperiment::colData(protein_raw)[,c(covariates)]
+    covariates_data <- MultiAssayExperiment::colData(protein_raw)[, c(covariates)]
     covariates_data <- data.frame(covariates_data)
 
     matrix <- limma::removeBatchEffect(
@@ -152,8 +155,10 @@ process_protein <- function(multiassay,
       (rowSums(matrix, 2) / ncol(matrix) < q2))
     matrix <- matrix[idx, ]
     dim4 <- dim(matrix)[1]
-    cli::cli_alert_success(paste(dim3 - dim4, "feature outliers out of",
-                                 dim3, "features detected and dropped"))
+    cli::cli_alert_success(paste(
+      dim3 - dim4, "feature outliers out of",
+      dim3, "features detected and dropped"
+    ))
   }
 
 
@@ -168,8 +173,10 @@ process_protein <- function(multiassay,
     }))
     matrix <- matrix[, colnames(matrix) %!in% outliers]
     dim6 <- dim(matrix)[2]
-    cli::cli_alert_success(paste(dim5-dim6, "sample outliers out of",
-                                 dim5, " samples detected and dropped"))
+    cli::cli_alert_success(paste(
+      dim5 - dim6, "sample outliers out of",
+      dim5, " samples detected and dropped"
+    ))
 
     metadata(multiassay)$OutliersFlags$protein <- outliers
   }
@@ -180,8 +187,10 @@ process_protein <- function(multiassay,
   map <- MultiAssayExperiment::sampleMap(multiassay)
   map_df <- data.frame(map@listData)
   map_df <- map_df[which(map_df$assay == "protein_raw"), ]
-  map_df <- map_df[match(colnames(matrix),
-                   map_df$colname), ][c("primary", "colname")]
+  map_df <- map_df[match(
+    colnames(matrix),
+    map_df$colname
+  ), ][c("primary", "colname")]
   map_df$assay <- "protein_processed"
 
   multiassay <- c(multiassay,
@@ -223,8 +232,10 @@ processed_rna <- function(multiassay,
   ), ][c("primary", "colname")]
   map_df$assay <- "protein_processed"
 
-  rm.protein_processed <- !grepl("protein_processed",
-                                  names(experiments(multiassay)))
+  rm.protein_processed <- !grepl(
+    "protein_processed",
+    names(experiments(multiassay))
+  )
   multiassay <- multiassay[, , rm.protein_processed]
   multiassay <- c(multiassay,
     protein_processed = matrix,

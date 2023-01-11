@@ -122,13 +122,16 @@ process_rna <- function(multiassay,
         dim1 - sum(protein_coding),
         "/", dim1, "non protein coding genes were dropped"
       ))
-      cli::cli_alert_success(paste(sum(protein_coding),
-                            "protein coding genes kept for analysis"))
+      cli::cli_alert_success(paste(
+        sum(protein_coding),
+        "protein coding genes kept for analysis"
+      ))
       dim1 <- as.numeric(dim(dds)[1])
     }
     cli::cli_alert_success(paste(
       "QC parameters selected require genes to have at least",
-      (min_sample * 100), "% of samples with counts of", min_count, "or more"))
+      (min_sample * 100), "% of samples with counts of", min_count, "or more"
+    ))
     idx <- rowSums(DESeq2::counts(dds,
       normalized = TRUE
     ) >=
@@ -163,9 +166,11 @@ process_rna <- function(multiassay,
 
   if (batch_correction == TRUE) {
     cli::cli_alert_success("BATCH CORRECTION")
-    cli::cli_alert_success(paste("Using Limma on", batch,
-                                 "to remove technical artefacts, and",
-                                 covariates, "as biological confounders"))
+    cli::cli_alert_success(paste(
+      "Using Limma on", batch,
+      "to remove technical artefacts, and",
+      covariates, "as biological confounders"
+    ))
     batch_data <- colData[batch]
     batch_data[[batch]] <- as.factor(batch_data[[batch]])
 
@@ -195,8 +200,10 @@ process_rna <- function(multiassay,
       }
     ))
     matrix <- matrix[, colnames(matrix) %!in% outliers]
-    cli::cli_alert_success(paste(length(outliers), "sample outliers out of",
-                                 dim2, " samples detected and dropped"))
+    cli::cli_alert_success(paste(
+      length(outliers), "sample outliers out of",
+      dim2, " samples detected and dropped"
+    ))
   }
 
   matrix <- as.data.frame(matrix)
@@ -264,8 +271,17 @@ processed_rna <- function(multiassay,
 
 
 
+#' Adds custom processed dataset to multiassay object
+#'
+#' @param multiassay
+#' @param custom_processed_df
+#'
+#' @return
+#' @export
+#'
+#' @examples
 counts_rna <- function(multiassay,
-                          custom_processed_df) {
+                       custom_processed_df) {
   matrix <- as.data.frame(custom_processed_df)
   map <- MultiAssayExperiment::sampleMap(multiassay)
   map_df <- data.frame(map@listData)
@@ -276,13 +292,13 @@ counts_rna <- function(multiassay,
   ), ][c("primary", "colname")]
   map_df$assay <- "rna_counts"
 
-  multiassay <- c(multiassay,
-                  rna_counts = matrix,
-                  sampleMap = map_df
+  multiassay_temp <- c(multiassay,
+    rna_counts = matrix,
+    sampleMap = map_df
   )
 
-  metadata(multiassay)$parameters_processing_rna$counts_df <- TRUE
-  return(multiassay)
+  metadata(multiassay_temp)$parameters_processing_rna$counts_df <- TRUE
+  return(multiassay_temp)
 
   cli::cli_alert_success("Raw transcriptomics counts added!")
 }

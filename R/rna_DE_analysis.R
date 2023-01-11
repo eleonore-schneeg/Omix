@@ -15,16 +15,15 @@
 #'
 #' @examples
 rna_DE_analysis <- function(multiassay,
-                                dependent = "diagnosis",
-                                levels = NULL,
-                                filter_protein_coding=TRUE,
-                                log2FoldChange = 0.5) {
-
+                            dependent = "diagnosis",
+                            levels = NULL,
+                            filter_protein_coding = TRUE,
+                            log2FoldChange = 0.5) {
   if (("dds" %in% names(multiassay@metadata)) == FALSE) {
     stop(cli::cli_alert_danger(
       paste("dds object not found in metadata, please run",
-            cli::style_bold("process_rna"),
-            sep = " "
+        cli::style_bold("process_rna"),
+        sep = " "
       )
     ))
   }
@@ -78,16 +77,20 @@ rna_DE_analysis <- function(multiassay,
 
   list_DEG_limma <- list()
   list_DEG_limma <- lapply(res, function(x) {
-    up=x$gene_name[which(x$padj <= 0.05 & x$de=='Up')]
-    down=x$gene_name[which(x$padj <= 0.05 & x$de=='Down')]
-      return(list(up=up,
-                  down=down))
+    up <- x$gene_name[which(x$padj <= 0.05 & x$de == "Up")]
+    down <- x$gene_name[which(x$padj <= 0.05 & x$de == "Down")]
+    return(list(
+      up = up,
+      down = down
+    ))
   })
   names(list_DEG_limma) <- unlist(names2)
 
   res$plot <- lapply(res, function(x) {
-    volcano_plot_deseq(dt = x,
-                       log2FoldChange = log2FoldChange)
+    volcano_plot_deseq(
+      dt = x,
+      log2FoldChange = log2FoldChange
+    )
   })
 
   res$sig_gene <- list_DEG_limma
