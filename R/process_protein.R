@@ -27,28 +27,31 @@
 #'
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
 #'  getWithColData sampleMap
+#' @importFrom SummarizedExperiment SummarizedExperiment assay rowData
 #' @export
 #'
 #' @examples
 process_protein <- function(multiassay,
                             # STEP 1 - FILTERING
                             filter = TRUE,
-                            min_sample = 0.6,
+                            min_sample = 0.5,
                             dependent = "diagnosis",
-                            levels = c("Control", "Mid", "Late"),
+                            levels = c("Control", "AD"),
                             # IMPUTATION
                             imputation = "minimum_value",
                             # FEATURE OUTLIERS
                             remove_feature_outliers = TRUE,
                             # TECHNICAL BATCH CORRECTION
                             batch_correction = TRUE,
-                            batch = "Batch",
+                            batch = "batch",
                             correction_method = c("Combat", "Median_centering"),
                             # SAMPLE OUTLIERS
                             remove_sample_outliers = TRUE,
                             # DENOISING BIOLOGICAL COVARIATES
                             denoise = FALSE,
-                            covariates = c("msex", "pmi", "apoe_genotype")) {
+                            covariates = c("sex", "age")) {
+
+
   "%!in%" <- function(x, y) !("%in%"(x, y))
 
   protein_raw <- MultiAssayExperiment::getWithColData(
@@ -62,7 +65,7 @@ process_protein <- function(multiassay,
   }
 
   cli::cli_alert_success("SCALING NORMALIZATION")
-  matrix <- assays(protein_raw)[[1]]
+  matrix <- SummarizedExperiment::assays(protein_raw)[[1]]
   matrix <- log2(matrix)
 
   if (filter == TRUE) {
@@ -109,6 +112,7 @@ process_protein <- function(multiassay,
 
   matrix <- as.data.frame(matrix, col.names = colnames(matrix))
 
+
   if (batch_correction == TRUE) {
     cli::cli_alert_success("BATCH CORRECTION")
     batch_map <- data.frame(SummarizedExperiment::colData(protein_raw))
@@ -132,14 +136,27 @@ process_protein <- function(multiassay,
 
     covariates_data <- MultiAssayExperiment::colData(protein_raw)[, c(covariates)]
     covariates_data <- data.frame(covariates_data)
+    covariates_data=covariates_data %>%  mutate(across(where(is.character),as.factor))
+    covariates_data=covariates_data %>%  mutate(across(where(is.factor),as.numeric))
+
+    for(i in colnames(covariates_data)){
+
+    if(all(!is.na(covariates_data[,i]))==FALSE){
+      stop(cli::cli_alert_danger(
+        paste(i,"Contains missing data, please impute or remove this covariate",
+              sep = " "
+        )))
+      }
+    }
 
     matrix <- limma::removeBatchEffect(
       matrix,
+      batch=NULL,
       covariates = covariates_data,
-      design = model.matrix(~ colData[[dependent]],
+      design = model.matrix(~ colData[[dependent]]),
         data = colData
       )
-    )
+
     matrix <- as.data.frame(matrix)
   }
 
@@ -165,7 +182,7 @@ process_protein <- function(multiassay,
   if (remove_sample_outliers == TRUE) {
     cli::cli_alert_success("REMOVING SAMPLE OUTLIERS")
     dim5 <- dim(matrix)[2]
-    pca <- prcomp(t(matrix), scale. = TRUE, rank. = 1)
+    pca <- prcomp(t(matrix), scale. = T, rank. = 1)
     U <- pca$x
     outliers <- rownames(apply(U, 2, function(x) {
       which(abs(x - mean(x))
@@ -183,7 +200,6 @@ process_protein <- function(multiassay,
 
 
   #####
-  matrix2 <- data.frame(matrix, col.names = rownames(matrix))
   map <- MultiAssayExperiment::sampleMap(multiassay)
   map_df <- data.frame(map@listData)
   map_df <- map_df[which(map_df$assay == "protein_raw"), ]
@@ -220,7 +236,16 @@ process_protein <- function(multiassay,
 
 
 
-processed_rna <- function(multiassay,
+#' Add custom processed proteomics dataset to multiassay
+#'
+#' @param multiassay
+#' @param custom_processed_df
+#'
+#' @return
+#' @export
+#'
+#' @examples
+processed_proteomics <- function(multiassay,
                           custom_processed_df) {
   matrix <- as.data.frame(custom_processed_df)
   map <- MultiAssayExperiment::sampleMap(multiassay)

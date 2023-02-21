@@ -41,15 +41,26 @@ vertical_integration <- function(multiassay,
                                  list.keepX = list(mRNA = c(50), proteins = c(50)),
                                  num_factors = 10,
                                  scale_views = TRUE,
-                                 try.N.clust = 2:4) {
+                                 try.N.clust = 2:4,
+                                 most_variable_feature=FALSE) {
+
   multimodal_object <- .get_multimodal_object(
-    multiassay,
-    slots,
-    intersect_genes,
+    multiassay=multiassay,
+    slots=slots,
+    intersect_genes=intersect_genes,
     ID_type = ID_type
   )
 
   multimodal_omics <- multimodal_object[[1]]
+
+  if(most_variable_feature==TRUE){
+    ### Keep only the most variable features in the high dimensional transcriptomics for modelling
+    ### omics layers should be the same dimensions
+    max_features=dim(multimodal_omics[[2]])[1]
+    keep= order(apply(multimodal_omics[[1]], 1, var), decreasing=TRUE)[1:max_features]
+    multimodal_omics[[1]]=multimodal_omics[[1]][keep,]
+  }
+
   metadata <- multimodal_object[[2]]
 
   Y <- metadata[[paste(dependent)]]
@@ -97,7 +108,8 @@ vertical_integration <- function(multiassay,
     cli::cli_alert_success("VERTICAL INTEGRATION WITH MOFA")
     int <- integrate_with_MOFA(multimodal_omics,
       num_factors = num_factors,
-      scale_views = scale_views
+      scale_views = scale_views,
+      metadata=   metadata
     )
   }
 

@@ -57,7 +57,8 @@
 #' @export
 #'
 #' @examples
-.get_ID_names <- function(id,
+.get_ID_names <- function(multiassay,
+                          id,
                           omic = "protein",
                           from = "uniprot_id",
                           to = "gene_name") {
@@ -177,8 +178,8 @@
 
   if (intersect_genes == TRUE) {
     rownames(CompleteMulti@ExperimentList@listData[[paste(slots[1])]]) <-
-      make.unique(.get_ID_names(
-        rownames(
+      make.unique(.get_ID_names(multiassay = multiassay,
+        id=rownames(
           CompleteMulti@ExperimentList@listData[[paste(slots[1])]]
         ),
         omic = "rna",
@@ -187,8 +188,8 @@
       ))
 
     rownames(CompleteMulti@ExperimentList@listData[[paste(slots[2])]]) <-
-      make.unique(.get_ID_names(
-        rownames(
+      make.unique(.get_ID_names(multiassay = multiassay,
+        id=rownames(
           CompleteMulti@ExperimentList@listData[[paste(slots[2])]]
         ),
         omic = "protein",
@@ -204,9 +205,13 @@
   multimodal_omics <- lapply(multimodal_omics, "colnames<-", rownames(metadata))
 
   if (ID_type == "gene_name") {
+
+    id_1=.get_ID_type( rownames(
+      CompleteMulti@ExperimentList@listData[[paste(slots[1])]]))
+
     rownames(multimodal_omics[[1]]) <-
-      make.unique(.get_ID_names(
-        rownames(
+      make.unique(.get_ID_names(multiassay = multiassay,
+        id=rownames(
           CompleteMulti@ExperimentList@listData[[paste(slots[1])]]
         ),
         omic = "rna",
@@ -214,15 +219,19 @@
         to = "gene_name"
       ))
 
+    id_2=.get_ID_type( rownames(
+      CompleteMulti@ExperimentList@listData[[paste(slots[2])]]))
+
+    if( id_2 != 'gene_name'){
     rownames(multimodal_omics[[2]]) <-
-      make.unique(.get_ID_names(
-        rownames(
+      make.unique(.get_ID_names(multiassay = multiassay,
+        id=rownames(
           CompleteMulti@ExperimentList@listData[[paste(slots[2])]]
         ),
         omic = "protein",
         from = "uniprot_id",
         to = "gene_name"
-      ))
+      ))}
   }
 
 

@@ -29,7 +29,7 @@
   return(df)
 }
 
-#' Imputation of missing values based on minimum value
+#' Imputation of missing values based on 50% minimum value
 
 #'
 #' @param df
@@ -42,7 +42,7 @@
 #' @examples
 .impute_minimum_value <- function(df) {
   for (i in colnames(df)) {
-    protein_minimum_imputation <- matrixStats::rowMins(as.matrix(df), na.rm = T)
+    protein_minimum_imputation <- 0.5 * matrixStats::rowMins(as.matrix(df), na.rm = T)
     missing <- is.na(df[[i]])
     df[[i]][missing] <- protein_minimum_imputation[missing]
   }

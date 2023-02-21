@@ -23,8 +23,8 @@ integrate_with_DIABLO <- function(multimodal_omics,
                                   ncomp,
                                   design = c("cor", "full"),
                                   range = list(
-                                    mRNA = seq(5, 100, by = 10),
-                                    proteins = seq(5, 100, by = 10)
+                                    mRNA = seq(5, 10, by = 10),
+                                    proteins = seq(5, 10, by = 10)
                                   )) {
   multimodal_omics <- lapply(multimodal_omics, t)
   X <- list(
@@ -54,6 +54,7 @@ integrate_with_DIABLO <- function(multimodal_omics,
     design <- "full"
   }
 
+
   Y <- factor(Y)
   cli::cli_h2("MODEL TUNING")
   tune <- mixOmics::tune.block.splsda(
@@ -65,9 +66,11 @@ integrate_with_DIABLO <- function(multimodal_omics,
       "mRNA" = range[[1]],
       "proteins" = range[[2]]
     ),
+    validation = 'Mfold',
+    folds = 5,
+    nrepeat = 1,
     progressBar = TRUE
   )
-
 
   list.keepX <- tune$choice.keepX
   tuned.diablo <- mixOmics::block.splsda(
@@ -241,7 +244,8 @@ integrate_with_MBPLS <- function(multimodal_omics,
 #' @examples
 integrate_with_MOFA <- function(multimodal_omics,
                                 num_factors = 5,
-                                scale_views = T) {
+                                scale_views = T,
+                                metadata) {
   # cli::cli_h2("VERTICAL INTEGRATION IN PROCESS")
   X <- list(
     mRNA = multimodal_omics[[1]],

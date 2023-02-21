@@ -10,7 +10,7 @@
 #'
 #' @examples
 single_omic_comparison <- function(multiassay,
-                                   slot = "LatevsControl") {
+                                   slot = "ADvsControl") {
   if (("DEG" %in% names(multiassay@metadata)) == FALSE) {
     stop(cli::cli_alert_danger(
       paste("Differential experession results not present in metadata, please run",

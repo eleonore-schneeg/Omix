@@ -13,12 +13,14 @@
 #' @export
 #'
 #' @examples
+
 format_res_limma <- function(dt,
                              gene_id_conversion = NULL,
                              log2FoldChange = 0,
-                             n_label = 10,
+                             n_label = 20,
                              padj = 0.05,
                              ylim = c(0, 10)) {
+
   if (!is.null(gene_id_conversion)) {
     dt$gene_name <- gene_id_conversion$gene_name[match(dt$Identifier, gene_id_conversion$uniprot_id)]
   }

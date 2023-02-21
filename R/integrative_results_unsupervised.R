@@ -2,7 +2,8 @@ integrative_results_unsupervised <- function(multiassay,
                                              integration = "MOFA",
                                              dependent = "diagnosis",
                                              correlation_threshold = 0.5,
-                                             disease_id = "MONDO_0004975") {
+                                             disease_id = "MONDO_0004975",
+                                             covariates = 'diagnosis') {
   model <- multiassay@metadata$integration[[paste(integration)]]
   covariates <- colnames(samples_metadata(model))
   corr <- correlate_factors_with_covariates(model,
@@ -22,7 +23,7 @@ integrative_results_unsupervised <- function(multiassay,
   # 4 pathology
 
   correlate_factors_with_covariates(model, covariates = covariates, plot = "r")
-  plot_variance_explained(model, max_r2 = 5)
+  plot_variance_explained(model, max_r2 = 20)
 
   selected_factor <- MOFA_get_relevant_factor(MOFAobject = model, covariate = dependent)
 
@@ -36,7 +37,7 @@ integrative_results_unsupervised <- function(multiassay,
     view = "all",
     factor = "all",
     abs = FALSE,
-    scale = TRUE,
+    scale = F,
     as.data.frame = FALSE
   )
 
@@ -74,6 +75,7 @@ integrative_results_unsupervised <- function(multiassay,
     protein = protein_negative
   )
 
+
   cli::cli_alert_success("BIPARTITE NETWORKS GENERATION")
   protective_network <- .multiomics_network(multiassay,
     list = protective,
@@ -85,7 +87,6 @@ integrative_results_unsupervised <- function(multiassay,
     list = detrimental,
     correlation_threshold = correlation_threshold
   )
-
 
 
   ### ID MAPPING

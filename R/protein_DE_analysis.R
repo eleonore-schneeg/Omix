@@ -21,12 +21,11 @@ protein_DE_analysis <- function(multiassay,
                                 slot = "protein_processed",
                                 dependent = "diagnosis",
                                 covariates = NULL,
-                                levels = c("Control", "Mid", "Late"),
+                                levels = c("Control", "AD"),
                                 log2FoldChange = 0.5) {
   abundance <- multiassay@ExperimentList@listData[[paste(slot)]]
 
-
-  if (("parameters_processing_protein" %in% names(multiassay@metadata)) == FALSE) {
+if (("parameters_processing_protein" %in% names(multiassay@metadata)) == FALSE) {
     stop(cli::cli_alert_danger(
       paste("parameters_processing_protein not found in metadata, please run",
         cli::style_bold("process_protein"),
@@ -42,13 +41,11 @@ protein_DE_analysis <- function(multiassay,
     stop(cli::cli_alert_danger(
       paste("Processed protein data is already for designated covariates, model will be run for unadjusted covariates only")
     ))
+    covariates <- setdiff(covariates, cov)
   }
 
-  covariates <- setdiff(covariates, cov)
   protein_raw <- MultiAssayExperiment::getWithColData(multiassay, i = "protein_raw", mode = "replace", verbose = F)
   colData <- data.frame(SummarizedExperiment::colData(protein_raw))
-  order <- map_protein$primary[match(colnames(abundance), map_protein$colname)]
-  colData <- colData[order, ]
   colData <- colData %>% mutate(across(where(is.character), as.factor))
 
   if (!is.null(covariates)) {
@@ -77,7 +74,7 @@ protein_DE_analysis <- function(multiassay,
   #### CATEGORICAL DEPENDENT VARIABLE
 
   if (!is.numeric(colData[, dependent])) {
-    if (!is.na(cov_var)) {
+    if (!is.null(cov_var)) {
       model_formula <- stats::as.formula(
         sprintf(
           "~0+ %s + %s",
@@ -86,7 +83,7 @@ protein_DE_analysis <- function(multiassay,
         )
       )
     }
-    if (is.na(cov_var)) {
+    if (is.null(cov_var)) {
       model_formula <- stats::as.formula(
         sprintf(
           "~0+ %s",
@@ -119,11 +116,12 @@ protein_DE_analysis <- function(multiassay,
 
     contr.matrix <- limma::makeContrasts(contrasts = c(x, covariates), levels = colnames(design))
 
-    fit <- limma::lmFit(abundance, design)
+    fit <- limma::lmFit(abundance, design,method="robust")
     vfit <- limma::contrasts.fit(fit, contrasts = contr.matrix)
-    efit <- limma::eBayes(vfit)
+    efit <- limma::eBayes(vfit, robust=TRUE)
 
     list_results <- list()
+
     for (i in 1:length(perCombs)) {
       list_results[[i]] <- assign(paste0(
         "limma.results_",
@@ -131,13 +129,13 @@ protein_DE_analysis <- function(multiassay,
       ), limma::topTable(efit, coef = i, n = Inf))
     }
 
-    names(list_results) <- colnames(topTable(efit))[1:length(perCombs)]
+    names(list_results) <- colnames(contr.matrix)[1:length(perCombs)]
   }
 
   #### NUMERIC DEPENDENT VARIABLE
 
   if (is.numeric(colData[, dependent])) {
-    if (!is.na(cov_var)) {
+    if (!is.null(cov_var)) {
       model_formula <- stats::as.formula(
         sprintf(
           "~%s + %s",
@@ -158,8 +156,8 @@ protein_DE_analysis <- function(multiassay,
 
 
     design <- model.matrix(model_formula)
-    fit <- lmFit(abundance, design)
-    efit <- eBayes(fit)
+    fit <- lmFit(abundance, design,method="robust")
+    efit <- eBayes(fit,robust=TRUE)
 
     list_results <- list()
     for (i in 1:length(1)) {
@@ -180,8 +178,12 @@ protein_DE_analysis <- function(multiassay,
   })
   gene_id_conversion <- as.data.frame(multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData)
 
+  if(is.null(gene_id_conversion$uniprot_id)){
+    gene_id_conversion=NULL
+  }
+
   res <- lapply(list_results, format_res_limma,
-    n_label = 10,
+    n_label = 20,
     gene_id_conversion = gene_id_conversion,
     log2FoldChange = log2FoldChange
   )
@@ -201,13 +203,13 @@ protein_DE_analysis <- function(multiassay,
   )
   res$sig_protein <- list_DEP_limma
 
-  names(res) <- gsub(pattern = ".", replacement = "vs", x = names(res), fixed = TRUE)
+  names(res) <- gsub(pattern = "-", replacement = "vs", x = names(res), fixed = TRUE)
   names(res$sig_protein) <- gsub(
-    pattern = ".", replacement = "vs",
+    pattern = "-", replacement = "vs",
     x = names(res$sig_protein), fixed = TRUE
   )
   names(res$plot) <- gsub(
-    pattern = ".", replacement = "vs",
+    pattern = "-", replacement = "vs",
     x = names(res$plot), fixed = TRUE
   )
 

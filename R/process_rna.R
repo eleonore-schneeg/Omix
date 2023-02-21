@@ -14,7 +14,9 @@
 #' Set parameter as NULL if dependent is NULL.
 #' @param covariates Technical and biological covariates to use for
 #' DESEQ2 analysis and denoising
-#' @param batch_correction Logical whether to perform batch correction
+#' @param batch_correction Logical whether to perform batch correction. The
+#' processed matrix returned will be denoised for designated covariates and
+#' technical batch.
 #' @param batch Technical batch, use batch2 for another technical batch
 #' @param remove_sample_outliers Logical whether to remove sample outliers
 #'
@@ -22,9 +24,9 @@
 #'
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
 #'  getWithColData sampleMap
-#' @importFrom SummarizedExperiment SummarizedExperiment
+#' @importFrom SummarizedExperiment SummarizedExperiment assay rowData
 #' @importFrom DESeq2 DESeqDataSetFromMatrix counts
-#' @importFrom stats prcomp
+#' @importFrom stats prcomp model.matrix
 #' @importFrom magrittr set_names
 #' @importFrom cli cli_alert_danger style_bold cli_alert_success
 #' @importFrom limma removeBatchEffect
@@ -57,12 +59,13 @@ process_rna <- function(multiassay,
     colData[[dependent]] <- factor(colData[[dependent]], levels = levels)
   }
 
-  if (!exists(batch)) {
+  if (is.null(batch)) {
     design_formula <- as.formula(paste("~", dependent, "+", paste(covariates,
       sep = " ",
       collapse = " + "
     )))
-  } else {
+  }
+  if (!is.null(batch)) {
     design_formula <- as.formula(paste("~", dependent, "+", paste(covariates,
       sep = " ",
       collapse = " + "
@@ -73,7 +76,7 @@ process_rna <- function(multiassay,
     rna_raw <- rna_raw[, !is.na(rna_raw[[paste(i)]])]
   }
 
-  countData <- assays(rna_raw)[[1]]
+  countData <- SummarizedExperiment::assays(rna_raw)[[1]]
   colData <- colData[colnames(countData), ]
 
   if (!all(colnames(countData) == rownames(colData))) {
@@ -98,25 +101,25 @@ process_rna <- function(multiassay,
   # matrix <- DESeq2::counts(dds, normalized=TRUE)
 
   if (transformation == "log2") {
-    matrix <- data.frame(log2(counts(dds, normalized = TRUE) + 1))
+    matrix <- data.frame(log2(DESeq2::counts(dds, normalized = TRUE) + 1))
   }
 
   if (transformation == "vst") {
     vsd <- DESeq2::vst(dds, blind = FALSE)
-    matrix <- as.data.frame(assay(vsd))
+    matrix <- as.data.frame(SummarizedExperiment::assay(vsd))
   }
 
   if (transformation == "rlog") {
     rlog <- DESeq2::rlog(dds, blind = FALSE)
-    matrix <- as.data.frame(assay(rlog))
+    matrix <- as.data.frame(SummarizedExperiment::assay(rlog))
   }
 
   if (filter == TRUE) {
     cli::cli_alert_success("GENE FILTERING")
     if (protein_coding == TRUE) {
       cli::cli_alert_success("Keeping only protein coding genes")
-      protein_coding <- rowData(rna_raw)$gene_biotype == "protein_coding" &
-        !is.na(rowData(rna_raw)$gene_biotype)
+      protein_coding <- SummarizedExperiment::rowData(rna_raw)$gene_biotype == "protein_coding" &
+        !is.na(SummarizedExperiment::rowData(rna_raw)$gene_biotype)
       dds <- dds[protein_coding, ]
       cli::cli_alert_success(paste(
         dim1 - sum(protein_coding),
@@ -148,19 +151,19 @@ process_rna <- function(multiassay,
 
     if (transformation == "log2") {
       cli::cli_alert_success("LOG2 TRANSFORMATION")
-      matrix <- data.frame(log2(counts(dds, normalized = TRUE) + 1))
+      matrix <- data.frame(log2(DESeq2::counts(dds, normalized = TRUE) + 1))
     }
 
     if (transformation == "vst") {
       cli::cli_alert_success("VST TRANSFORMATION")
       vsd <- DESeq2::vst(dds, blind = FALSE)
-      matrix <- as.data.frame(assay(vsd))
+      matrix <- as.data.frame(SummarizedExperiment::assay(vsd))
     }
 
     if (transformation == "rlog") {
       cli::cli_alert_success("RLOG TRANSFORMATION")
       rlog <- DESeq2::rlog(dds, blind = FALSE)
-      matrix <- as.data.frame(assay(rlog))
+      matrix <- as.data.frame(SummarizedExperiment::assay(rlog))
     }
   }
 
@@ -171,22 +174,48 @@ process_rna <- function(multiassay,
       "to remove technical artefacts, and",
       covariates, "as biological confounders"
     ))
-    batch_data <- colData[batch]
-    batch_data[[batch]] <- as.factor(batch_data[[batch]])
 
     covariates_data <- MultiAssayExperiment::colData(rna_raw)[, c(covariates)]
     covariates_data <- data.frame(covariates_data)
+    covariates_data=covariates_data %>%  mutate(across(where(is.character),as.factor))
+    covariates_data=covariates_data %>%  mutate(across(where(is.factor),as.numeric))
 
+    for(i in colnames(covariates_data)){
+
+      if(all(!is.na(covariates_data[,i]))==FALSE){
+        stop(cli::cli_alert_danger(
+          paste(i,"Contains missing data, please impute or remove this covariate",
+                sep = " "
+          )))
+      }
+    }
+
+if(is.null(batch)){
     matrix <- limma::removeBatchEffect(
       matrix,
-      batch = batch_data[[batch]],
+      batch=NULL,
       covariates = covariates_data,
       design = model.matrix(~ colData[[dependent]],
         data = colData
       )
     )
   }
+    if(!is.null(batch)){
 
+    batch_data <- colData[batch]
+    batch_data[[batch]] <- as.factor(batch_data[[batch]])
+
+    matrix <- limma::removeBatchEffect(
+      matrix,
+      batch = batch_data[[batch]],
+      covariates = covariates_data,
+      design = stats::model.matrix(~ colData[[dependent]],
+                            data = colData
+      )
+    )
+    }
+
+  }
   if (remove_sample_outliers == TRUE) {
     dim2 <- dim(matrix)[2]
     cli::cli_alert_success("SAMPLE OUTLIERS REMOVAL")
@@ -242,63 +271,4 @@ process_rna <- function(multiassay,
   cli::cli_alert_success("Processing parameters saved in metadata")
 
   return(multiassay)
-}
-
-
-processed_rna <- function(multiassay,
-                          custom_processed_df) {
-  matrix <- as.data.frame(custom_processed_df)
-  map <- MultiAssayExperiment::sampleMap(multiassay)
-  map_df <- data.frame(map@listData)
-  map_df <- map_df[which(map_df$assay == "rna_raw"), ]
-  map_df <- map_df[match(
-    colnames(matrix),
-    map_df$colname
-  ), ][c("primary", "colname")]
-  map_df$assay <- "rna_processed"
-
-  rm.rna_processed <- !grepl("rna_processed", names(experiments(multiassay)))
-  multiassay <- multiassay[, , rm.rna_processed]
-  multiassay <- c(multiassay,
-    rna_processed = matrix,
-    sampleMap = map_df
-  )
-
-  metadata(multiassay)$parameters_processing_rna$custom_processed_df <- TRUE
-
-  cli::cli_alert_success("Custom processed transcriptomics added!")
-}
-
-
-
-#' Adds custom processed dataset to multiassay object
-#'
-#' @param multiassay
-#' @param custom_processed_df
-#'
-#' @return
-#' @export
-#'
-#' @examples
-counts_rna <- function(multiassay,
-                       custom_processed_df) {
-  matrix <- as.data.frame(custom_processed_df)
-  map <- MultiAssayExperiment::sampleMap(multiassay)
-  map_df <- data.frame(map@listData)
-  map_df <- map_df[which(map_df$assay == "rna_raw"), ]
-  map_df <- map_df[match(
-    colnames(matrix),
-    map_df$colname
-  ), ][c("primary", "colname")]
-  map_df$assay <- "rna_counts"
-
-  multiassay_temp <- c(multiassay,
-    rna_counts = matrix,
-    sampleMap = map_df
-  )
-
-  metadata(multiassay_temp)$parameters_processing_rna$counts_df <- TRUE
-  return(multiassay_temp)
-
-  cli::cli_alert_success("Raw transcriptomics counts added!")
 }

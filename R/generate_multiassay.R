@@ -97,6 +97,9 @@ generate_multiassay <- function(rawdata_rna,
     ))
   }
 
+
+ individual_metadata=as.data.frame(individual_metadata)
+
   if (individual_to_sample == TRUE) {
     map_rna <- data.frame(
       primary = colnames(rawdata_rna),
@@ -113,8 +116,8 @@ generate_multiassay <- function(rawdata_rna,
 
   if (individual_to_sample == FALSE) {
     map_l <- list(
-      map_rna,
-      map_protein
+      data.frame(map_rna),
+      data.frame(map_protein)
     )
   }
 
@@ -220,6 +223,7 @@ generate_multiassay <- function(rawdata_rna,
       protein_df$UNIPROTID
     )]
   }
+
 
   rownames(individual_metadata) <- individual_metadata[, paste(map_by_column)]
 

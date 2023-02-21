@@ -35,7 +35,7 @@ integrative_results_clustering <- function(multiassay,
   metadata <- multimodal_object[[2]]
   multimodal <- lapply(multimodal, data.frame)
 
-  cluster <- multiassay@metadata$integration[[paste(integration)]]
+  cluster <-multiassay@metadata$integration[[paste(integration)]]
 
   plot_data <- MOVICS::getStdiz(
     data = multimodal,

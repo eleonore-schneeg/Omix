@@ -19,6 +19,7 @@ rna_DE_analysis <- function(multiassay,
                             levels = NULL,
                             filter_protein_coding = TRUE,
                             log2FoldChange = 0.5) {
+
   if (("dds" %in% names(multiassay@metadata)) == FALSE) {
     stop(cli::cli_alert_danger(
       paste("dds object not found in metadata, please run",
