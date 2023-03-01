@@ -25,7 +25,7 @@ protein_DE_analysis <- function(multiassay,
                                 log2FoldChange = 0.5) {
   abundance <- multiassay@ExperimentList@listData[[paste(slot)]]
 
-if (("parameters_processing_protein" %in% names(multiassay@metadata)) == FALSE) {
+  if (("parameters_processing_protein" %in% names(multiassay@metadata)) == FALSE) {
     stop(cli::cli_alert_danger(
       paste("parameters_processing_protein not found in metadata, please run",
         cli::style_bold("process_protein"),
@@ -116,9 +116,9 @@ if (("parameters_processing_protein" %in% names(multiassay@metadata)) == FALSE) 
 
     contr.matrix <- limma::makeContrasts(contrasts = c(x, covariates), levels = colnames(design))
 
-    fit <- limma::lmFit(abundance, design,method="robust")
+    fit <- limma::lmFit(abundance, design, method = "robust")
     vfit <- limma::contrasts.fit(fit, contrasts = contr.matrix)
-    efit <- limma::eBayes(vfit, robust=TRUE)
+    efit <- limma::eBayes(vfit, robust = TRUE)
 
     list_results <- list()
 
@@ -156,8 +156,8 @@ if (("parameters_processing_protein" %in% names(multiassay@metadata)) == FALSE) 
 
 
     design <- model.matrix(model_formula)
-    fit <- lmFit(abundance, design,method="robust")
-    efit <- eBayes(fit,robust=TRUE)
+    fit <- lmFit(abundance, design, method = "robust")
+    efit <- eBayes(fit, robust = TRUE)
 
     list_results <- list()
     for (i in 1:length(1)) {
@@ -178,8 +178,8 @@ if (("parameters_processing_protein" %in% names(multiassay@metadata)) == FALSE) 
   })
   gene_id_conversion <- as.data.frame(multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData)
 
-  if(is.null(gene_id_conversion$uniprot_id)){
-    gene_id_conversion=NULL
+  if (is.null(gene_id_conversion$uniprot_id)) {
+    gene_id_conversion <- NULL
   }
 
   res <- lapply(list_results, format_res_limma,

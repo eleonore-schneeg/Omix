@@ -66,7 +66,7 @@ integrate_with_DIABLO <- function(multimodal_omics,
       "mRNA" = range[[1]],
       "proteins" = range[[2]]
     ),
-    validation = 'Mfold',
+    validation = "Mfold",
     folds = 5,
     nrepeat = 1,
     progressBar = TRUE
@@ -267,6 +267,58 @@ integrate_with_MOFA <- function(multimodal_omics,
     data_options = data_opts,
     model_options = model_opts,
     training_options = train_opts
+  )
+
+  MOFAobject <- MOFA2::run_mofa(MOFAobject)
+  metadata$sample <- rownames(metadata)
+  MOFA2::samples_metadata(MOFAobject) <- metadata
+  model <- MOFAobject
+
+
+  return(list(
+    multimodal_object = X,
+    model = model
+  ))
+}
+
+
+integrate_with_MEIFESTO <- function(multimodal_omics,
+                                    num_factors = 5,
+                                    scale_views = T,
+                                    metadata,
+                                    time = "pseudotime") {
+  time <- metadata[, time]
+  names(time) <- rownames(metadata)
+  time <- data.frame(time)
+  time <- t(time)
+
+  # cli::cli_h2("VERTICAL INTEGRATION IN PROCESS")
+  X <- list(
+    mRNA = multimodal_omics[[1]],
+    proteins = multimodal_omics[[2]]
+  )
+
+  MOFAobject <- MOFA2::create_mofa(X)
+  MOFAobject <- MOFA2::set_covariates(MOFAobject, covariates = time)
+  data_opts <- MOFA2::get_default_data_options(MOFAobject)
+  data_opts$scale_views <- scale_views
+
+  model_opts <- MOFA2::get_default_model_options(MOFAobject)
+  model_opts$num_factors <- num_factors
+
+
+  train_opts <- MOFA2::get_default_training_options(MOFAobject)
+  train_opts$seed <- 2020
+  train_opts$maxiter <- 1000
+  train_opts$convergence_mode <- "medium"
+
+  mefisto_opts <- MOFA2::get_default_mefisto_options(MOFAobject)
+
+  MOFAobject <- MOFA2::prepare_mofa(MOFAobject,
+    data_options = data_opts,
+    model_options = model_opts,
+    training_options = train_opts,
+    mefisto_options = mefisto_opts
   )
 
   MOFAobject <- MOFA2::run_mofa(MOFAobject)

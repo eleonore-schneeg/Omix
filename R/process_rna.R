@@ -45,6 +45,8 @@ process_rna <- function(multiassay,
                         batch_correction,
                         batch,
                         remove_sample_outliers) {
+
+  library(dplyr)
   "%!in%" <- function(x, y) !("%in%"(x, y))
   suppressWarnings({
     rna_raw <- MultiAssayExperiment::getWithColData(

@@ -129,10 +129,10 @@ circular_heatmap<-function(network_communities,
   }, bg.border = NA)
 
 
-  lgd = Legend(title = "Pearson's correlation", col_fun = col_fun1,at=c(-0.4,0,0.4))
-  lgd2 = Legend(title = "BH-corrected q-values", col_fun = col_fun2,at=c(0,0.05,1))
-  lgd_list_vertical2 = packLegend(lgd,lgd2)
+  lgd = ComplexHeatmap::Legend(title = "Pearson's correlation", col_fun = col_fun1,at=c(-1,0,1))
+  lgd2 = ComplexHeatmap::Legend(title = "BH-corrected q-values", col_fun = col_fun2,at=c(0,0.05,1))
+  lgd_list_vertical2 = ComplexHeatmap::packLegend(lgd,lgd2)
 
-  draw(lgd_list_vertical2, x = unit(50, "mm"), y = unit(1, "mm"), just = c("right", "bottom"))
+  ComplexHeatmap::draw(lgd_list_vertical2, x = unit(50, "mm"), y = unit(1, "mm"), just = c("right", "bottom"))
 
 }
