@@ -9,7 +9,7 @@ integrate_with_DIABLO(
   Y,
   ncomp,
   design = c("cor", "full"),
-  range = list(mRNA = seq(5, 100, by = 10), proteins = seq(5, 100, by = 10))
+  range = list(mRNA = seq(5, 10, by = 10), proteins = seq(5, 10, by = 10))
 )
 }
 \arguments{

@@ -8,7 +8,7 @@ format_res_limma(
   dt,
   gene_id_conversion = NULL,
   log2FoldChange = 0,
-  n_label = 10,
+  n_label = 20,
   padj = 0.05,
   ylim = c(0, 10)
 )

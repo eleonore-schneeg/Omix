@@ -2,7 +2,7 @@
 % Please edit documentation in R/imputation_protein.R
 \name{.impute_minimum_value}
 \alias{.impute_minimum_value}
-\title{Imputation of missing values based on minimum value}
+\title{Imputation of missing values based on 50\% minimum value}
 \usage{
 .impute_minimum_value(df)
 }
@@ -10,5 +10,5 @@
 \item{df}{}
 }
 \description{
-Imputation of missing values based on minimum value
+Imputation of missing values based on 50\% minimum value
 }

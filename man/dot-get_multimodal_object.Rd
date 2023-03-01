@@ -8,7 +8,8 @@
   multiassay,
   slots = c("rna_processed", "protein_processed"),
   intersect_genes = FALSE,
-  ID_type = "gene_name"
+  ID_type = "gene_name",
+  ...
 )
 }
 \arguments{

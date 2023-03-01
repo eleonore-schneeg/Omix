@@ -4,7 +4,13 @@
 \alias{.get_ID_names}
 \title{Convert nomenclature}
 \usage{
-.get_ID_names(id, omic = "protein", from = "uniprot_id", to = "gene_name")
+.get_ID_names(
+  multiassay,
+  id,
+  omic = "protein",
+  from = "uniprot_id",
+  to = "gene_name"
+)
 }
 \arguments{
 \item{to}{}

@@ -4,7 +4,7 @@
 \alias{.interactive_network}
 \title{Get interactive network from igraph object}
 \usage{
-.interactive_network(igraph)
+.interactive_network(igraph, communities, cluster)
 }
 \arguments{
 \item{igraph}{}

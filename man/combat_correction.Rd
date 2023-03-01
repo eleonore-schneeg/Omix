@@ -4,7 +4,7 @@
 \alias{combat_correction}
 \title{Proteomics normalisation batch correction using Combat}
 \usage{
-combat_correction(matrix, batch_map)
+combat_correction(matrix, batch_map, batch)
 }
 \arguments{
 \item{batch_map}{}

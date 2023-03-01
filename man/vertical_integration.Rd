@@ -7,7 +7,7 @@
 vertical_integration(
   multiassay,
   slots = c("rna_processed", "protein_processed"),
-  integration = c("MOFA", "DIABLO", "sMBPLS", "iCluster"),
+  integration = c("MOFA", "DIABLO", "sMBPLS", "iCluster", "MEIFESTO"),
   intersect_genes = FALSE,
   ID_type = "gene_name",
   dependent = "Group",
@@ -17,8 +17,11 @@ vertical_integration(
   range = list(mRNA = seq(5, 100, by = 10), proteins = seq(5, 100, by = 10)),
   list.keepX = list(mRNA = c(50), proteins = c(50)),
   num_factors = 10,
+  time = "pseudotime",
   scale_views = TRUE,
-  try.N.clust = 2:4
+  try.N.clust = 2:4,
+  most_variable_feature = FALSE,
+  ...
 )
 }
 \arguments{
@@ -27,7 +30,7 @@ vertical_integration(
 \item{slots}{Default are processed slots}
 
 \item{integration}{Possible integration methods are \code{MOFA},
-\code{DIABLO},\code{sMBPLS},\code{iCluster}}
+\code{DIABLO},\code{sMBPLS},\code{iCluster},\code{MEIFESTO}}
 
 \item{intersect_genes}{Logical whether to keep intersecting features for
 integration}

@@ -9,7 +9,7 @@ protein_DE_analysis(
   slot = "protein_processed",
   dependent = "diagnosis",
   covariates = NULL,
-  levels = c("Control", "Mid", "Late"),
+  levels = c("Control", "AD"),
   log2FoldChange = 0.5
 )
 }

@@ -4,7 +4,12 @@
 \alias{integrate_with_MOFA}
 \title{Vertical integration with MOFA}
 \usage{
-integrate_with_MOFA(multimodal_omics, num_factors = 5, scale_views = T)
+integrate_with_MOFA(
+  multimodal_omics,
+  num_factors = 5,
+  scale_views = T,
+  metadata
+)
 }
 \arguments{
 \item{scale_views}{}

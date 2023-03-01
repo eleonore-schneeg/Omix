@@ -12,12 +12,6 @@ DE_multiomics(
 )
 }
 \arguments{
-\item{multiassay}{}
-
-\item{dependent}{}
-
-\item{covariates}{}
-
 \item{levels}{}
 }
 \description{

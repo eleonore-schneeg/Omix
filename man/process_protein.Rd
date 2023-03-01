@@ -7,17 +7,17 @@
 process_protein(
   multiassay,
   filter = TRUE,
-  min_sample = 0.6,
+  min_sample = 0.5,
   dependent = "diagnosis",
-  levels = c("Control", "Mid", "Late"),
+  levels = c("Control", "AD"),
   imputation = "minimum_value",
   remove_feature_outliers = TRUE,
   batch_correction = TRUE,
-  batch = "Batch",
+  batch = "batch",
   correction_method = c("Combat", "Median_centering"),
   remove_sample_outliers = TRUE,
   denoise = FALSE,
-  covariates = c("msex", "pmi", "apoe_genotype")
+  covariates = c("sex", "age")
 )
 }
 \arguments{
