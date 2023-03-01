@@ -50,7 +50,15 @@ Imports:
       reshape2,
       ghql,
       tidyr,
-      visNetwork
+      visNetwork,
+      slingshot,
+      ggpubr,
+      viridis,
+      ggpubr,
+      RColorBrewer,
+      WGCNA,
+      corrplot,
+      stringr
 Remotes:
       xlucpu/MOVICS
 Suggests: 
