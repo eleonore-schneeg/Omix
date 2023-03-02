@@ -246,7 +246,7 @@ volcano_interactive <- function(data, log2FoldChange = 0.25) {
     geom_point() +
     geom_text(
       data = data,
-      aes(log2FoldChange - 0.05, y = -log10(padj) + 0.6, label = ifelse(label == "Yes", gene_name, ""))
+      aes(log2FoldChange - 0.05, y = -log10(padj) + 0.1, label = ifelse(label == "Yes", gene_name, ""))
     ) +
     geom_vline(
       xintercept = c(-log2FoldChange, log2FoldChange),

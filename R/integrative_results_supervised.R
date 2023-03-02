@@ -37,20 +37,20 @@ integrative_results_supervised <- function(multiassay,
   )
 
   cli::cli_alert_success("DETECTION OF NETWORK COMMUNITIES")
-  detrimental_communities <- .communities_network(detrimental_network)
-  protective_communities <- .communities_network(protective_network)
+  detrimental_communities <- .communities_network(detrimental_network$graph)
+  protective_communities <- .communities_network(protective_network$graph)
 
 
   cli::cli_alert_success("CELL TYPE ENRICHMENT OF COMMUNITIES")
 
   detrimental_cell_type <- cell_type_enrichment(
     multiassay = multiassay,
-    communities = detrimental_communities
+    communities = detrimental_communities$communities
   )
 
   protective_cell_type <- cell_type_enrichment(
     multiassay = multiassay,
-    communities = protective_communities
+    communities = protective_communities$communities
   )
 
   cli::cli_alert_success("FUNCTIONAL ENRICHMENT")
@@ -116,8 +116,13 @@ integrative_results_supervised <- function(multiassay,
   # Comparison of communities
   cli::cli_alert_success("FUNCTIONALLY COMPARING MULTIOMICS NETWORKS COMMUNITIES")
 
-  detrimental_communities_x <- lapply(detrimental_communities, function(x) x[length(x) >= 2])
-  detrimental_communities_x <- detrimental_communities[lapply(detrimental_communities, length) > 0]
+  detrimental_communities_x <- lapply(detrimental_communities$communities, function(x) x[length(x) >= 2])
+  detrimental_communities_x <- detrimental_communities_x[lapply(detrimental_communities, length) > 0]
+
+  detrimental_communities_x  <- lapply(  detrimental_communities_x , function(x) {
+    sub("\\_.*", "", x)
+  })
+
 
   detrimental_comp <- clusterProfiler::compareCluster(
     geneCluster = detrimental_communities_x,
@@ -136,8 +141,12 @@ integrative_results_supervised <- function(multiassay,
   }
   detrimental_comp <- enrichplot::pairwise_termsim(detrimental_comp)
 
-  protective_communities_x <- lapply(protective_communities, function(x) x[length(x) >= 2])
-  protective_communities_x <- protective_communities[lapply(protective_communities, length) > 0]
+  protective_communities_x <- lapply(protective_communities$communities, function(x) x[length(x) >= 2])
+  protective_communities_x <-   protective_communities_x[lapply(protective_communities, length) > 0]
+
+  protective_communities_x   <- lapply(   protective_communities_x  , function(x) {
+    sub("\\_.*", "", x)
+  })
 
   protective_comp <- clusterProfiler::compareCluster(
     geneCluster = protective_communities_x,

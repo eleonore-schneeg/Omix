@@ -13,13 +13,11 @@ pseudotime_inference <- function(model,
                                  clusters,
                                  time_factor = 8,
                                  second_factor = 1,
-                                 pseudotime_var = "pseudotime",
-                                 start.clus = 1,
-                                 end.clus= 3) {
+                                 pseudotime_var = "pseudotime", ...) {
   gg <- MOFA2::plot_factors(model,
     factors = c(time_factor, second_factor),
     color_by = pseudotime_var,
-    scale = T
+    scale = F
   )
 
   embeddings <- gg$data[, c("x", "y")]
@@ -27,10 +25,7 @@ pseudotime_inference <- function(model,
   rownames(embeddings) <- gg$data[, c("sample")]
   embeddings <- embeddings[names(clusters$cluster), ]
 
-  sds <- slingshot::slingshot(embeddings, clusters$cluster,
-    start.clus = start.clus,
-    end.clus =end.clus
-  )
+  sds <- slingshot::slingshot(embeddings, clusters$cluster,...)
   df <- slingshot::as.SlingshotDataSet(sds)
 
   pseudotime <- as.data.frame(sds@assays@data@listData[["pseudotime"]])

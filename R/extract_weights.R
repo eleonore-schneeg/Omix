@@ -72,6 +72,12 @@ extract_weigths <- function(model,
     protein = unique(protein_negative)
   )
 
+  rna_1=rna_1 %>%
+    arrange(desc(Weights), desc(Feature))
+
+  protein_1=protein_1 %>%
+    arrange(desc(Weights), desc(Feature))
+
   ## Check distribution
   distrib_rna <- ggplot2::ggplot(rna_1, aes(x = Weights)) +
     geom_density() +
@@ -190,6 +196,10 @@ extract_weigths <- function(model,
       weights_cor_plot = list(
         rna = cor_weights_rna,
         protein = cor_weights_protein
+      ),
+      weights_df = list(
+        rna = rna_1,
+        protein = protein_1
       )
     ))
   }
@@ -203,6 +213,10 @@ extract_weigths <- function(model,
       distribution_plot = list(
         rna = distrib_rna,
         protein = distrib_protein
+      ),
+      weights_df = list(
+        rna = rna_1,
+        protein = protein_1
       )
     ))
   }

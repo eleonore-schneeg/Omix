@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @examples
-single_omic_comparison <- function(multiassay,
+single_omic_comparisons <- function(multiassay,
                                    slot = "ADvsControl") {
   if (("DEG" %in% names(multiassay@metadata)) == FALSE) {
     stop(cli::cli_alert_danger(
