@@ -19,7 +19,8 @@ format_res_limma <- function(dt,
                              log2FoldChange = 0,
                              n_label = 20,
                              padj = 0.05,
-                             ylim = c(0, 10)) {
+                             ylim = c(0, 10),
+                             ...) {
 
   if (!is.null(gene_id_conversion)) {
     dt$gene_name <- gene_id_conversion$gene_name[match(dt$Identifier, gene_id_conversion$uniprot_id)]
@@ -39,6 +40,7 @@ format_res_limma <- function(dt,
   dt$label <- NA
   dt$log2FoldChange <- dt$logFC
   dt$padj <- dt$adj.P.Val
+  dt$pvalue <- dt$P.Value
 
 
   if (n_up > 0) {
@@ -56,6 +58,10 @@ format_res_limma <- function(dt,
       pull(Identifier)
     dt$label[dt$Identifier %in% top_down] <- "Yes"
   }
+
+  dt=dt[,c("Identifier","gene_name","log2FoldChange","pvalue","padj","de",
+           "label")]
+
   return(dt)
 }
 
@@ -138,6 +144,9 @@ format_res_deseq <- function(dt,
 
 
   res_summary <- setNames(c(n_up, n_down), c("up", "down"))
+  dt$gene_name= sub("*\\.[0-9]", "", dt$gene_name)
+  dt=dt[,c("ensembl_name","gene_name","log2FoldChange","pvalue","padj","de",
+           "label","gene_type")]
 
   attr(dt, "summary") <- res_summary
   return(dt)
@@ -260,6 +269,42 @@ volcano_interactive <- function(data, log2FoldChange = 0.25) {
       "Up" = "#DC0000FF",
       "Down" = "#3C5488FF",
       "Not sig" = "grey"
+    ))
+
+  plot <- ggplotly(volcano, tooltip = c("text"))
+  plot
+}
+
+
+
+volcano_interactive_comparison <- function(data, log2FoldChange = 0.25) {
+  volcano <- ggplot2::ggplot(data, aes(x = log2FoldChange.x, y = log2FoldChange.y, label = gene_name, colour = direction, text = paste(
+    "Gene:", gene_name, "<br>",
+    "Log2FC transcriptomics:", log2FoldChange.x, "<br>",
+    "Log2FC proteomics;", log2FoldChange.y, "<br>",
+    "pval transcriptomics:", pvalue.x, "<br>",
+    "pval proteomics:", pvalue.y, "<br>",
+    "padj transcriptomics:", padj.x, "<br>",
+    "padj proteomics:", padj.y, "<br>"
+  ))) +
+    xlab("log2FoldChange Transcriptome") +
+    ylab("log2FoldChange Proteome") +
+    geom_point(size = 0.4) +
+    geom_text(
+      data = data,
+      aes(log2FoldChange.x - 0.05, y = log2FoldChange.y + 0.1, label =  ifelse(pvalue_category=='double_platform', gene_name, ""))
+    ) +
+    geom_vline(
+      xintercept = 0,
+      linetype = 2, size = 0.2, alpha = 0.5
+    ) +
+    geom_hline(
+      yintercept = 0,
+      linetype = 2, size = 0.2, alpha = 0.5
+    ) +
+    scale_color_manual(values = c(
+      "Concordant" = "#3C5488FF",
+      "Discordant" = "#DC0000FF"
     ))
 
   plot <- ggplotly(volcano, tooltip = c("text"))

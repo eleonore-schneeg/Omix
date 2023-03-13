@@ -4,51 +4,55 @@
 #' @param slot If more than two comparison groups designates the slot name of
 #' interest in `names(multiassay@metadata$DEG)` and
 #' `names(multiassay@metadata$DEP)`
-#'
+#' @param pvalue Comparison reference.can be set to `pval` or `adj`, to consider
+#' the normal p values or the ones after multiple testing correction, respectively.
+#'  With pvalue== `all`, no p value threshold is applied and all genes will be compared.
+#' all genes are kept and only the direction is compared.
+#' @param threshold is the pvalue threshold. Default to 0.05
+#' @param filtering_options default to `NULL`. if set to `both_significant`the
+#' returned dataframe will only display genes that are significant at both
+#' transcriptomic and proteomics levels. Setting the parameter to `either`will
+#' return genes that are significant in at least one layer.
+
 #' @return
 #' @export
 #'
 #' @examples
-single_omic_comparisons <- function(multiassay,
-                                   slot = "ADvsControl") {
-  if (("DEG" %in% names(multiassay@metadata)) == FALSE) {
-    stop(cli::cli_alert_danger(
-      paste("Differential experession results not present in metadata, please run",
-        cli::style_bold("rna_DE_analysis"),
-        sep = " "
+single_omic_comparison <- function(multiassay,
+                                   slot = "ADvsControl",
+                                   threshold = 0.05,
+                                   pvalue = c("adj", "pval", "all"),
+                                   filtering_options='both_significant') {
+  DEG <- multiassay@metadata$DEG[paste(slot)][[paste(slot)]]
+  DEP <- multiassay@metadata$DEP[paste(slot)][[paste(slot)]]
+    t <- merge(DEG, DEP, by = "gene_name")
+
+  if (pvalue == "adj") {
+    t$pvalue_category <- ifelse(t$padj.x <= threshold & t$padj.y <= threshold,
+                                "double_platform",
+      ifelse(t$padj.x <= threshold & t$padj.y > threshold, "transcriptomics_only",
+        ifelse(t$padj.x > threshold & t$padj.y <= threshold, "proteomics_only", NA)
       )
-    ))
-  }
-
-  if (("DEP" %in% names(multiassay@metadata)) == FALSE) {
-    stop(cli::cli_alert_danger(
-      paste("Differential experession results not present in metadata, please run",
-        cli::style_bold("protein_DE_analysis"),
-        sep = " "
-      )
-    ))
-  }
-
-  DEG <- multiassay@metadata$DEG[[paste(slot)]]
-  DEP <- multiassay@metadata$DEP[[paste(slot)]]
-
-
-  t <- left_join(DEG, DEP, by = "gene_name")
-  t$pvalue_category <- ifelse(t$padj.x <= 0.05 & t$padj.y <= 0.05, "double_platform",
-    ifelse(t$padj.x <= 0.05 & t$padj.y > 0.05, "transcriptomics_only",
-      ifelse(t$padj.x > 0.05 & t$padj.y <= 0.05, "proteomics_only", NA)
     )
-  )
+  }
 
-  t_new <- t[which(!is.na(t$pvalue_category)), ]
+  if (pvalue == "pval") {
+    t$pvalue_category <- ifelse(t$pvalue.x <= threshold & t$pvalue.y <= threshold, "double_platform",
+      ifelse(t$pvalue.x <= threshold & t$pvalue.y > threshold, "transcriptomics_only",
+        ifelse(t$pvalue.x > threshold & t$pvalue.y <= threshold, "proteomics_only", NA)
+      )
+    )
+  }
 
-  t_dp <- t_new[t_new$pvalue_category == "double_platform", ]
-  t_dp$direction <- ifelse(t_dp$log2FoldChange.x >= 0 & t_dp$log2FoldChange.y >= 0 |
-    t_dp$log2FoldChange.x <= 0 & t_dp$log2FoldChange.y <= 0,
+  t$direction <- ifelse(t$log2FoldChange.x >= 0 & t$log2FoldChange.y >= 0 |
+    t$log2FoldChange.x <= 0 & t$log2FoldChange.y <= 0,
   "Concordant", "Discordant"
   )
 
-  comparison_volcano <- ggpubr::ggscatter(t_dp,
+  t_double <- t[which(t$pvalue_category == "double_platform"), ]
+
+
+  comparison_volcano <- ggpubr::ggscatter(t_double,
     x = "log2FoldChange.x",
     y = "log2FoldChange.y", label = "gene_name",
     repel = TRUE, color = "direction",
@@ -70,5 +74,49 @@ single_omic_comparisons <- function(multiassay,
       axis.text = element_text(size = 200)
     ) + theme_classic(base_size = 15)
 
-  return(comparison_volcano)
+  if (pvalue == "all") {
+    comparison_volcano <- ggpubr::ggscatter(t,
+      x = "log2FoldChange.x",
+      y = "log2FoldChange.y",
+      label = "gene_name",
+      repel = TRUE, color = "direction",
+      font.label = c(8, "plain")
+    ) +
+      xlab("log2FoldChange Transcriptome") +
+      ylab("log2FoldChange Proteome") +
+      geom_vline(
+        xintercept = 0, linetype = "dotted",
+        color = "grey", size = 1
+      ) +
+      geom_hline(
+        yintercept = 0, linetype = "dotted",
+        color = "grey", size = 1
+      ) +
+      theme(
+        axis.text.x = element_text(face = "bold", size = 10),
+        axis.text.y = element_text(face = "bold", size = 10),
+        axis.text = element_text(size = 200)
+      ) + theme_classic(base_size = 15)
+  }
+
+
+  if( is.null(filtering_options)){
+
+    df=t
+  }
+  if( !is.null(filtering_options)){
+
+    if(filtering_options=='both_significant'){
+      t_double=t[which(t$pvalue_category=='double_platform'),]
+    }
+    if(filtering_options=='either'){
+      t_double=t[which(t$pvalue_category!='never_significant'),]
+    }
+    df= t_double
+  }
+
+  list=list(dataframe=df,
+            plot=comparison_volcano)
+  return(list)
 }
+

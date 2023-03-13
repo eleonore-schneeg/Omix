@@ -22,7 +22,8 @@ protein_DE_analysis <- function(multiassay,
                                 dependent = "diagnosis",
                                 covariates = NULL,
                                 levels = c("Control", "AD"),
-                                log2FoldChange = 0.5) {
+                                log2FoldChange = 0.5,
+                                padj=0.5) {
   abundance <- multiassay@ExperimentList@listData[[paste(slot)]]
 
   if (("parameters_processing_protein" %in% names(multiassay@metadata)) == FALSE) {
@@ -190,8 +191,8 @@ protein_DE_analysis <- function(multiassay,
 
   list_DEP_limma <- list()
   list_DEP_limma <- lapply(res, function(x) {
-    up <- x$gene_name[which(x$adj.P.Val <= 0.05 & x$de == "Up")]
-    down <- x$gene_name[which(x$adj.P.Val <= 0.05 & x$de == "Down")]
+    up <- x$gene_name[which(x$padj <= 0.05 & x$de == "Up")]
+    down <- x$gene_name[which(x$padj <= 0.05 & x$de == "Down")]
     return(list(
       up = up,
       down = down
