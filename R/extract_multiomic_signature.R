@@ -1,4 +1,4 @@
-#' Title
+#' Extracts a multi-omics signature from loadings
 #'
 #' @param multiassay
 #' @param integration

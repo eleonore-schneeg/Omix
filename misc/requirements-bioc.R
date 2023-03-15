@@ -1,0 +1,27 @@
+bioc_pkgs<-c(
+  "MultiAssayExperiment",
+  "SummarizedExperiment",
+  "proBatch",
+  "mixOmics",
+  "MOFA2",
+  "ComplexHeatmap",
+  "circlize",
+  'BiocGenerics',
+  'BiocStyle',
+  'fgsea',
+  'org.Hs.eg.db',
+  'clusterProfiler',
+  'enrichplot',
+  'biomaRt',
+  'edgeR',
+  'EWCE',
+  'GenomicRanges',
+  'AnnotationDbi',
+  'WGCNA',
+  'limma',
+  'S4Vectors',
+  'slingshot'
+)
+
+requireNamespace("BiocManager")
+BiocManager::install(bioc_pkgs, ask=F)

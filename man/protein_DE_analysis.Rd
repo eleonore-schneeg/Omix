@@ -10,7 +10,8 @@ protein_DE_analysis(
   dependent = "diagnosis",
   covariates = NULL,
   levels = c("Control", "AD"),
-  log2FoldChange = 0.5
+  log2FoldChange = 0.5,
+  padj = 0.5
 )
 }
 \arguments{

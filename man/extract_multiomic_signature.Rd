@@ -2,7 +2,7 @@
 % Please edit documentation in R/extract_multiomic_signature.R
 \name{extract_multiomic_signature}
 \alias{extract_multiomic_signature}
-\title{Title}
+\title{Extracts a multi-omics signature from loadings}
 \usage{
 extract_multiomic_signature(multiassay, integration = "DIABLO", component = 1)
 }
@@ -10,5 +10,5 @@ extract_multiomic_signature(multiassay, integration = "DIABLO", component = 1)
 \item{component}{}
 }
 \description{
-Title
+Extracts a multi-omics signature from loadings
 }

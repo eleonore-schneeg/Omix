@@ -2,7 +2,7 @@
 % Please edit documentation in R/extract_weights.R
 \name{extract_weigths}
 \alias{extract_weigths}
-\title{Extract_weigths}
+\title{Extract_weigths from MOFA model for a given factor of interest}
 \usage{
 extract_weigths(
   model,
@@ -16,5 +16,5 @@ extract_weigths(
 \item{variable}{}
 }
 \description{
-Extract_weigths
+Extract_weigths from MOFA model for a given factor of interest
 }

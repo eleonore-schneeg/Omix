@@ -1,4 +1,4 @@
-#' pseudotime_ordering_modules
+#' Generates a plot relating modules eigenvalue along pseudotime
 #'
 #' @param metadata
 #' @param modules

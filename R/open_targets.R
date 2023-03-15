@@ -1,3 +1,12 @@
+#' Interface to OpenTargets database
+#'
+#' @param disease_id
+#' @param size
+#'
+#' @return
+#' @export
+#'
+#' @examples
 OpenTargets <- function(disease_id, size = 2000) {
   query_url <- "https://api.platform.opentargets.org/api/v4/graphql"
 

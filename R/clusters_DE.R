@@ -1,4 +1,4 @@
-#' Performs DE between clusters
+#' Performs differential expression between clusters
 #'
 #' @param colData
 #' @param dependent

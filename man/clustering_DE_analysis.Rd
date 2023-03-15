@@ -2,7 +2,7 @@
 % Please edit documentation in R/clusters_DE.R
 \name{clustering_DE_analysis}
 \alias{clustering_DE_analysis}
-\title{Performs DE between clusters}
+\title{Performs differential expression between clusters}
 \usage{
 clustering_DE_analysis(
   normalized_data = multimodal$rna_processed,
@@ -16,5 +16,5 @@ clustering_DE_analysis(
 \item{log2FoldChange}{}
 }
 \description{
-Performs DE between clusters
+Performs differential expression between clusters
 }

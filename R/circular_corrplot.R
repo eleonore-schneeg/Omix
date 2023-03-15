@@ -1,5 +1,4 @@
-
-#' Title
+#' Circular heatmap of module-trait correlations and module-cell type enrichments
 #'
 #' @param network_communities
 #' @param cell_type_communities

@@ -1,5 +1,5 @@
 ################################################################################
-#' Title
+#' Formatting differential expression results from limma
 #'
 #' @param dt
 #' @param gene_id_conversion
@@ -67,7 +67,7 @@ format_res_limma <- function(dt,
 
 
 
-#' Title
+#' Formatting differential expression results from DESEQ2
 #'
 #' @param dt
 #' @param log2FoldChange
@@ -155,7 +155,7 @@ format_res_deseq <- function(dt,
 
 
 
-#' Title
+#' Builds a volcano plot from limma results
 #'
 #' @param dt
 #' @param log2FoldChange
@@ -201,7 +201,7 @@ volcano_plot_limma <- function(dt,
 }
 
 
-#' Title
+#' Builds a volcano plot from DESEQ2 results
 #'
 #' @param dt
 #' @param log2FoldChange
@@ -246,11 +246,20 @@ volcano_plot_deseq <- function(dt,
     )
 }
 
+#' Builds an interactive volcano plot using plotly
+#'
+#' @param data
+#' @param log2FoldChange
+#'
+#' @return
+#' @export
+#'
+#' @examples
 volcano_interactive <- function(data, log2FoldChange = 0.25) {
   volcano <- ggplot2::ggplot(data, aes(x = log2FoldChange, y = -log10(padj), label = gene_name, colour = de, text = paste(
     "Gene:", gene_name, "<br>",
-    "Log2FC:", log2FoldChange, "<br>",
-    "Adjust pval;", padj
+    "Log2FC:", round(log2FoldChange,3), "<br>",
+    "Adjust pval;", round(padj,3)
   ))) +
     geom_point() +
     geom_text(
@@ -277,15 +286,24 @@ volcano_interactive <- function(data, log2FoldChange = 0.25) {
 
 
 
+#' Builds an interactive comparison plot using plotly
+#'
+#' @param data
+#' @param log2FoldChange
+#'
+#' @return
+#' @export
+#'
+#' @examples
 volcano_interactive_comparison <- function(data, log2FoldChange = 0.25) {
   volcano <- ggplot2::ggplot(data, aes(x = log2FoldChange.x, y = log2FoldChange.y, label = gene_name, colour = direction, text = paste(
     "Gene:", gene_name, "<br>",
-    "Log2FC transcriptomics:", log2FoldChange.x, "<br>",
-    "Log2FC proteomics;", log2FoldChange.y, "<br>",
-    "pval transcriptomics:", pvalue.x, "<br>",
-    "pval proteomics:", pvalue.y, "<br>",
-    "padj transcriptomics:", padj.x, "<br>",
-    "padj proteomics:", padj.y, "<br>"
+    "Log2FC transcriptomics:", round(log2FoldChange.x,3), "<br>",
+    "Log2FC proteomics;", round(log2FoldChange.y,3), "<br>",
+    "pval transcriptomics:", round(pvalue.x,3), "<br>",
+    "pval proteomics:", round(pvalue.y,3), "<br>",
+    "padj transcriptomics:", round(padj.x,3), "<br>",
+    "padj proteomics:", round(padj.y,3), "<br>"
   ))) +
     xlab("log2FoldChange Transcriptome") +
     ylab("log2FoldChange Proteome") +

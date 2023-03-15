@@ -2,7 +2,7 @@
 % Please edit documentation in R/DE_formating.R
 \name{format_res_limma}
 \alias{format_res_limma}
-\title{Title}
+\title{Formatting differential expression results from limma}
 \usage{
 format_res_limma(
   dt,
@@ -10,12 +10,13 @@ format_res_limma(
   log2FoldChange = 0,
   n_label = 20,
   padj = 0.05,
-  ylim = c(0, 10)
+  ylim = c(0, 10),
+  ...
 )
 }
 \arguments{
 \item{ylim}{}
 }
 \description{
-Title
+Formatting differential expression results from limma
 }

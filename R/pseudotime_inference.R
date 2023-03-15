@@ -1,4 +1,4 @@
-#' pseudotime_inference
+#' Pseudotime_inference based on integrated embeddings and clusters
 #'
 #' @param model
 #' @param clusters

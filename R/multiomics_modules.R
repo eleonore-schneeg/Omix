@@ -1,3 +1,14 @@
+#' Multi-omics modules downstream analysis including eigenvalue and correlation to clinical traits
+#'
+#' @param multiassay
+#' @param metadata
+#' @param covariates
+#' @param communities
+#'
+#' @return
+#' @export
+#'
+#' @examples
 multiomics_modules <- function(multiassay,
                                metadata,
                                covariates = c("pseudotime", "PHF1", "amyloid", "pTau"),

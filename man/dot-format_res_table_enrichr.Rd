@@ -6,6 +6,9 @@
 \usage{
 .format_res_table_enrichr(res, min_overlap = 3)
 }
+\arguments{
+\item{min_overlap}{}
+}
 \description{
 Format result table
 }

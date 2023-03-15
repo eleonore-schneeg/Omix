@@ -6,12 +6,12 @@
 #' `names(multiassay@metadata$DEP)`
 #' @param pvalue Comparison reference.can be set to `pval` or `adj`, to consider
 #' the normal p values or the ones after multiple testing correction, respectively.
-#'  With pvalue== `all`, no p value threshold is applied and all genes will be compared.
+#'  With pvalue == `all`, no p value threshold is applied and all genes will be compared.
 #' all genes are kept and only the direction is compared.
 #' @param threshold is the pvalue threshold. Default to 0.05
 #' @param filtering_options default to `NULL`. if set to `both_significant`the
 #' returned dataframe will only display genes that are significant at both
-#' transcriptomic and proteomics levels. Setting the parameter to `either`will
+#' transcriptomics and proteomics levels. Setting the parameter to `either`will
 #' return genes that are significant in at least one layer.
 
 #' @return

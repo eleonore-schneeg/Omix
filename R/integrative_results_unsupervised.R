@@ -1,3 +1,16 @@
+#' Downstream analysis for integrated multi-omics data
+#'
+#' @param multiassay
+#' @param integration
+#' @param dependent
+#' @param correlation_threshold
+#' @param disease_id
+#' @param covariates
+#'
+#' @return
+#' @export
+#'
+#' @examples
 integrative_results_unsupervised <- function(multiassay,
                                              integration = "MOFA",
                                              dependent = "diagnosis",
@@ -262,6 +275,15 @@ integrative_results_unsupervised <- function(multiassay,
 
 
 # selects the top factor that is most strongly associated with outcomes of interest
+#' Title
+#'
+#' @param MOFAobject
+#' @param covariate
+#'
+#' @return
+#' @export
+#'
+#' @examples
 MOFA_get_relevant_factor <- function(MOFAobject, covariate) {
   corr <- correlate_factors_with_covariates(MOFAobject,
     covariates = covariate,

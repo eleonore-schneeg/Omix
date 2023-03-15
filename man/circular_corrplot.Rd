@@ -2,7 +2,7 @@
 % Please edit documentation in R/circular_corrplot.R
 \name{circular_corrplot}
 \alias{circular_corrplot}
-\title{Title}
+\title{Circular heatmap of module-trait correlations and module-cell type enrichments}
 \usage{
 circular_corrplot(moduleTraitCor, moduleColors, cell_type, names = NULL)
 }
@@ -10,5 +10,5 @@ circular_corrplot(moduleTraitCor, moduleColors, cell_type, names = NULL)
 \item{data}{}
 }
 \description{
-Title
+Circular heatmap of module-trait correlations and module-cell type enrichments
 }

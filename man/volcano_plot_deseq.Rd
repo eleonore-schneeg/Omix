@@ -2,7 +2,7 @@
 % Please edit documentation in R/DE_formating.R
 \name{volcano_plot_deseq}
 \alias{volcano_plot_deseq}
-\title{Title}
+\title{Builds a volcano plot from DESEQ2 results}
 \usage{
 volcano_plot_deseq(
   dt,
@@ -16,5 +16,5 @@ volcano_plot_deseq(
 \item{ylim}{}
 }
 \description{
-Title
+Builds a volcano plot from DESEQ2 results
 }

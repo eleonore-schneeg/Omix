@@ -1,12 +1,3 @@
-
-
-# Since missing values are associated with proteins with low levels of expression,
-# we can substitute the missing values with numbers that are considered “small”
-# in each sample. We can define this statistically by drawing from a normal
-# distribution with a mean that is down-shifted from the sample mean and a
-# standard deviation that is a fraction of the standard deviation of
-# the sample distribution.
-
 #' Imputation of missing values based on distribution
 #'
 #' @param df
@@ -31,7 +22,6 @@
 
 #' Imputation of missing values based on 50% minimum value
 
-#'
 #' @param df
 #'
 #' @return
@@ -48,3 +38,13 @@
   }
   return(df)
 }
+
+
+
+
+# Since missing values are associated with proteins with low levels of expression,
+# we can substitute the missing values with numbers that are considered “small”
+# in each sample. We can define this statistically by drawing from a normal
+# distribution with a mean that is down-shifted from the sample mean and a
+# standard deviation that is a fraction of the standard deviation of
+# the sample distribution.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/DE_formating.R
 \name{format_res_deseq}
 \alias{format_res_deseq}
-\title{Title}
+\title{Formatting differential expression results from DESEQ2}
 \usage{
 format_res_deseq(
   dt,
@@ -17,5 +17,5 @@ format_res_deseq(
 \item{filter_protein_coding}{}
 }
 \description{
-Title
+Formatting differential expression results from DESEQ2
 }

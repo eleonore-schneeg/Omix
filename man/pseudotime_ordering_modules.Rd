@@ -2,7 +2,7 @@
 % Please edit documentation in R/pseudotime_ordering_modules.R
 \name{pseudotime_ordering_modules}
 \alias{pseudotime_ordering_modules}
-\title{pseudotime_ordering_modules}
+\title{Generates a plot relating modules eigenvalue along pseudotime}
 \usage{
 pseudotime_ordering_modules(
   metadata,
@@ -15,5 +15,5 @@ pseudotime_ordering_modules(
 \item{pseudotime_var}{}
 }
 \description{
-pseudotime_ordering_modules
+Generates a plot relating modules eigenvalue along pseudotime
 }

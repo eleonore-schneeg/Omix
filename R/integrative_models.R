@@ -282,6 +282,18 @@ integrate_with_MOFA <- function(multimodal_omics,
 }
 
 
+#' Vertical integration with MEIFESTO
+#'
+#' @param multimodal_omics
+#' @param num_factors
+#' @param scale_views
+#' @param metadata
+#' @param time
+#'
+#' @return
+#' @export
+#'
+#' @examples
 integrate_with_MEIFESTO <- function(multimodal_omics,
                                     num_factors = 5,
                                     scale_views = T,

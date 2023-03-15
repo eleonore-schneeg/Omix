@@ -272,6 +272,15 @@
 }
 
 
+#' Detects communities in multi-omics network
+#'
+#' @param igraph
+#' @param community_detection
+#'
+#' @return
+#' @export
+#'
+#' @examples
 .communities_network <- function(igraph,
                                  community_detection='louvain') {
 
@@ -306,6 +315,18 @@
 }
 
 
+#' Creates a multi-omics network based on clustered subgroups following multi-omics clustering
+#'
+#' @param multiassay
+#' @param integration
+#' @param cluster
+#' @param list
+#' @param correlation_threshold
+#'
+#' @return
+#' @export
+#'
+#' @examples
 .multiomics_network_cluster <- function(multiassay,
                                         integration = "iCluster",
                                         cluster = 1,
@@ -367,6 +388,16 @@
   return(colorRampPalette(colors)(colsteps)[findInterval(x, seq(-1, 1, length.out = colsteps))])
 }
 
+#' Creates a subnetwork graph based on detected communities
+#'
+#' @param igraph
+#' @param community_object
+#' @param community
+#'
+#' @return
+#' @export
+#'
+#' @examples
 .community_graph<- function(igraph,
                             community_object,
                             community=1){

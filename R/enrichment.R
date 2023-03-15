@@ -123,6 +123,10 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 
 
 #' Format result table
+#'
+#' @param res
+#' @param min_overlap
+#'
 #' @keywords internal
 
 .format_res_table_enrichr <- function(res,
@@ -243,6 +247,19 @@ dot_plot_enrichr_semantics <- function(dt,
 
 
 
+#' Creates a functional enrichment dotplot
+#'
+#' @param enrichment.results
+#' @param factor
+#' @param alpha
+#' @param max.pathways
+#' @param text_size
+#' @param dot_size
+#'
+#' @return
+#' @export
+#'
+#' @examples
 dotplot_enrichment_MOFA <- function(enrichment.results, factor, alpha = 0.1, max.pathways = 25,
                                     text_size = 1.0, dot_size = 5.0) {
   # Sanity checks
@@ -297,6 +314,21 @@ dotplot_enrichment_MOFA <- function(enrichment.results, factor, alpha = 0.1, max
 
 
 
+#' Creates a functional enrichment dotplot based on a given semantics
+#'
+#'
+#' @param enrichment.results
+#' @param semantics
+#' @param factor
+#' @param alpha
+#' @param max.pathways
+#' @param text_size
+#' @param dot_size
+#'
+#' @return
+#' @export
+#'
+#' @examples
 dotplot_enrichment_MOFA_semantics <- function(enrichment.results, semantics, factor, alpha = 0.05, max.pathways = 25,
                                               text_size = 1.0, dot_size = 5.0) {
   factor <- seq(1, dim(enrichment.results$pval.adj)[2], by = 1)
@@ -348,6 +380,18 @@ dotplot_enrichment_MOFA_semantics <- function(enrichment.results, semantics, fac
 }
 
 
+#' Functional enrichment based on given reference annotations
+#'
+#' @param genes
+#' @param reference
+#' @param genesets
+#' @param adj
+#' @param verbose
+#'
+#' @return
+#' @export
+#'
+#' @examples
 enrichment_custom <- function(genes, reference, genesets, adj = "fdr", verbose = FALSE) {
   tab <- lapply(1:length(genesets), function(i) {
     if (verbose == TRUE) {
@@ -408,10 +452,19 @@ enrichment_custom <- function(genes, reference, genesets, adj = "fdr", verbose =
 }
 
 
+#' Cell type enrichment of communities
+#'
+#' @param multiassay
+#' @param communities
+#'
+#' @return
+#' @export
+#'
+#' @examples
 cell_type_enrichment <- function(multiassay,
                                  communities) {
   background_genes <- .get_background(multiassay)
-  load(file = "~/RDS_ukdri/multiomics/multiomics/pipeline_17_05/3_UNI_OMIC/CellTypeData_all_ds.rda") # loads ctd
+  #load(file = "~/RDS_ukdri/multiomics/multiomics/pipeline_17_05/3_UNI_OMIC/CellTypeData_all_ds.rda") # loads ctd
 
   hits <- communities
   hits <- lapply(hits, function(x) {
@@ -423,9 +476,8 @@ cell_type_enrichment <- function(multiassay,
   reps <- 100
   annotLevel <- 1
 
-
-  sct <- ctd[2] # want to get cell type annotation 2
-
+  #sct <- ctd[2] # want to get cell type annotation 2
+  sct <- ctd
   results <- list()
   results <- lapply(hits, function(x) {
     EWCE::bootstrap_enrichment_test(

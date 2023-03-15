@@ -1,4 +1,4 @@
-#' Title
+#' Performs functional gene set enrichment analysis
 #'
 #' @param gene_list
 #' @param pval
@@ -69,7 +69,7 @@ GSEA = function(gene_list, pval) {
   return(output)
 }
 
-#' Title
+#' Plots FGSEA results
 #'
 #' @param gs_results
 #' @param myGO

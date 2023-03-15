@@ -268,6 +268,15 @@
 }
 
 
+#' Get module functional annotation
+#'
+#' @param gene_list
+#' @param moduleColors
+#'
+#' @return
+#' @export
+#'
+#' @examples
 get_module_annotation <- function(gene_list,
                                   moduleColors) {
   library(org.Hs.eg.db)

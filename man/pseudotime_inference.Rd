@@ -2,7 +2,7 @@
 % Please edit documentation in R/pseudotime_inference.R
 \name{pseudotime_inference}
 \alias{pseudotime_inference}
-\title{pseudotime_inference}
+\title{Pseudotime_inference based on integrated embeddings and clusters}
 \usage{
 pseudotime_inference(
   model,
@@ -10,13 +10,12 @@ pseudotime_inference(
   time_factor = 8,
   second_factor = 1,
   pseudotime_var = "pseudotime",
-  start.clus = 1,
-  end.clus = 3
+  ...
 )
 }
 \arguments{
 \item{second_factor}{}
 }
 \description{
-pseudotime_inference
+Pseudotime_inference based on integrated embeddings and clusters
 }

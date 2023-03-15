@@ -2,7 +2,7 @@
 % Please edit documentation in R/DE_formating.R
 \name{volcano_plot_limma}
 \alias{volcano_plot_limma}
-\title{Title}
+\title{Builds a volcano plot from limma results}
 \usage{
 volcano_plot_limma(
   dt,
@@ -16,5 +16,5 @@ volcano_plot_limma(
 \item{ylim}{}
 }
 \description{
-Title
+Builds a volcano plot from limma results
 }

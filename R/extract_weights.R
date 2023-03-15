@@ -1,4 +1,4 @@
-#' Extract_weigths
+#' Extract_weigths from MOFA model for a given factor of interest
 #'
 #' @param model
 #' @param factor

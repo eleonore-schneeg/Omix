@@ -11,11 +11,12 @@ integrative_results_supervised(
   correlation_threshold = 0.2,
   disease_id = "MONDO_0004975",
   enrichment_method = "enrichr",
-  simplify = TRUE
+  simplify = FALSE,
+  compare_communities = FALSE
 )
 }
 \arguments{
-\item{component}{}
+\item{compare_communities}{}
 }
 \description{
 Downstream analysis for integrated multi-omics data
