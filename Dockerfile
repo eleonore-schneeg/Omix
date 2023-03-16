@@ -113,6 +113,7 @@ RUN apt-get update \
 
 RUN install2.r -e \
       cli \
+      BiocManager \
       enrichR \
       magrittr \
       stats \
