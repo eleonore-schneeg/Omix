@@ -114,6 +114,7 @@ RUN apt-get update \
 RUN install2.r -e \
       cli \
       BiocManager \
+      devtools \
       remotes \
       enrichR \
       magrittr \
@@ -125,7 +126,6 @@ RUN install2.r -e \
       rmarkdown \
       tidyverse \
       paletteer \
-      devtools \
       data.table \
       ggpubr \
       igraph \
@@ -147,6 +147,7 @@ RUN install2.r -e \
       stringr \
       purrr \
       ggrepel \
+      SNFtool \
       && rm -rf /tmp/downloaded_packages
 
 ## Install Bioconductor packages
