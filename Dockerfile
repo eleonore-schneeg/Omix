@@ -147,7 +147,7 @@ RUN install2.r -e \
       stringr \
       purrr \
       ggrepel \
-      SNFtool \
+      SNFtool (2.3.1) \
       && rm -rf /tmp/downloaded_packages
 
 ## Install Bioconductor packages
