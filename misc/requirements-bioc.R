@@ -24,8 +24,9 @@ bioc_pkgs<-c(
   'DESeq2',
   'limma',
   'Biobase',
-  'SNFtool'
+  'EnsDb.Hsapiens.v86'
 )
+
 
 requireNamespace("BiocManager")
 BiocManager::install(bioc_pkgs, ask=F)

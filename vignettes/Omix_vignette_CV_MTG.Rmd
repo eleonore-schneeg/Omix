@@ -1,5 +1,5 @@
 ---
-title: "<b>Omix</b> - Integrative analysis of Multi-omics data in R"
+title: "Omix - Get started"
 author: "This vignette was created by Eléonore Schneegans and Nurun Fancy"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
@@ -11,7 +11,7 @@ output:
     code_folding: show
     df_print: paged
 vignette: >
-  %\VignetteIndexEntry{<b>Omix</b> - Integrative analysis of Multi-omics data in R}
+  %\VignetteIndexEntry{Omix - Get started}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 editor_options: 
