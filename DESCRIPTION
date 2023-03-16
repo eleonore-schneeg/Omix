@@ -3,7 +3,7 @@ Title: A Multi-Omics Integration Toolkit
 Version: 0.0.0.9000
 Authors@R: 
     c(
-    person(given = Eléonore,
+    person(given = Eleonore,
            family = Schneegans,
            role = c(aut, cre),
            email = eleonore.schneegans17@imperial.ac.uk,
@@ -45,15 +45,14 @@ Imports:
       tidyr,
       tibble,
       visNetwork,
-      slingshot,
       ggpubr,
       viridis,
-      ggpubr,
       RColorBrewer,
       corrplot,
       stringr,
       purrr,
       ggrepel,
+      BiocManager,
       MultiAssayExperiment,
       SummarizedExperiment,
       proBatch,
@@ -75,7 +74,11 @@ Imports:
       WGCNA,
       limma,
       S4Vectors,
-      slingshot
+      slingshot,
+      rmarkdown,
+      remotes,
+      devtools,
+      Biobase,
 Remotes:
       xlucpu/MOVICS
 Suggests: 
