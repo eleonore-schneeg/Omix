@@ -122,6 +122,11 @@ RUN install2.r -e \
       dplyr \
       matrixStats \
       purrr \
+      rmarkdown \
+      tidyverse \
+      paletteer \
+      devtools \
+      data.table \
       ggpubr \
       igraph \
       ggplot2 \
