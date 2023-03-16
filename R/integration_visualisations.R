@@ -23,6 +23,7 @@
   matrix2 <- matrix2[, list[[2]]]
 
   matrix <- scale(cbind(matrix1, matrix2))
+  colnames(matrix) <-  features_interest
 
   colnames(matrix)[1:pk[1]] <- paste0(colnames(matrix)[1:pk[1]], "_rna")
   colnames(matrix)[(pk[1] + 1):(pk[1] + pk[2])] <- paste0(colnames(matrix)[(pk[1] + 1):(pk[1] + pk[2])], "_protein")
@@ -107,7 +108,9 @@
   matrix2 <- t(multimodal_object[[2]])
   matrix2 <- matrix2[, list[[2]]]
 
+
   matrix <- scale(cbind(matrix1, matrix2))
+  colnames(matrix) <-  features_interest
 
   colnames(matrix)[1:pk[1]] <- paste0(colnames(matrix)[1:pk[1]], "_rna")
   colnames(matrix)[(pk[1] + 1):(pk[1] + pk[2])] <- paste0(colnames(matrix)[(pk[1] + 1):(pk[1] + pk[2])], "_protein")
