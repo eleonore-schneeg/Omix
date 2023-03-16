@@ -113,11 +113,8 @@ RUN apt-get update \
 
 RUN install2.r -e \
       cli \
-      DESeq2 \
-      limma \
       enrichR \
       magrittr \
-      ClassDiscovery \
       stats \
       lme4 \
       dplyr \
@@ -135,7 +132,6 @@ RUN install2.r -e \
       tidyr \
       tibble \
       visNetwork \
-      slingshot \
       ggpubr \
       viridis \
       ggpubr \
@@ -144,7 +140,7 @@ RUN install2.r -e \
       stringr \
       purrr \
       ggrepel \
-&& rm -rf /tmp/downloaded_packages
+      && rm -rf /tmp/downloaded_packages
 
 ## Install Bioconductor packages
 COPY ./misc/requirements-bioc.R .
@@ -156,6 +152,10 @@ RUN apt-get update \
 RUN Rscript -e 'requireNamespace("BiocManager"); BiocManager::install(ask=F);' \
 && Rscript requirements-bioc.R \
 && rm -rf /tmp/downloaded_packages
+
+RUN install2.r -e \
+      ClassDiscovery \
+      && rm -rf /tmp/downloaded_packages
 
 ## Install from GH the following
 RUN installGithub.r xlucpu/MOVICS \

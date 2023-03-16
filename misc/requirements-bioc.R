@@ -20,7 +20,10 @@ bioc_pkgs<-c(
   'WGCNA',
   'limma',
   'S4Vectors',
-  'slingshot'
+  'slingshot',
+  'DESeq2',
+  'limma',
+  'Biobase'
 )
 
 requireNamespace("BiocManager")
