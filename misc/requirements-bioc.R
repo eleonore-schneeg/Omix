@@ -23,7 +23,8 @@ bioc_pkgs<-c(
   'slingshot',
   'DESeq2',
   'limma',
-  'Biobase'
+  'Biobase',
+  'SNFtool'
 )
 
 requireNamespace("BiocManager")
