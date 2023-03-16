@@ -147,7 +147,7 @@ RUN install2.r -e \
       stringr \
       purrr \
       ggrepel \
-      SNFtool (<=2.3.1) \
+      SNFtool \
       && rm -rf /tmp/downloaded_packages
 
 ## Install Bioconductor packages
@@ -166,7 +166,8 @@ RUN install2.r -e \
       && rm -rf /tmp/downloaded_packages
 
 ## Install from GH the following
-RUN installGithub.r xlucpu/MOVICS \
+RUN installGithub.r cran/heatmap.plus \
+    xlucpu/MOVICS \
 && rm -rf /tmp/downloaded_packages
 
 ## Install Omix package
