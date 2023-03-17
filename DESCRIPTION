@@ -80,7 +80,8 @@ Imports:
       rmarkdown,
       remotes,
       devtools,
-      Biobase
+      Biobase,
+      basilisk
 Remotes:
       xlucpu/MOVICS
 Suggests: 
