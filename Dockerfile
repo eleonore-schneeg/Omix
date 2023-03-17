@@ -117,6 +117,7 @@ RUN pip3 install mofapy2
 
 RUN install2.r -e \
       cli \
+      statmod \
       assertthat \
       BiocManager \
       devtools \
