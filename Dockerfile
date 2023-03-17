@@ -13,8 +13,7 @@ RUN apt-get update \
 	gdb \
 	libxml2-dev \
 	python3-pip \
-	python3.9 \
-	python3.9-dev \
+	python3 \
 	libz-dev \
 	liblzma-dev \
 	libbz2-dev \
