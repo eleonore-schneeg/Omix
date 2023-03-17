@@ -57,7 +57,7 @@ integrate_with_DIABLO <- function(multimodal_omics,
 
   Y <- factor(Y)
   cli::cli_h2("MODEL TUNING")
-  tune <- mixOmics::tune.block.splsda(
+  tune <- suppressWarnings({mixOmics::tune.block.splsda(
     X = X,
     Y = Y,
     ncomp = ncomp,
@@ -71,16 +71,17 @@ integrate_with_DIABLO <- function(multimodal_omics,
     nrepeat = 1,
     progressBar = TRUE
   )
+  })
 
   list.keepX <- tune$choice.keepX
-  tuned.diablo <- mixOmics::block.splsda(
+  tuned.diablo <- suppressWarnings({mixOmics::block.splsda(
     X = X,
     Y = Y,
     keepX = list.keepX,
     ncomp = ncomp,
     design = design,
     scale = T
-  )
+  )})
 
   model <- tuned.diablo
   X <- lapply(X, t)
