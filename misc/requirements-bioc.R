@@ -3,6 +3,7 @@ bioc_pkgs<-c(
   "SummarizedExperiment",
   "proBatch",
   "mixOmics",
+  'basilisk',
   "MOFA2",
   "ComplexHeatmap",
   "circlize",
@@ -24,8 +25,7 @@ bioc_pkgs<-c(
   'DESeq2',
   'limma',
   'Biobase',
-  'EnsDb.Hsapiens.v86',
-  'basilisk'
+  'EnsDb.Hsapiens.v86'
 )
 
 
