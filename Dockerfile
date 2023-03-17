@@ -77,15 +77,6 @@ RUN apt-get update \
 	## new libs
 	libglpk-dev \
 	## Databases and other software
-	libcurl4-openssl-dev \
-	libcairo2-dev \
-	libfreetype6-dev \
-	libpng-dev \
-	libtiff5-dev \
-	libjpeg-dev \
-	libxt-dev \
-	libharfbuzz-dev \
-	libfribidi-dev \
 	sqlite \
 	openmpi-bin \
 	mpi-default-bin \
@@ -109,6 +100,9 @@ RUN apt-get update \
 	qpdf \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
+
+RUN apt-get install -y libcurl4-openssl-dev
+RUN apt-get install -y libcairo2-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libxt-dev libharfbuzz-dev libfribidi-dev
 
 # Install mofapy2
 RUN python3 -m pip install 'https://github.com/bioFAM/mofapy2/tarball/master'
