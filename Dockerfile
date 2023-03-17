@@ -13,6 +13,8 @@ RUN apt-get update \
 	gdb \
 	libxml2-dev \
 	python3-pip \
+	python3.9 \
+	python3.9-dev \
 	libz-dev \
 	liblzma-dev \
 	libbz2-dev \
@@ -98,6 +100,8 @@ RUN apt-get update \
 	qpdf \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install mofapy2
 
 #RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | \
 #tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
