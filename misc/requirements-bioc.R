@@ -3,6 +3,7 @@ bioc_pkgs<-c(
   "SummarizedExperiment",
   "proBatch",
   "mixOmics",
+  'basilisk',
   "MOFA2",
   "ComplexHeatmap",
   "circlize",
