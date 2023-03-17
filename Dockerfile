@@ -2,8 +2,8 @@
 
 ## Use rstudio installs binaries from RStudio's RSPM service by default,
 ## Uses the latest stable ubuntu, R and Bioconductor versions. Created on unbuntu 20.04, R 4.0 and BiocManager 3.12
-FROM rocker/rstudio:4.2.2
-
+#FROM rocker/rstudio:4.2.2
+FROM gtca/mofa2
 
 ## Add packages dependencies
 RUN apt-get update \
@@ -100,7 +100,7 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install mofapy2
+RUN pip3 install mofapy2 numpy
 
 #RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | \
 #tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
@@ -113,7 +113,6 @@ RUN pip3 install mofapy2
 
 #RUN unzip awscliv2.zip && ./aws/install \
 #&& rm -rf awscliv2.zip
-RUN pip3 install mofapy2
 
 RUN install2.r -e \
       cli \
