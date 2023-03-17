@@ -2,8 +2,7 @@
 
 ## Use rstudio installs binaries from RStudio's RSPM service by default,
 ## Uses the latest stable ubuntu, R and Bioconductor versions. Created on unbuntu 20.04, R 4.0 and BiocManager 3.12
-#FROM rocker/rstudio:4.2.2
-FROM gtca/mofa2
+FROM rocker/rstudio:4.2.2
 
 ## Add packages dependencies
 RUN apt-get update \
@@ -14,6 +13,8 @@ RUN apt-get update \
 	libxml2-dev \
 	python3-pip \
 	python3 \
+  python3-setuptools \
+  python3-dev \
 	libz-dev \
 	liblzma-dev \
 	libbz2-dev \
@@ -76,6 +77,15 @@ RUN apt-get update \
 	## new libs
 	libglpk-dev \
 	## Databases and other software
+	libcurl4-openssl-dev \
+	libcairo2-dev \
+	libfreetype6-dev \
+	libpng-dev \
+	libtiff5-dev \
+	libjpeg-dev \
+	libxt-dev \
+	libharfbuzz-dev \
+	libfribidi-dev \
 	sqlite \
 	openmpi-bin \
 	mpi-default-bin \
@@ -100,7 +110,9 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install mofapy2 numpy
+# Install mofapy2
+RUN python3 -m pip install 'https://github.com/bioFAM/mofapy2/tarball/master'
+
 
 #RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | \
 #tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
@@ -169,6 +181,16 @@ RUN Rscript -e 'requireNamespace("BiocManager"); BiocManager::install(ask=F);' \
 RUN install2.r -e \
       ClassDiscovery \
       && rm -rf /tmp/downloaded_packages
+
+# Install bioconductor dependencies
+RUN R --vanilla -e "\
+  if (!requireNamespace('BiocManager', quietly = TRUE)) install.packages('BiocManager', repos = 'https://cran.r-project.org'); \
+  sapply(c('rhdf5', 'dplyr', 'tidyr', 'reshape2', 'pheatmap', 'corrplot', \
+           'ggplot2', 'ggbeeswarm', 'scales', 'GGally', 'doParallel', 'RColorBrewer', \
+           'cowplot', 'ggrepel', 'foreach', 'reticulate', 'HDF5Array', 'DelayedArray', \
+           'ggpubr', 'forcats', 'Rtsne', 'uwot', \
+           'systemfonts', 'ragg', 'Cairo', 'ggrastr', 'basilisk', 'mvtnorm'), \
+         BiocManager::install)"
 
 ## Install from GH the following
 RUN installGithub.r cran/heatmap.plus \
