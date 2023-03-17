@@ -25,6 +25,7 @@ Imports:
       assertthat (>= 0.2.1),
       cli,
       DESeq2,
+      statmod,
       limma,
       enrichR,
       magrittr,
@@ -79,7 +80,7 @@ Imports:
       rmarkdown,
       remotes,
       devtools,
-      Biobase,
+      Biobase
 Remotes:
       xlucpu/MOVICS
 Suggests: 

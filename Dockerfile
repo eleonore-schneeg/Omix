@@ -13,6 +13,8 @@ RUN apt-get update \
 	gdb \
 	libxml2-dev \
 	python3-pip \
+	python3.9 \
+	python3.9-dev \
 	libz-dev \
 	liblzma-dev \
 	libbz2-dev \
@@ -110,9 +112,11 @@ RUN apt-get update \
 
 #RUN unzip awscliv2.zip && ./aws/install \
 #&& rm -rf awscliv2.zip
+RUN pip3 install mofapy2
 
 RUN install2.r -e \
       cli \
+      statmod \
       assertthat \
       BiocManager \
       devtools \
