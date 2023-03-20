@@ -11,6 +11,7 @@
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
 #'  getWithColData sampleMap
 #' @importFrom mixOmics block.splsda tune.block.splsda
+#' @import mixOmics
 #' @export
 #'
 #' @examples
@@ -99,6 +100,7 @@ integrate_with_DIABLO <- function(multimodal_omics,
 #'
 #' @return a list object with `multimodal_object` and `model` slots
 #' @importFrom mixOmics block.spls
+#' @import mixOmics
 #' @export
 #'
 #' @examples
@@ -170,6 +172,7 @@ integrate_with_sMBPLS <- function(multimodal_omics,
 #'
 #' @return a list object with `multimodal_object` and `model` slots
 #' @importFrom mixOmics block.pls
+#' @import mixOmics
 #' @export
 #'
 #' @examples
@@ -239,7 +242,9 @@ integrate_with_MBPLS <- function(multimodal_omics,
 #' @export
 #' @importFrom MOFA2 create_mofa get_default_data_options
 #' get_default_model_options get_default_training_options prepare_mofa run_mofa
-#'
+#' @import MOFA2
+#' @import basilisk
+#' @import reticulate
 #' @examples
 integrate_with_MOFA <- function(multimodal_omics,
                                 num_factors = 5,
@@ -294,6 +299,7 @@ integrate_with_MOFA <- function(multimodal_omics,
 #' @importFrom MOFA2 create_mofa get_default_data_options
 #' get_default_model_options get_default_training_options prepare_mofa run_mofa
 #' get_default_mefisto_options
+#' @import MOFA2
 #'
 #' @examples
 integrate_with_MEIFESTO <- function(multimodal_omics,
@@ -356,6 +362,7 @@ integrate_with_MEIFESTO <- function(multimodal_omics,
 #' @return a list object with `multimodal_object` and `model` slots
 
 #' @importFrom MOVICS getClustNum getiClusterBayes
+#' @import MOVICS
 #' @export
 #'
 #' @examples
