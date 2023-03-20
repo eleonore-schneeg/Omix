@@ -9,7 +9,8 @@ integrate_with_DIABLO(
   Y,
   ncomp,
   design = c("cor", "full"),
-  range = list(mRNA = seq(5, 10, by = 10), proteins = seq(5, 10, by = 10))
+  range = list(mRNA = seq(5, 10, by = 10), proteins = seq(5, 10, by = 10)),
+  ...
 )
 }
 \arguments{
@@ -21,6 +22,8 @@ integrate_with_DIABLO(
 
 \item{design}{Possible designs for integration are \code{cor}(strength of correlation between PC1 of omics layers)
 or \code{full} (The strength of all relationships between dataframes is maximised (= 1) – a “fully connected” design)}
+
+\item{range}{}
 }
 \value{
 a list object with \code{multimodal_object} and \code{model} slots

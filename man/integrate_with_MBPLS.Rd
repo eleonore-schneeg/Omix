@@ -8,7 +8,8 @@ integrate_with_MBPLS(
   multimodal_omics,
   Y,
   design = c("cor", "full", "avg"),
-  ncomp
+  ncomp,
+  ...
 )
 }
 \arguments{

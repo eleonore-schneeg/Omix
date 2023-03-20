@@ -9,7 +9,8 @@ integrate_with_sMBPLS(
   Y,
   design = c("cor", "full", "avg"),
   ncomp,
-  list.keepX = list(mRNA = c(50), proteins = c(50))
+  list.keepX = list(mRNA = c(50), proteins = c(50)),
+  ...
 )
 }
 \arguments{

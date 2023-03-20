@@ -8,7 +8,6 @@
 #' @param intersect_genes Logical whether to keep intersecting features for
 #' integration
 #' @param dependent
-#' @param map_by_column
 #' @param design Design matrix (design = "full"): The strength of all
 #' relationships between dataframes is maximised (= 1) – a “fully connected” design.
 #' If design is set on cor, the correlation between PC1 of each dataset will be
@@ -16,7 +15,15 @@
 #' @param ncomp Number of components in `DIABLO`,`sMBPLS`
 #' @param range List of the range of numbers of features to keep in the tuning phase.
 #' First element must be for rna, second for proteins
+#' @param ID_type
+#' @param levels
+#' @param list.keepX
+#' @param num_factors
+#' @param time
+#' @param scale_views
+#' @param most_variable_feature
 #' @param try.N.clust number of cluster to tune in `iCluster`
+#'
 #' @return Returns an integrated object in `multiassay@metadata$integration` to
 #' be used for further analysis
 #' @export

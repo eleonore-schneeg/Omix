@@ -9,7 +9,8 @@ integrate_with_MEIFESTO(
   num_factors = 5,
   scale_views = T,
   metadata,
-  time = "pseudotime"
+  time = "pseudotime",
+  ...
 )
 }
 \arguments{

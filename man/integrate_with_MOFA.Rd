@@ -8,7 +8,8 @@ integrate_with_MOFA(
   multimodal_omics,
   num_factors = 5,
   scale_views = T,
-  metadata
+  metadata,
+  ...
 )
 }
 \arguments{
@@ -17,6 +18,8 @@ integrate_with_MOFA(
 \item{num_factors}{Number of factors}
 
 \item{scale_views}{Logical whether to scale omics layers}
+
+\item{metadata}{}
 }
 \value{
 a list object with \code{multimodal_object} and \code{model} slots

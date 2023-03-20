@@ -172,6 +172,7 @@
 #' Default to gene_name
 #'
 #' @return A list object containing the multimodal object and metadata
+#' @import MultiAssayExperiment
 #' @export
 #'
 #' @examples
