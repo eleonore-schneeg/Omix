@@ -25,7 +25,8 @@ bioc_pkgs<-c(
   'DESeq2',
   'limma',
   'Biobase',
-  'EnsDb.Hsapiens.v86'
+  'EnsDb.Hsapiens.v86',
+  'msigdbr'
 )
 
 

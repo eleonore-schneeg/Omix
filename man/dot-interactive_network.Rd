@@ -4,10 +4,18 @@
 \alias{.interactive_network}
 \title{Get interactive network from igraph object}
 \usage{
-.interactive_network(igraph, communities, cluster)
+.interactive_network(igraph, communities = FALSE, cluster)
 }
 \arguments{
-\item{igraph}{}
+\item{igraph}{Multi-omics network}
+
+\item{communities}{Logical as whether to show communities on graph}
+
+\item{cluster}{If commmunities = TRUE, provide a community object generated
+by  \code{.communities_network}function}
+}
+\value{
+plots \code{visNetwork} graph
 }
 \description{
 Get interactive network from igraph object

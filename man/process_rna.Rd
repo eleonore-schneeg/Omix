@@ -50,7 +50,7 @@ technical batch.}
 \item{remove_sample_outliers}{Logical whether to remove sample outliers}
 }
 \value{
-a MultiAssayExperiment object with processed slots
+a MultiAssayExperiment object with \code{rna_processed} slot
 }
 \description{
 Process batch transcriptomics data

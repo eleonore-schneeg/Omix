@@ -9,6 +9,10 @@
 \arguments{
 \item{character_vector}{}
 }
+\value{
+ID type between \code{entrez_gene_id},\code{gene_name},\code{ensembl_gene_id},
+\code{uniprot_id}, \code{not_identified}
+}
 \description{
 Get nomenclature type
 }

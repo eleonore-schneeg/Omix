@@ -1,19 +1,21 @@
-#' Extract_weigths from MOFA model for a given factor of interest
+#' Extract_weigths from MOFA model for a given factor of interest at a defined absolute threshold
 #'
-#' @param model
-#' @param factor
-#' @param threshold
-#' @param variable
+#' @param model MOFA model from integration in `multiassay@metadata$integration$MOFA`
+#' @param factor Factor to extract weight from
+#' @param threshold Absolute threshold to filter weights
+#' @param sense_check_variable default to `NULL`. High weights should coincide with
+#' stronger correlation if the sense_check_variable is an important driver of
+#' variation in the designated factor. Will be used to generate a plot if set to a covariate.
 #'
-#' @return
+#' @return List with positive and negative weights above and below the specified threshold,
+#' distirbution plots of the weights, and dataframes of the weights for each omic layer.
 #' @export
 #'
 #' @examples
 extract_weigths <- function(model,
                             factor = 1,
                             threshold = 0.3,
-                            variable,
-                            sense_check_variable) {
+                            sense_check_variable=NULL) {
   weights_rna_1 <- MOFA2::get_weights(model,
     view = "mRNA",
     factor = factor,

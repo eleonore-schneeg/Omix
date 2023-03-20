@@ -82,7 +82,8 @@ Imports:
       remotes,
       devtools,
       Biobase,
-      basilisk
+      basilisk,
+      msigdbr
 Remotes:
       xlucpu/MOVICS
 Suggests: 

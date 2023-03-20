@@ -2,19 +2,30 @@
 % Please edit documentation in R/extract_weights.R
 \name{extract_weigths}
 \alias{extract_weigths}
-\title{Extract_weigths from MOFA model for a given factor of interest}
+\title{Extract_weigths from MOFA model for a given factor of interest at a defined absolute threshold}
 \usage{
 extract_weigths(
   model,
   factor = 1,
   threshold = 0.3,
-  variable,
-  sense_check_variable
+  sense_check_variable = NULL
 )
 }
 \arguments{
-\item{variable}{}
+\item{model}{MOFA model from integration in \code{multiassay@metadata$integration$MOFA}}
+
+\item{factor}{Factor to extract weight from}
+
+\item{threshold}{Absolute threshold to filter weights}
+
+\item{sense_check_variable}{default to \code{NULL}. High weights should coincide with
+stronger correlation if the sense_check_variable is an important driver of
+variation in the designated factor. Will be used to generate a plot if set to a covariate.}
+}
+\value{
+List with positive and negative weights above and below the specified threshold,
+distirbution plots of the weights, and dataframes of the weights for each omic layer.
 }
 \description{
-Extract_weigths from MOFA model for a given factor of interest
+Extract_weigths from MOFA model for a given factor of interest at a defined absolute threshold
 }

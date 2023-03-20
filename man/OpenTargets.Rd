@@ -4,10 +4,12 @@
 \alias{OpenTargets}
 \title{Interface to OpenTargets database}
 \usage{
-OpenTargets(disease_id, size = 2000)
+OpenTargets(disease_id = "MONDO_0004975", size = 3000)
 }
 \arguments{
-\item{size}{}
+\item{disease_id}{OpenTargets disease id. Default to "MONDO_0004975" (Alzheimer's Disease)}
+
+\item{size}{Default to 3000}
 }
 \description{
 Interface to OpenTargets database

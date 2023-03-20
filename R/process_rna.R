@@ -20,7 +20,7 @@
 #' @param batch Technical batch, use batch2 for another technical batch
 #' @param remove_sample_outliers Logical whether to remove sample outliers
 #'
-#' @return a MultiAssayExperiment object with processed slots
+#' @return a MultiAssayExperiment object with `rna_processed` slot
 #'
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
 #'  getWithColData sampleMap

@@ -5,6 +5,8 @@
 #'
 #' @return
 #' @export
+#' @importFrom msigdbr msigdbr
+#' @importFrom dplyr filter
 #'
 #' @examples
 GSEA = function(gene_list, pval) {

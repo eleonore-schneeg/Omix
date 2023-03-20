@@ -1,12 +1,16 @@
 #' Pseudotime_inference based on integrated embeddings and clusters
 #'
-#' @param model
-#' @param clusters
-#' @param time_factor
-#' @param second_factor
+#' @param model MOFA model from integration in `multiassay@metadata$integration$MOFA`
+#' @param clusters cluster generated from MOFA2::cluster_samples or other clustering method
+#' @param time_factor MOFA factor corresponding to time
+#' @param second_factor MOFA factor used as other axis of variation in the embedding
 #'
-#' @return
+#' @return A list object with `model` and `plot` slots
 #' @export
+#' @importFrom slingshot slingshot as.SlingshotDataSet
+#' @importFrom viridis scale_color_viridis
+#' @importFrom MOFA2 plot_factors samples_metadata
+
 #'
 #' @examples
 pseudotime_inference <- function(model,

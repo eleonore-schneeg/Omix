@@ -22,8 +22,8 @@
 #' @param remove_sample_outliers Logical whether to remove sample outliers
 #' @param denoise Logical whether to denoise biological covariates
 #' @param covariates Covariates used in linear mixed model for denoising
-#'
-#' @return
+#
+#' @return a MultiAssayExperiment object with `protein_processed` slot
 #'
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
 #'  getWithColData sampleMap

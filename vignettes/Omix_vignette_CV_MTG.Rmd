@@ -338,7 +338,7 @@ Since the magnitude of changes are not directly comparable between platforms, bu
 
 
 ```{r}
-DE_comparison=single_omic_comparison(multiassay=multiomics_object_MTG,
+DE_comparison=single_omic_comparisons(multiassay=multiomics_object_MTG,
                                        slot='ADvsControl',
                                        threshold = 0.05,
                                        pvalue = 'pval',

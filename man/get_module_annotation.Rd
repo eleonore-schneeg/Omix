@@ -7,7 +7,9 @@
 get_module_annotation(gene_list, moduleColors)
 }
 \arguments{
-\item{moduleColors}{}
+\item{gene_list}{Character vector of genes belonging to a module}
+
+\item{moduleColors}{from WGCNA}
 }
 \description{
 Get module functional annotation

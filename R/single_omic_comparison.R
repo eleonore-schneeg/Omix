@@ -13,12 +13,12 @@
 #' returned dataframe will only display genes that are significant at both
 #' transcriptomics and proteomics levels. Setting the parameter to `either`will
 #' return genes that are significant in at least one layer.
-
-#' @return
+#' @return A list object with `dataframe` and `plot` slots
 #' @export
+#' @importFrom ggpubr ggscatter
 #'
 #' @examples
-single_omic_comparison <- function(multiassay,
+single_omic_comparisons <- function(multiassay,
                                    slot = "ADvsControl",
                                    threshold = 0.05,
                                    pvalue = c("adj", "pval", "all"),

@@ -7,7 +7,14 @@
 .communities_network(igraph, community_detection = "louvain")
 }
 \arguments{
-\item{community_detection}{}
+\item{igraph}{Multi-omics network}
+
+\item{community_detection}{Available methods include \code{edge_betweeness},
+\code{leading_eigen},\code{walktrap},\code{fastgreedy},\code{louvain} all available from the
+\code{igraph} package.}
+}
+\value{
+List object including \code{community_object} and \code{communities}
 }
 \description{
 Detects communities in multi-omics network

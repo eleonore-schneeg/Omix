@@ -55,6 +55,9 @@ effects. Possible values are \code{Combat} or \code{median_centering}}
 
 \item{covariates}{Covariates used in linear mixed model for denoising}
 }
+\value{
+a MultiAssayExperiment object with \code{protein_processed} slot
+}
 \description{
 Process bulk proteomics data
 }

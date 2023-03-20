@@ -1,13 +1,14 @@
 #' Interface to OpenTargets database
 #'
-#' @param disease_id
-#' @param size
+#' @param disease_id OpenTargets disease id. Default to "MONDO_0004975" (Alzheimer's Disease)
+#' @param size Default to 3000
 #'
 #' @return
 #' @export
 #'
 #' @examples
-OpenTargets <- function(disease_id, size = 2000) {
+OpenTargets <- function(disease_id="MONDO_0004975",
+                        size=3000) {
   query_url <- "https://api.platform.opentargets.org/api/v4/graphql"
 
   # Building query:
