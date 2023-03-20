@@ -109,7 +109,7 @@ RUN apt-get update \
 
 # Install mofapy2
 #RUN python3 -m pip install 'https://github.com/bioFAM/mofapy2/tarball/master'
-RUN pip3 install mofapy2==0.6.2
+RUN pip3 install mofapy2==0.6.3
 
 #RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | \
 #tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
