@@ -16,7 +16,8 @@
 pseudotime_inference <- function(model,
                                  clusters,
                                  time_factor = 8,
-                                 second_factor = 1,...) {
+                                 second_factor = 1,
+                                 lineage= "Lineage1",...) {
   gg <- MOFA2::plot_factors(model,
     factors = c(time_factor, second_factor),
     scale = F
@@ -32,15 +33,15 @@ pseudotime_inference <- function(model,
 
   pseudotime <- as.data.frame(sds@assays@data@listData[["pseudotime"]])
 
-  MOFA2::samples_metadata(model)$pseudotime <- pseudotime$Lineage1[match(
+  MOFA2::samples_metadata(model)$pseudotime <- pseudotime[paste(lineage)][match(
     names(clusters$cluster),
     rownames(pseudotime)
-  )]
+  ),]
 
   embeddings <- data.frame(embeddings)
-  embeddings$pseudotime <- pseudotime$Lineage1
+  embeddings$pseudotime <- pseudotime[,paste(lineage)]
 
-  df2 <- data.frame(df@curves$Lineage1$s)
+  df2 <- data.frame(df@curves[[paste(lineage)]]$s)
 
   plot <- ggpubr::ggscatter(embeddings,
     x = "x", y = "y",

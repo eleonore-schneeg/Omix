@@ -177,7 +177,7 @@ vertical_integration <- function(multiassay,
   # }
 
     args5 <- list(
-      multimodal_omics=multimodal_omics
+      multimodal_omics=multimodal_omics,
       num_factors = num_factors,
       scale_views = scale_views,
       metadata = metadata,
