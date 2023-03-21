@@ -399,6 +399,10 @@ The function will perform tuning on the defined range, and number of components 
 
 ```{r}
 multiomics_object_MTG=vertical_integration(multiomics_object_MTG,
+                                  slots = c(
+                                   "rna_processed",
+                                   "protein_processed"
+                                 ),
                                 integration='DIABLO',
                                 intersect_genes=FALSE,
                                 ID_type='gene_name',

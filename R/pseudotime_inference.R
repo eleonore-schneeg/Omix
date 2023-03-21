@@ -27,7 +27,7 @@ pseudotime_inference <- function(model,
   rownames(embeddings) <- gg$data[, c("sample")]
   embeddings <- embeddings[names(clusters$cluster), ]
 
-  sds <- slingshot::slingshot(embeddings, clusters$cluster)
+  sds <- slingshot::slingshot(embeddings, clusters$cluster,...)
   df <- slingshot::as.SlingshotDataSet(sds)
 
   pseudotime <- as.data.frame(sds@assays@data@listData[["pseudotime"]])

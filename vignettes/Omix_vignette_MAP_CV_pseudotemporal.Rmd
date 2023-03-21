@@ -408,7 +408,6 @@ pseudotime=pseudotime_inference(integrated_object,
                                  clusters,
                                  time_factor=8,
                                  second_factor=6,
-                                 pseudotime_var='pseudotime',
                                  start.clus = 1,
                                  end.clus=3)
 
