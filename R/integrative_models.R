@@ -21,9 +21,10 @@ integrate_with_DIABLO <- function(multimodal_omics,
                                   ncomp,
                                   design = c("cor", "full"),
                                   range = list(
-                                    mRNA = seq(5, 10, by = 10),
-                                    proteins = seq(5, 10, by = 10)
-                                  ),...) {
+                                    mRNA = seq(5, 100, by = 10),
+                                    proteins = seq(5, 100, by = 10)
+                                  ),
+                                  list.keepX,...) {
   multimodal_omics <- lapply(multimodal_omics, t)
   X <- list(
     mRNA = multimodal_omics[[1]],

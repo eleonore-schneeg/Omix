@@ -79,70 +79,131 @@ vertical_integration <- function(multiassay,
   Y <- metadata[[paste(dependent)]]
 
   if (integration == "DIABLO") {
-    cli::cli_alert_success("VERTICAL INTEGRATION WITH DIABLO")
 
     Y <- factor(Y, levels = levels)
-    int <- integrate_with_DIABLO(
-      multimodal_omics = multimodal_omics,
+
+    args1 <- list(
+      multimodal_omics=multimodal_omics,
       Y = Y,
       design = design,
       ncomp = ncomp,
       range = range
     )
-  }
 
+    int <- do.call('integrate_with_DIABLO', args1)
+    cli::cli_alert_success("VERTICAL INTEGRATION WITH DIABLO")
+
+  #   int <- integrate_with_DIABLO(
+  #     multimodal_omics,
+  #     Y = Y,
+  #     design = design,
+  #     ncomp = ncomp,
+  #     range = range
+  #   )
+  # }
+  }
   if (integration == "sMBPLS") {
-    cli::cli_alert_success("VERTICAL INTEGRATION WITH sMBPLS")
     Y <- as.matrix(Y)
     rownames(Y) <- rownames(metadata)
-    int <- integrate_with_sMBPLS(
-      multimodal_omics = multimodal_omics,
+  #   int <- integrate_with_sMBPLS(
+  #     multimodal_omics,
+  #     Y = Y,
+  #     design = design,
+  #     ncomp = ncomp,
+  #     list.keepX = list.keepX
+  #   )
+  # }
+
+    args2 <- list(
+      multimodal_omics=multimodal_omics,
       Y = Y,
       design = design,
       ncomp = ncomp,
       list.keepX = list.keepX
     )
-  }
 
+    int <- do.call('integrate_with_sMBPLS', args2)
+    cli::cli_alert_success("VERTICAL INTEGRATION WITH sMBPLS")
+
+  }
   if (integration == "MBPLS") {
-    cli::cli_alert_success("VERTICAL INTEGRATION WITH MBPLS")
     Y <- as.matrix(Y)
     rownames(Y) <- rownames(metadata)
-    int <- integrate_with_MBPLS(
-      multimodal_omics = multimodal_omics,
+  #   int <- integrate_with_MBPLS(
+  #     multimodal_omics,
+  #     Y = Y,
+  #     design = design,
+  #     ncomp = ncomp
+  #   )
+  # }
+    args3 <- list(
+      multimodal_omics=multimodal_omics,
       Y = Y,
       design = design,
       ncomp = ncomp
     )
-  }
+
+    int <- do.call('integrate_with_MBPLS', args3)
+    cli::cli_alert_success("VERTICAL INTEGRATION WITH MBPLS")
 
 
+   }
   if (integration == "MOFA") {
-    cli::cli_alert_success("VERTICAL INTEGRATION WITH MOFA")
-    int <- integrate_with_MOFA(multimodal_omics,
-      num_factors = num_factors,
-      scale_views = scale_views,
-      metadata = metadata
+  #   int <- integrate_with_MOFA(multimodal_omics,
+  #     num_factors = num_factors,
+  #     scale_views = scale_views,
+  #     metadata = metadata
+  #   )
+  # }
+
+    args4 <- list(
+    multimodal_omics=multimodal_omics
+    num_factors = num_factors,
+    scale_views = scale_views,
+    metadata = metadata
     )
+
+    int <- do.call('integrate_with_MOFA', args4)
+    cli::cli_alert_success("VERTICAL INTEGRATION WITH MOFA")
   }
 
   if (integration == "MEIFESTO") {
-    cli::cli_alert_success("VERTICAL INTEGRATION WITH MEIFESTO")
-    int <- integrate_with_MEIFESTO(multimodal_omics,
+  #   int <- integrate_with_MEIFESTO(multimodal_omics,
+  #     num_factors = num_factors,
+  #     scale_views = scale_views,
+  #     metadata = metadata,
+  #     time = time
+  #   )
+  # }
+
+    args5 <- list(
+      multimodal_omics=multimodal_omics
       num_factors = num_factors,
       scale_views = scale_views,
       metadata = metadata,
       time = time
     )
+
+    int <- do.call('integrate_with_MEIFESTO', args5)
+    cli::cli_alert_success("VERTICAL INTEGRATION WITH MEIFESTO")
+
   }
 
   if (integration == "iCluster") {
-    cli::cli_alert_success("VERTICAL INTEGRATION CLUSTERING WITH ICLUSTER")
+
     multimodal <- lapply(multimodal, data.frame)
-    int <- integrate_with_iCluster(
+    # int <- integrate_with_iCluster(
+    #   multimodal_omics = multimodal_omics,
+    #   try.N.clust = try.N.clust
+    # )
+
+    args6 <- list(
       multimodal_omics = multimodal_omics,
       try.N.clust = try.N.clust
     )
+
+    int <- do.call('integrate_with_iCluster', args6)
+    cli::cli_alert_success("VERTICAL INTEGRATION CLUSTERING WITH ICLUSTER")
   }
 
   multiassay@metadata$multimodal_object <- int[[1]]
