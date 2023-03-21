@@ -16,11 +16,9 @@
 pseudotime_inference <- function(model,
                                  clusters,
                                  time_factor = 8,
-                                 second_factor = 1,
-                                 pseudotime_var = "pseudotime", ...) {
+                                 second_factor = 1,...) {
   gg <- MOFA2::plot_factors(model,
     factors = c(time_factor, second_factor),
-    color_by = pseudotime_var,
     scale = F
   )
 
@@ -29,7 +27,7 @@ pseudotime_inference <- function(model,
   rownames(embeddings) <- gg$data[, c("sample")]
   embeddings <- embeddings[names(clusters$cluster), ]
 
-  sds <- slingshot::slingshot(embeddings, clusters$cluster,...)
+  sds <- slingshot::slingshot(embeddings, clusters$cluster)
   df <- slingshot::as.SlingshotDataSet(sds)
 
   pseudotime <- as.data.frame(sds@assays@data@listData[["pseudotime"]])
@@ -46,12 +44,12 @@ pseudotime_inference <- function(model,
 
   plot <- ggpubr::ggscatter(embeddings,
     x = "x", y = "y",
-    color = paste(pseudotime_var)
+    color = "pseudotime"
   ) +
     viridis::scale_color_viridis() +
     geom_point(data = df2, aes(x = x, y = y)) +
     xlab(paste("Factor", time_factor, " ~ Pseudotime")) +
-    ylab(paste("Factor", second_factor, " ~ Neuropathology"))
+    ylab(paste("Factor", second_factor))
 
   return(list(
     model = model,
