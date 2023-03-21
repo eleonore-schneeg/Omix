@@ -268,6 +268,7 @@ integrate_with_MOFA <- function(multimodal_omics,
   train_opts <- MOFA2::get_default_training_options(MOFAobject)
   train_opts$convergence_mode <- "medium"
   train_opts$seed <- 42
+  train_opts$stochastic <- FALSE
 
   MOFAobject <- MOFA2::prepare_mofa(MOFAobject,
     data_options = data_opts,
