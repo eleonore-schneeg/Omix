@@ -2,8 +2,16 @@
 
 ## Use rstudio installs binaries from RStudio's RSPM service by default,
 ## Uses the latest stable ubuntu, R and Bioconductor versions. Created on unbuntu 20.04, R 4.0 and BiocManager 3.12
-FROM rocker/rstudio:4.2.2
+#FROM rocker/rstudio:4.2.2
+FROM rocker/rstudio:4.0.1
+
 #FROM r-base:4.0.2
+RUN apt-get update && apt-get install -f && apt-get install -y python3 python3-setuptools python3-dev python3-pip
+RUN apt-get install -y libcurl4-openssl-dev
+RUN apt-get install -y libcairo2-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libxt-dev libharfbuzz-dev libfribidi-dev
+
+# Install mofapy2
+RUN python3 -m pip install 'https://github.com/bioFAM/mofapy2/tarball/master'
 
 ## Add packages dependencies
 RUN apt-get update \
@@ -12,10 +20,10 @@ RUN apt-get update \
 	## Basic deps
 	gdb \
 	libxml2-dev \
-	python3-pip \
-	python3 \
-  python3-setuptools \
-  python3-dev \
+	#python3-pip \
+	#python3 \
+  #python3-setuptools \
+  #python3-dev \
 	libz-dev \
 	liblzma-dev \
 	libbz2-dev \
@@ -102,14 +110,14 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update \
-    && apt-get install -y libcurl4-openssl-dev
-RUN apt-get update \
-    && apt-get install -y libcairo2-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libxt-dev libharfbuzz-dev libfribidi-dev
+#RUN apt-get update \
+#    && apt-get install -y libcurl4-openssl-dev
+#RUN apt-get update \
+#    && apt-get install -y libcairo2-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libxt-dev libharfbuzz-dev libfribidi-dev
 
 # Install mofapy2
 #RUN python3 -m pip install 'https://github.com/bioFAM/mofapy2/tarball/master'
-RUN pip3 install mofapy2==0.6.3
+#RUN pip3 install mofapy2==0.6.3
 #RUN pip3 install mofapy2
 #RUN pip3 install 'https://github.com/bioFAM/mofapy2/tarball/master'
 
