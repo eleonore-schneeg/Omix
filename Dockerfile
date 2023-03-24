@@ -141,6 +141,7 @@ RUN install2.r -e \
       devtools \
       remotes \
       enrichR \
+      ggpp \
       magrittr \
       lme4 \
       dplyr \
