@@ -34,6 +34,9 @@ integrative_results_supervised(
 
 \item{compare_communities}{Logical whether to compare multi-omics network communities using \code{compareCluster}}
 }
+\value{
+List object of integrated results
+}
 \description{
 Downstream analysis for integrated multi-omics data
 }

@@ -7,7 +7,12 @@
 combat_correction(matrix, batch_map, batch)
 }
 \arguments{
-\item{batch_map}{}
+\item{matrix}{protein abundance matrix}
+
+\item{batch_map}{generated internally to \code{batch_correction_protein()}}
+}
+\value{
+Combat corrected data frame
 }
 \description{
 Proteomics normalisation batch correction using Combat

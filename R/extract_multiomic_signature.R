@@ -5,10 +5,9 @@
 #' `DIABLO`,`sMBPLS`,`iCluster`,`MEIFESTO`
 #' @param component Chosen component for downstream analysis. Default to 1
 #'
-#' @return
+#' @return List object
 #' @export
 #'
-#' @examples
 extract_multiomic_signature <- function(multiassay,
                                         integration = "DIABLO",
                                         component = 1) {

@@ -7,7 +7,14 @@
 median_centering_correction(matrix, batch_map, batch)
 }
 \arguments{
-\item{batch}{}
+\item{matrix}{protein abundance matrix}
+
+\item{batch_map}{generated internally to \code{batch_correction_protein()}}
+
+\item{batch}{batch covariate}
+}
+\value{
+Median normalised data frame
 }
 \description{
 Proteomics normalisation batch correction using median centering method

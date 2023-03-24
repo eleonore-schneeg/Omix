@@ -1,16 +1,17 @@
-## Data filtering function
+#' Data filtering function
+#'
 #' @param matrix data frame containing LOG2 data
 #' @param groups A character vector dictating the grouping
-#' @param min_sample # minimum % of samples that should have non missing
-#'  protein value, or else the protein is excluded
+#' @param min_sample minimum % of samples that should have non missing
+#' protein value, or else the protein is excluded
 #' @param at_least_one TRUE means to keep the row if min_count is met for at
-#'  least one condition, FALSE means min_count must be met across all
-#'  groups for retention
+#' least one condition, FALSE means min_count must be met across all
+#' groups for retention
 #'
-#' @return
+#' @return Filtered protein matrix
 #' @export
 #'
-#' @examples
+
 filter_protein <- function(matrix,
                            groups,
                            min_sample = 0.5,

@@ -9,7 +9,7 @@
 #' @return list of of plots - one for each module provided
 #' @export
 #'
-#' @examples
+
 pseudotime_ordering_modules <- function(metadata,
                                         modules,
                                         variable,

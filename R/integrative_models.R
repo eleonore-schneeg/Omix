@@ -15,7 +15,7 @@
 #' @import mixOmics
 #' @export
 #'
-#' @examples
+
 integrate_with_DIABLO <- function(multimodal_omics,
                                   Y,
                                   ncomp,
@@ -105,7 +105,7 @@ integrate_with_DIABLO <- function(multimodal_omics,
 #' @import mixOmics
 #' @export
 #'
-#' @examples
+
 integrate_with_sMBPLS <- function(multimodal_omics,
                                   Y,
                                   design = c("cor", "full", "avg"),
@@ -177,7 +177,7 @@ integrate_with_sMBPLS <- function(multimodal_omics,
 #' @import mixOmics
 #' @export
 #'
-#' @examples
+
 integrate_with_MBPLS <- function(multimodal_omics,
                                  Y,
                                  design = c("cor", "full", "avg"),
@@ -248,7 +248,7 @@ integrate_with_MBPLS <- function(multimodal_omics,
 #' @import MOFA2
 #' @import basilisk
 #' @import reticulate
-#' @examples
+
 integrate_with_MOFA <- function(multimodal_omics,
                                 num_factors = 5,
                                 scale_views = T,
@@ -305,7 +305,7 @@ integrate_with_MOFA <- function(multimodal_omics,
 #' get_default_mefisto_options
 #' @import MOFA2
 #'
-#' @examples
+
 integrate_with_MEIFESTO <- function(multimodal_omics,
                                     num_factors = 5,
                                     scale_views = T,
@@ -366,10 +366,9 @@ integrate_with_MEIFESTO <- function(multimodal_omics,
 #' @return a list object with `multimodal_object` and `model` slots
 
 #' @importFrom MOVICS getClustNum getiClusterBayes
-#' @import MOVICS
 #' @export
 #'
-#' @examples
+
 integrate_with_iCluster <- function(multimodal_omics,
                                     try.N.clust = 2:4) {
   cli::cli_alert_success("Optimising the number of cluster (this make take a while")

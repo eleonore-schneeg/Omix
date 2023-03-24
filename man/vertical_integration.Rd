@@ -35,6 +35,14 @@ vertical_integration(
 \item{intersect_genes}{Logical whether to keep intersecting features for
 integration}
 
+\item{ID_type}{Default to gene_name}
+
+\item{dependent}{Dependent variable for the DeSEQ2 analysis, usually the
+disease group variable}
+
+\item{levels}{Character vector with reference group as first element.
+Set parameter as NULL if dependent is NULL.}
+
 \item{design}{Design matrix (design = "full"): The strength of all
 relationships between dataframes is maximised (= 1) – a “fully connected” design.
 If design is set on cor, the correlation between PC1 of each dataset will be
@@ -45,7 +53,17 @@ set for the design matrix}
 \item{range}{List of the range of numbers of features to keep in the tuning phase.
 First element must be for rna, second for proteins}
 
+\item{list.keepX}{if integration == \code{sMBPLS}, number of features to keep per view.}
+
+\item{num_factors}{if integration == \code{MOFA}, number of factors. Default to 10.}
+
+\item{time}{Pseudotime covariate}
+
+\item{scale_views}{Logical whether to scale omic views}
+
 \item{try.N.clust}{number of cluster to tune in \code{iCluster}}
+
+\item{most_variable_feature}{Logical whether to keep most variable features}
 }
 \value{
 Returns an integrated object in \code{multiassay@metadata$integration} to

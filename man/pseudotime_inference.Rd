@@ -9,7 +9,7 @@ pseudotime_inference(
   clusters,
   time_factor = 8,
   second_factor = 1,
-  pseudotime_var = "pseudotime",
+  lineage = "Lineage1",
   ...
 )
 }

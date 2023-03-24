@@ -7,7 +7,12 @@
 GSEA(gene_list, pval)
 }
 \arguments{
-\item{pval}{}
+\item{gene_list}{vector of genes}
+
+\item{pval}{threshold for adjusted pvalue}
+}
+\value{
+List of results
 }
 \description{
 Performs functional gene set enrichment analysis

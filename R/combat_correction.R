@@ -1,10 +1,10 @@
 ################################################################################
 #' Proteomics normalisation batch correction using Combat
 #'
-#' @param matrix
-#' @param batch_map
+#' @param matrix protein abundance matrix
+#' @param batch_map generated internally to `batch_correction_protein()`
 #'
-#' @return
+#' @return Combat corrected data frame
 #' @importFrom proBatch correct_with_ComBat_df quantile_normalize_dm
 #' matrix_to_long long_to_matrix
 #' @export

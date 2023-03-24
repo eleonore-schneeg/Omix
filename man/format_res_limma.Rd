@@ -10,12 +10,23 @@ format_res_limma(
   log2FoldChange = 0,
   n_label = 20,
   padj = 0.05,
-  ylim = c(0, 10),
   ...
 )
 }
 \arguments{
-\item{ylim}{}
+\item{dt}{Differential expression results dataframe from limma}
+
+\item{gene_id_conversion}{Default to NULL. Can provide a dataframe with \code{gene_name}
+and \code{uniprot_id} columns to easily convert nomenclature.}
+
+\item{log2FoldChange}{Log2FC absolute threshold}
+
+\item{n_label}{maximum number of label on volcano plot}
+
+\item{padj}{adjusted p value threshold. Default to 0.05}
+}
+\value{
+Formatted data frame
 }
 \description{
 Formatting differential expression results from limma

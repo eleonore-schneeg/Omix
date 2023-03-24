@@ -1,25 +1,24 @@
 ################################################################################
 #' Formatting differential expression results from limma
 #'
-#' @param dt
-#' @param gene_id_conversion
-#' @param log2FoldChange
-#' @param n_label
-#' @param padj
-#' @param ylim
+#' @param dt Differential expression results dataframe from limma
+#' @param gene_id_conversion Default to NULL. Can provide a dataframe with `gene_name`
+#' and `uniprot_id` columns to easily convert nomenclature.
+#' @param log2FoldChange Log2FC absolute threshold
+#' @param n_label maximum number of label on volcano plot
+#' @param padj adjusted p value threshold. Default to 0.05
 #'
-#' @return
-#' @importFrom dplyr filter arrange pull top_n
+#' @return Formatted data frame
+#' @import dplyr
 #' @export
 #'
-#' @examples
+
 
 format_res_limma <- function(dt,
                              gene_id_conversion = NULL,
                              log2FoldChange = 0,
                              n_label = 20,
                              padj = 0.05,
-                             ylim = c(0, 10),
                              ...) {
 
   if (!is.null(gene_id_conversion)) {
@@ -69,18 +68,20 @@ format_res_limma <- function(dt,
 
 #' Formatting differential expression results from DESEQ2
 #'
-#' @param dt
-#' @param log2FoldChange
-#' @param padj
-#' @param n_label
-#' @param gene_id_conversion
-#' @param filter_protein_coding
+#' @param dt Differential expression results dataframe from DESEQ2
+#' @param log2FoldChange  Log2FC absolute threshold
+#' @param padj adjusted p value threshold. Default to 0.05
+#' @param n_label maximum number of label on volcano plot
+#' @param gene_id_conversion Default to NULL. Can provide a dataframe with `gene_name`
+#' `uniprot_id` columns to easily convert nomenclature.
+#' @param filter_protein_coding Logical as whether to filter protein coding gene.
+#' Default to TRUE.
 #'
-#' @return
-#' @importFrom dplyr filter arrange pull
+#' @return Formatted data frame
+#' @import dplyr
 #' @export
 #'
-#' @examples
+
 format_res_deseq <- function(dt,
                              log2FoldChange = 0,
                              padj = 0.05,
@@ -157,25 +158,21 @@ format_res_deseq <- function(dt,
 
 #' Builds a volcano plot from limma results
 #'
-#' @param dt
-#' @param log2FoldChange
-#' @param n_label
-#' @param padj
-#' @param ylim
+#' @param dt Formatted Differential expression results from `format_res_limma()`
+#' @param log2FoldChange  Log2FC absolute threshold
+#' @param padj adjusted p value threshold. Default to 0.05
 #'
-#' @return
+#' @return Volcano plot
+#' @import ggplot2
+#' @import ggrepel
 #' @export
-#'
-#' @examples
+
 volcano_plot_limma <- function(dt,
                                log2FoldChange = 0,
-                               n_label = 10,
-                               padj = 0.05,
-                               ylim = c(0, 10)) {
-  library(ggplot2)
+                               padj = 0.05) {
 
-  ggplot2::ggplot(dt, aes(x = logFC, y = -log10(adj.P.Val), label = gene_name, colour = de, repel = TRUE)) +
-    geom_point(aes(x = logFC, y = -log10(adj.P.Val), fill = de, colour = de), show.legend = T, alpha = 0.5) +
+  ggplot2::ggplot(dt, aes(x = log2FoldChange, y = -log10(padj), label = gene_name, colour = de, repel = TRUE)) +
+    geom_point(aes(x = log2FoldChange, y = -log10(padj), fill = de, colour = de), show.legend = T, alpha = 0.5) +
     theme_classic() +
     scale_colour_manual(
       name = NULL,
@@ -186,7 +183,7 @@ volcano_plot_limma <- function(dt,
     ) +
     ggrepel::geom_text_repel(
       data = dt,
-      aes(logFC, y = -log10(adj.P.Val), label = ifelse(label == "Yes", gene_name, "")), max.overlaps = 2000
+      aes(log2FoldChange, y = -log10(padj), label = ifelse(label == "Yes", gene_name, "")), max.overlaps = 2000
     ) +
     xlab(bquote(Log[2] * " (fold-change)")) +
     ylab(bquote("-" * Log[10] * " (adjusted p-value)")) +
@@ -203,22 +200,19 @@ volcano_plot_limma <- function(dt,
 
 #' Builds a volcano plot from DESEQ2 results
 #'
-#' @param dt
-#' @param log2FoldChange
-#' @param n_label
-#' @param padj
-#' @param ylim
+#' @param dt Formatted Differential expression results from `format_res_deseq()`
+#' @param log2FoldChange  Log2FC absolute threshold
+#' @param padj adjusted p value threshold. Default to 0.05
 #'
-#' @return
+#' @return Volcano plot
+#' @import ggplot2
+#' @import ggrepel
 #' @export
 #'
-#' @examples
+
 volcano_plot_deseq <- function(dt,
                                log2FoldChange = 0,
-                               n_label = 10,
-                               padj = 0.05,
-                               ylim = c(0, 10)) {
-  library(ggplot2)
+                               padj = 0.05) {
 
   ggplot2::ggplot(dt, aes(x = log2FoldChange, y = -log10(padj), label = gene_name, colour = de, repel = TRUE)) +
     geom_point(aes(x = log2FoldChange, y = -log10(padj), fill = de, colour = de), show.legend = T, alpha = 0.5) +
@@ -248,14 +242,19 @@ volcano_plot_deseq <- function(dt,
 
 #' Builds an interactive volcano plot using plotly
 #'
-#' @param data
-#' @param log2FoldChange
+#' @param data Formatted Differential expression results from `format_res_deseq()` or
+#' `format_res_limma()`
+#' @param log2FoldChange  Log2FC absolute threshold. Default to 0.25
+#' @param padj adjusted p value threshold. Default to 0.05
 #'
-#' @return
+#' @return Interactive volcano plot
+#' @import ggplot2
+#' @import plotly
 #' @export
 #'
-#' @examples
-volcano_interactive <- function(data, log2FoldChange = 0.25) {
+volcano_interactive <- function(data,
+                                log2FoldChange = 0.25,
+                                padj=0.05) {
   volcano <- ggplot2::ggplot(data, aes(x = log2FoldChange, y = -log10(padj), label = gene_name, colour = de, text = paste(
     "Gene:", gene_name, "<br>",
     "Log2FC:", round(log2FoldChange,3), "<br>",
@@ -271,7 +270,7 @@ volcano_interactive <- function(data, log2FoldChange = 0.25) {
       linetype = 2, size = 0.2, alpha = 0.5
     ) +
     geom_hline(
-      yintercept = -log10(0.05),
+      yintercept = -log10(padj),
       linetype = 2, size = 0.2, alpha = 0.5
     ) +
     scale_color_manual(values = c(
@@ -288,14 +287,15 @@ volcano_interactive <- function(data, log2FoldChange = 0.25) {
 
 #' Builds an interactive comparison plot using plotly
 #'
-#' @param data
-#' @param log2FoldChange
+#' @param data Formatted Comparative Differential expression results from `single_omic_comparisons()`
 #'
-#' @return
+#' @return Interactive plot
+#' @import ggplot2
+#' @import plotly
 #' @export
 #'
-#' @examples
-volcano_interactive_comparison <- function(data, log2FoldChange = 0.25) {
+
+volcano_interactive_comparison <- function(data) {
   volcano <- ggplot2::ggplot(data, aes(x = log2FoldChange.x, y = log2FoldChange.y, label = gene_name, colour = direction, text = paste(
     "Gene:", gene_name, "<br>",
     "Log2FC transcriptomics:", round(log2FoldChange.x,3), "<br>",

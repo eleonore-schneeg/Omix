@@ -14,7 +14,22 @@ format_res_deseq(
 )
 }
 \arguments{
-\item{filter_protein_coding}{}
+\item{dt}{Differential expression results dataframe from DESEQ2}
+
+\item{log2FoldChange}{Log2FC absolute threshold}
+
+\item{padj}{adjusted p value threshold. Default to 0.05}
+
+\item{n_label}{maximum number of label on volcano plot}
+
+\item{gene_id_conversion}{Default to NULL. Can provide a dataframe with \code{gene_name}
+\code{uniprot_id} columns to easily convert nomenclature.}
+
+\item{filter_protein_coding}{Logical as whether to filter protein coding gene.
+Default to TRUE.}
+}
+\value{
+Formatted data frame
 }
 \description{
 Formatting differential expression results from DESEQ2

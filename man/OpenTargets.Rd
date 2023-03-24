@@ -7,9 +7,13 @@
 OpenTargets(disease_id = "MONDO_0004975", size = 3000)
 }
 \arguments{
-\item{disease_id}{OpenTargets disease id. Default to "MONDO_0004975" (Alzheimer's Disease)}
+\item{disease_id}{OpenTargets disease id. Default to "MONDO_0004975" (Alzheimer's Disease)
+Different disease ontologies can be found on https://www.ebi.ac.uk/ols/ontologies}
 
 \item{size}{Default to 3000}
+}
+\value{
+ggplot showing association scores from OpenTargets
 }
 \description{
 Interface to OpenTargets database

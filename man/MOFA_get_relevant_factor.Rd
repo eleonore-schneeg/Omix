@@ -2,13 +2,18 @@
 % Please edit documentation in R/integrative_results_unsupervised.R
 \name{MOFA_get_relevant_factor}
 \alias{MOFA_get_relevant_factor}
-\title{Title}
+\title{Selects the top factor that is most strongly associated with outcomes of interest}
 \usage{
 MOFA_get_relevant_factor(MOFAobject, covariate)
 }
 \arguments{
-\item{covariate}{}
+\item{MOFAobject}{MOFA model}
+
+\item{covariate}{Covariate of interest}
+}
+\value{
+String of relevant factor
 }
 \description{
-Title
+Selects the top factor that is most strongly associated with outcomes of interest
 }

@@ -1,12 +1,13 @@
 #' Interface to OpenTargets database
 #'
 #' @param disease_id OpenTargets disease id. Default to "MONDO_0004975" (Alzheimer's Disease)
+#' Different disease ontologies can be found on https://www.ebi.ac.uk/ols/ontologies
 #' @param size Default to 3000
 #'
-#' @return
+#' @return ggplot showing association scores from OpenTargets
 #' @export
 #'
-#' @examples
+
 OpenTargets <- function(disease_id="MONDO_0004975",
                         size=3000) {
   query_url <- "https://api.platform.opentargets.org/api/v4/graphql"

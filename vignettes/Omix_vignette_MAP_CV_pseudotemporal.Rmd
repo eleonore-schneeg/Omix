@@ -72,6 +72,14 @@ Call required packages for vignette:
 ```{r}
 library(Omix)
 library(purrr)
+library(fgsea)
+library(slingshot)
+library(ggplot2)
+library(MOFA2)
+library(visNetwork)
+library(plotly)
+library(igraph)
+library(EnsDb.Hsapiens.v86)
 ```
 
 First we must load the data from Omix for the vignette:
@@ -341,16 +349,17 @@ MOFA2::plot_variance_explained(integrated_object, max_r2=10)
 
 ```{r}
 
-MOFA2::correlate_factors_with_covariates(integrated_object, 
+suppressWarnings({MOFA2::correlate_factors_with_covariates(integrated_object, 
                                   covariates = c("AD","Braak",'pseudotime','MTG',
                                                  'SSC','amyloid','pTau','PHF1'), 
                                   plot="r")
 
-
-MOFA2::correlate_factors_with_covariates(integrated_object, 
+})
+suppressWarnings({MOFA2::correlate_factors_with_covariates(integrated_object, 
                                   covariates = c("AD","Braak",'pseudotime','MTG',
                                                  'SSC','amyloid','pTau','PHF1'), 
                                   plot="log_pval")
+})
 
 ```
 
@@ -409,7 +418,8 @@ pseudotime=pseudotime_inference(integrated_object,
                                  time_factor=8,
                                  second_factor=6,
                                  start.clus = 1,
-                                 end.clus=3)
+                                 end.clus=3,
+                                 lineage = 'Lineage1')
 
 pseudotime$plot
 
@@ -447,7 +457,6 @@ It also returns QC plots
 weights=extract_weigths(integrated_object,
                            factor=6,
                            threshold=0.3,
-                           variable,
                            sense_check_variable='PHF1')
 ```
 
@@ -657,7 +666,7 @@ protein_enrichment$Plot
 
 ```{r, message= FALSE}
 modules=multiomics_modules(multiassay=multiomics_object,
-                              metadata=samples_metadata(integrated_object),
+                              metadata=MOFA2::samples_metadata(integrated_object),
                               covariates=c('pseudotime','PHF1','amyloid','pTau'),
                               communities=communities$communities)
 ```

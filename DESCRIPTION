@@ -31,6 +31,7 @@ Imports:
       enrichR,
       magrittr,
       ClassDiscovery,
+      EnsDb.Hsapiens.v86,
       stats,
       lme4,
       dplyr,
@@ -39,6 +40,7 @@ Imports:
       ggpubr,
       igraph,
       ggplot2,
+      ggsignif,
       cowplot,
       httr,
       jsonlite,
@@ -83,7 +85,11 @@ Imports:
       devtools,
       Biobase,
       basilisk,
-      msigdbr
+      msigdbr,
+      reticulate,
+      plotly,
+      MOVICS,
+      DT
 Remotes:
       xlucpu/MOVICS
 Suggests: 

@@ -12,13 +12,12 @@
 #' @param simplify Logical whether to simplify pathways ontologies using `clusterProfiler`
 #' @param compare_communities Logical whether to compare multi-omics network communities using `compareCluster`
 #'
-#' @return
+#' @return List object of integrated results
 #' @export
 #' @importFrom purrr possibly
 #' @importFrom clusterProfiler enrichGO simplify compareCluster
 #' @importFrom enrichplot pairwise_termsim
-#' @importFrom
-#' @examples
+
 integrative_results_supervised <- function(multiassay,
                                            integration = "DIABLO",
                                            component = 1,

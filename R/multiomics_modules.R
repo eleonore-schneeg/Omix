@@ -13,14 +13,13 @@
 #' @importFrom purrr map_dfr
 ##' @importFrom tibble enframe
 #'
-#' @examples
+
 multiomics_modules <- function(multiassay,
                                metadata,
                                covariates = c("pseudotime", "PHF1", "amyloid", "pTau"),
                                communities) {
 
-  multimodal_omics <- multiassay@metadata$multimodal_object
-
+  multimodal_omics <- multiassay@metadata$multimodal_object$omics
   df <- purrr::map_dfr(
     .x = communities,
     .f = ~ tibble::enframe(
@@ -38,7 +37,7 @@ multiomics_modules <- function(multiassay,
   matrix2 <- t(multimodal_omics$proteins)
   matrix <- cbind(matrix1, matrix2)
 
-  df$color <- basetheme::num2col(as.numeric(df$community))
+    df$color <- basetheme::num2col(as.numeric(df$community))
   moduleColors <- df$community
   names(moduleColors) <- df$feature
 
@@ -52,6 +51,7 @@ multiomics_modules <- function(multiassay,
   moduleTraitPvalue <- WGCNA::corPvalueStudent(moduleTraitCor, nSamples)
 
   metadata <- merge(metadata, MEs, by = "sample_id")
+
   corrplot=corrplot::corrplot(t(moduleTraitCor[1:nrow(moduleTraitCor - 1), ]),
     p.mat = t(moduleTraitPvalue),
     insig = "label_sig", sig.level = c(0.001, 0.01, 0.05),
@@ -70,3 +70,4 @@ multiomics_modules <- function(multiassay,
     modules_eigen_value = MEs0
   ))
 }
+

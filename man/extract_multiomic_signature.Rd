@@ -14,6 +14,9 @@ extract_multiomic_signature(multiassay, integration = "DIABLO", component = 1)
 
 \item{component}{Chosen component for downstream analysis. Default to 1}
 }
+\value{
+List object
+}
 \description{
 Extracts a multi-omics signature from loadings
 }

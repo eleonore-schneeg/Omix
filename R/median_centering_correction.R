@@ -1,11 +1,11 @@
 ################################################################################
 #' Proteomics normalisation batch correction using median centering method
 #'
-#' @param matrix
-#' @param batch_map
-#' @param batch
+#' @param matrix protein abundance matrix
+#' @param batch_map generated internally to `batch_correction_protein()`
+#' @param batch batch covariate
 #'
-#' @return
+#' @return Median normalised data frame
 #' @importFrom proBatch center_feature_batch_medians_df quantile_normalize_dm
 #' matrix_to_long long_to_matrix
 #' @export

@@ -7,7 +7,18 @@
 enrichment_custom(genes, reference, genesets, adj = "fdr", verbose = FALSE)
 }
 \arguments{
-\item{verbose}{}
+\item{genes}{Gene list (vector)}
+
+\item{reference}{Reference background (vector)}
+
+\item{genesets}{List of genesets}
+
+\item{adj}{Multiple testing adjustment method. Default to 'fdr'}
+
+\item{verbose}{Default to FALSE}
+}
+\value{
+Functional enrichment result
 }
 \description{
 Functional enrichment based on given reference annotations

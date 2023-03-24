@@ -1,18 +1,17 @@
 #' Performs functional gene set enrichment analysis
 #'
-#' @param gene_list
-#' @param pval
+#' @param gene_list vector of genes
+#' @param pval threshold for adjusted pvalue
 #'
-#' @return
+#' @return List of results
 #' @export
+#' @import fgsea
+#' @import dplyr
 #' @importFrom msigdbr msigdbr
-#' @importFrom dplyr filter
 #'
-#' @examples
+
 GSEA = function(gene_list, pval) {
   set.seed(54321)
-  library(dplyr)
-  library(fgsea)
 
   if ( any( duplicated(names(gene_list)) )  ) {
     warning("Duplicates in gene names")
@@ -30,18 +29,18 @@ GSEA = function(gene_list, pval) {
   names(msigdbr_list)=tolower(names(msigdbr_list))
   myGO=msigdbr_list
 
-  fgRes <- fgsea::fgsea(pathways = myGO,
+  fgRes <- suppressWarnings({fgsea::fgsea(pathways = myGO,
                         stats = gene_list,
                         minSize=15, ## minimum gene set size
                         maxSize=400, ## maximum gene set size
-                        nperm=10000) %>%
+                        nperm=10000)}) %>%
     as.data.frame() %>%
     dplyr::filter(padj < !!pval) %>%
     arrange(desc(NES))
   message(paste("Number of signficant gene sets =", nrow(fgRes)))
 
   message("Collapsing Pathways -----")
-  concise_pathways = collapsePathways(data.table::as.data.table(fgRes),
+  concise_pathways = fgsea::collapsePathways(data.table::as.data.table(fgRes),
                                       pathways = myGO,
                                       stats = gene_list)
   fgRes = fgRes[fgRes$pathway %in% concise_pathways$mainPathways, ]
@@ -71,71 +70,3 @@ GSEA = function(gene_list, pval) {
   return(output)
 }
 
-#' Plots FGSEA results
-#'
-#' @param gs_results
-#' @param myGO
-#' @param min.sz
-#' @param main
-#'
-#' @return
-#' @export
-#'
-#' @examples
-plot_geneset_clusters = function( gs_results, myGO, min.sz = 4, main="GSEA clusters"){
-  library(ggplot2)
-  library(ggrepel)
-  library(stringr)
-
-
-  df = matrix(nrow=nrow(gs_results), ncol = nrow(gs_results), data = 0)
-  rownames(df) = colnames(df) = gs_results$pathway
-
-  for ( i in 1:nrow(gs_results)) {
-    genesI =  unlist(myGO[names(myGO) == gs_results$pathway[i] ])
-    for (j in 1:nrow(gs_results)) {
-      genesJ = unlist(myGO[names(myGO) == gs_results$pathway[j] ])
-      ## Jaccards distance  1 - (intersection / union )
-      overlap = sum(!is.na(match(genesI, genesJ )))
-      jaccards = overlap / length(unique(c(genesI, genesJ) ))
-      df[i,j] = 1-jaccards
-    }
-  }
-
-  ## Cluster nodes using dynamic tree cut, for colors
-  distMat = as.dist(df)
-  dendro = hclust(distMat, method = "average" )
-  clust = dynamicTreeCut::cutreeDynamicTree( dendro, minModuleSize = min.sz )
-  ## Note: in dynamicTreeCut, cluster 0, is a garbage cluster for things that dont cluster, so we remove it
-
-  gs_results$Cluster = clust
-  gs_results = gs_results[gs_results$Cluster != 0, ]
-
-  ## select gene sets to label for each clusters
-  bests = gs_results %>%
-    group_by( Cluster ) %>%
-    top_n(wt = abs(size), n = 10) %>%
-    .$pathway
-  ## determine cluster order for plotting
-  clust_ords = gs_results %>%
-    group_by( Cluster ) %>%
-    summarise("Average" = NES ) %>%
-    arrange(desc(Average)) %>%
-    .$Cluster %>%
-    unique
-
-  gs_results$Cluster = factor(gs_results$Cluster, levels = clust_ords)
-
-  gs_results$Label = ""
-  gs_results$Label[gs_results$pathway %in% bests ] = gs_results$pathway[gs_results$pathway %in% bests ]
-  gs_results$Label = str_remove(gs_results$Label, "GO_")
-  gs_results$Label = tolower(gs_results$Label)
-
-  g1 = ggplot(gs_results, aes(x = Cluster, y = NES, label = Label )) +
-    geom_jitter( aes(color = Cluster,  size = size), alpha = 0.8, height = 0, width = 0.2 ) +
-    scale_size_continuous(range = c(0.5,5)) +
-    geom_text_repel(min.segment.length = 0, seed = 42, box.padding = 0.5)+
-    ggtitle(main)
-
-  return(g1)
-}

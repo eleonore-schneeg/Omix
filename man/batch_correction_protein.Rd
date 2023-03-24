@@ -2,13 +2,22 @@
 % Please edit documentation in R/batch_correction_protein.R
 \name{batch_correction_protein}
 \alias{batch_correction_protein}
-\title{Calling different proteomics correction methods}
+\title{Calling different proteomics correction methods. Internal to \code{process_protein()}}
 \usage{
 batch_correction_protein(matrix, batch_map, batch, correction_method)
 }
 \arguments{
-\item{correction_method}{}
+\item{matrix}{Protein abundance matrix}
+
+\item{batch_map}{Automatically generated in \code{process_protein()}}
+
+\item{batch}{Batch column name}
+
+\item{correction_method}{\code{Combat} or \code{Median_centering}}
+}
+\value{
+Batch corrected matrix
 }
 \description{
-Calling different proteomics correction methods
+Calling different proteomics correction methods. Internal to \code{process_protein()}
 }

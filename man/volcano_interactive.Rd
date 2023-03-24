@@ -4,10 +4,18 @@
 \alias{volcano_interactive}
 \title{Builds an interactive volcano plot using plotly}
 \usage{
-volcano_interactive(data, log2FoldChange = 0.25)
+volcano_interactive(data, log2FoldChange = 0.25, padj = 0.05)
 }
 \arguments{
-\item{log2FoldChange}{}
+\item{data}{Formatted Differential expression results from \code{format_res_deseq()} or
+\code{format_res_limma()}}
+
+\item{log2FoldChange}{Log2FC absolute threshold. Default to 0.25}
+
+\item{padj}{adjusted p value threshold. Default to 0.05}
+}
+\value{
+Interactive volcano plot
 }
 \description{
 Builds an interactive volcano plot using plotly

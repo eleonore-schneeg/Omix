@@ -4,10 +4,13 @@
 \alias{volcano_interactive_comparison}
 \title{Builds an interactive comparison plot using plotly}
 \usage{
-volcano_interactive_comparison(data, log2FoldChange = 0.25)
+volcano_interactive_comparison(data)
 }
 \arguments{
-\item{log2FoldChange}{}
+\item{data}{Formatted Comparative Differential expression results from \code{single_omic_comparisons()}}
+}
+\value{
+Interactive plot
 }
 \description{
 Builds an interactive comparison plot using plotly

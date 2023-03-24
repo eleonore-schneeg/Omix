@@ -7,7 +7,14 @@
 .impute_distribution(df, width = 0.3, downshift = 1.8)
 }
 \arguments{
-\item{downshift}{}
+\item{df}{Data frame to be imputed}
+
+\item{width}{Coefficient shrinking standard deviation with. Default to 0.3}
+
+\item{downshift}{Coefficient shifting the mean of imputed values. Default to 1.8}
+}
+\value{
+Imputed data frame
 }
 \description{
 Imputation of missing values based on distribution

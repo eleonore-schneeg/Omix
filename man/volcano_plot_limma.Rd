@@ -4,16 +4,17 @@
 \alias{volcano_plot_limma}
 \title{Builds a volcano plot from limma results}
 \usage{
-volcano_plot_limma(
-  dt,
-  log2FoldChange = 0,
-  n_label = 10,
-  padj = 0.05,
-  ylim = c(0, 10)
-)
+volcano_plot_limma(dt, log2FoldChange = 0, padj = 0.05)
 }
 \arguments{
-\item{ylim}{}
+\item{dt}{Formatted Differential expression results from \code{format_res_limma()}}
+
+\item{log2FoldChange}{Log2FC absolute threshold}
+
+\item{padj}{adjusted p value threshold. Default to 0.05}
+}
+\value{
+Volcano plot
 }
 \description{
 Builds a volcano plot from limma results

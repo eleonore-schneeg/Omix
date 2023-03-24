@@ -7,7 +7,16 @@
 circular_corrplot(moduleTraitCor, moduleColors, cell_type, names = NULL)
 }
 \arguments{
-\item{data}{}
+\item{moduleTraitCor}{moduleTraitCor from \code{multiomics_modules()}}
+
+\item{moduleColors}{moduleColors from \code{multiomics_modules()}}
+
+\item{cell_type}{output from \code{cell_type_enrichment()}}
+
+\item{names}{modulesLabels from \code{multiomics_modules()}}
+}
+\value{
+Circular correlation plot
 }
 \description{
 Circular heatmap of module-trait correlations and module-cell type enrichments

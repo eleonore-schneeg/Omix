@@ -145,6 +145,7 @@ RUN install2.r -e \
       data.table \
       ggpubr \
       igraph \
+      plotly \
       ggplot2 \
       cowplot \
       httr \
@@ -156,6 +157,8 @@ RUN install2.r -e \
       tibble \
       visNetwork \
       ggpubr \
+      ggsignif \
+      DT \
       viridis \
       ggpubr \
       RColorBrewer \

@@ -12,7 +12,7 @@
 #' @importFrom MOFA2 plot_factors samples_metadata
 
 #'
-#' @examples
+
 pseudotime_inference <- function(model,
                                  clusters,
                                  time_factor = 8,

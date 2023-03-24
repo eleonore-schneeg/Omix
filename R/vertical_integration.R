@@ -7,7 +7,8 @@
 #' `DIABLO`,`sMBPLS`,`iCluster`,`MEIFESTO`
 #' @param intersect_genes Logical whether to keep intersecting features for
 #' integration
-#' @param dependent
+#' @param dependent Dependent variable for the DeSEQ2 analysis, usually the
+#' disease group variable
 #' @param design Design matrix (design = "full"): The strength of all
 #' relationships between dataframes is maximised (= 1) – a “fully connected” design.
 #' If design is set on cor, the correlation between PC1 of each dataset will be
@@ -15,20 +16,21 @@
 #' @param ncomp Number of components in `DIABLO`,`sMBPLS`
 #' @param range List of the range of numbers of features to keep in the tuning phase.
 #' First element must be for rna, second for proteins
-#' @param ID_type
-#' @param levels
-#' @param list.keepX
-#' @param num_factors
-#' @param time
-#' @param scale_views
-#' @param most_variable_feature
+#' @param ID_type Default to gene_name
+#' @param levels Character vector with reference group as first element.
+#' Set parameter as NULL if dependent is NULL.
+#' @param list.keepX if integration == `sMBPLS`, number of features to keep per view.
+#' @param num_factors if integration == `MOFA`, number of factors. Default to 10.
+#' @param time Pseudotime covariate
+#' @param scale_views Logical whether to scale omic views
+#' @param most_variable_feature Logical whether to keep most variable features
 #' @param try.N.clust number of cluster to tune in `iCluster`
 #'
 #' @return Returns an integrated object in `multiassay@metadata$integration` to
 #' be used for further analysis
 #' @export
 #'
-#' @examples
+
 vertical_integration <- function(multiassay,
                                  slots = c(
                                    "rna_processed",
@@ -184,14 +186,14 @@ vertical_integration <- function(multiassay,
       time = time
     )
 
-    int <- do.call('integrate_with_MEIFESTO', args5)
+        int <- do.call('integrate_with_MEIFESTO', args5)
     cli::cli_alert_success("VERTICAL INTEGRATION WITH MEIFESTO")
 
   }
 
   if (integration == "iCluster") {
 
-    multimodal <- lapply(multimodal, data.frame)
+    multimodal <- lapply(multimodal_omics, data.frame)
     # int <- integrate_with_iCluster(
     #   multimodal_omics = multimodal_omics,
     #   try.N.clust = try.N.clust
@@ -205,8 +207,9 @@ vertical_integration <- function(multiassay,
     int <- do.call('integrate_with_iCluster', args6)
     cli::cli_alert_success("VERTICAL INTEGRATION CLUSTERING WITH ICLUSTER")
   }
-
-  multiassay@metadata$multimodal_object <- int[[1]]
+  names(multimodal[[1]])=c('mRNA','proteins')
+  multiassay@metadata$multimodal_object <- list(omics=lapply(multimodal[[1]],as.data.frame),
+                                                metadata =  multimodal[[2]])
   multiassay@metadata$integration[[paste(integration)]] <- int[[2]]
 
   return(multiassay)

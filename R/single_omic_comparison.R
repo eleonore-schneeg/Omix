@@ -17,7 +17,7 @@
 #' @export
 #' @importFrom ggpubr ggscatter
 #'
-#' @examples
+
 single_omic_comparisons <- function(multiassay,
                                    slot = "ADvsControl",
                                    threshold = 0.05,

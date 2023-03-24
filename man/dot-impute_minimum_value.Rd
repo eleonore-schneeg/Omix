@@ -7,7 +7,10 @@
 .impute_minimum_value(df)
 }
 \arguments{
-\item{df}{}
+\item{df}{Data frame to be imputed}
+}
+\value{
+Imputed data frame
 }
 \description{
 Imputation of missing values based on 50\% minimum value

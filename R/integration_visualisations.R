@@ -7,7 +7,7 @@
 #' @return List containing `graph` and `matrix` slots
 #' @export
 #'
-#' @examples
+
 .multiomics_network_matrix <- function(multimodal_object,
                                        list,
                                        correlation_threshold = 0.5) {
@@ -91,7 +91,7 @@
 #' @return List containing `graph` and `matrix` slots
 #' @export
 #'
-#' @examples
+
 .multiomics_network <- function(multiassay,
                                 list,
                                 correlation_threshold = 0.5) {
@@ -99,7 +99,7 @@
   features_interest <- c(list[[1]], list[[2]])
   pk <- c(length(list[[1]]), length(list[[2]]))
 
-  multimodal_object <- multiassay@metadata$multimodal_object
+  multimodal_object <- multiassay@metadata$multimodal_object$omics
 
 
   matrix1 <- t(multimodal_object[[1]])
@@ -223,7 +223,7 @@
 #' @return plots `visNetwork` graph
 #' @export
 #'
-#' @examples
+
 .interactive_network <- function(igraph,
                                  communities=FALSE,
                                  cluster) {
@@ -289,7 +289,7 @@
 #' @return List object including `community_object` and `communities`
 #' @export
 #'
-#' @examples
+
 .communities_network <- function(igraph,
                                  community_detection='louvain') {
 
@@ -335,7 +335,7 @@
 #' @return `Igraph` object
 #' @export
 #'
-#' @examples
+
 .multiomics_network_cluster <- function(multiassay,
                                         integration = "iCluster",
                                         cluster = 1,
@@ -343,7 +343,7 @@
                                         correlation_threshold = 0.5) {
   library(igraph)
   features_interest <- c(list[[1]], list[[2]])
-  multimodal_object <- multiassay@metadata$multimodal_object
+  multimodal_object <- multiassay@metadata$multimodal_object$omics
 
   clusters <- multiassay@metadata$integration[[paste(integration)]]$clust.res$clust
   keep <- clusters == cluster
@@ -406,7 +406,7 @@
 #' @return A list including `graph` and `hubs`
 #' @export
 #'
-#' @examples
+
 .community_graph<- function(igraph,
                             community_object,
                             community=1){

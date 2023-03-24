@@ -1,13 +1,13 @@
 #' Circular heatmap of module-trait correlations and module-cell type enrichments
 #'
-#' @param network_communities
-#' @param cell_type_communities
-#' @param data
+#' @param moduleTraitCor  moduleTraitCor from `multiomics_modules()`
+#' @param moduleColors moduleColors from `multiomics_modules()`
+#' @param cell_type output from `cell_type_enrichment()`
+#' @param names modulesLabels from `multiomics_modules()`
 #'
-#' @return
+#' @return Circular correlation plot
 #' @export
 #'
-#' @examples
 circular_corrplot <- function(moduleTraitCor,
                               moduleColors,
                               cell_type,

@@ -13,7 +13,6 @@
 #' @export
 #'
 #'
-#' @examples
 .get_metadata <- function(multiassay,
                           omic,
                           slot = c("rna_processed", "protein_processed")) {
@@ -56,10 +55,9 @@
 #' @param from Possible nomenclatures include `uniprot_id` ,`ensembl_gene_id`, `gene_name`
 #' @param to  Possible nomenclatures include `uniprot_id` ,`ensembl_gene_id`, `gene_name`
 #'
-#' @return
+#' @return vector of new IDs
 #' @export
 #'
-#' @examples
 .get_ID_names <- function(multiassay,
                           id,
                           omic = "protein",
@@ -96,7 +94,6 @@
 #' @return Background genes character vector
 #' @export
 #'
-#' @examples
 .get_background <- function(multiassay,
                             of = "full") {
   multiassay=multiassay
@@ -126,7 +123,7 @@
 #' `uniprot_id`, `not_identified`
 #' @export
 #'
-#' @examples
+
 .get_ID_type <- function(character_vector) {
 
   test <- sub("\\;.*", "",character_vector[1])
@@ -175,7 +172,7 @@
 #' @import MultiAssayExperiment
 #' @export
 #'
-#' @examples
+
 .get_multimodal_object <- function(multiassay,
                                    slots = c(
                                      "rna_processed",
@@ -279,10 +276,9 @@
 #' @param gene_list Character vector of genes belonging to a module
 #' @param moduleColors from WGCNA
 #'
-#' @return
+#' @return Functional annotation of modules
 #' @export
 #'
-#' @examples
 get_module_annotation <- function(gene_list,
                                   moduleColors) {
   library(org.Hs.eg.db)

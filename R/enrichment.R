@@ -122,10 +122,10 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 }
 
 
-#' Format result table
+#' Format result table for `pathway_analysis_enrichr()`
 #'
-#' @param res
-#' @param min_overlap
+#' @param res Internal to `pathway_analysis_enrichr()`
+#' @param min_overlap Default to 3
 #'
 #' @keywords internal
 
@@ -213,7 +213,15 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
     cowplot::background_grid()
 }
 
-dot_plot_enrichr_semantics <- function(dt,
+#' Curates dotplot for `pathway_analysis_enrichr()` on a required semantics
+#'
+#' @param dt functional enrichment results
+#' @param semantics vector of biological terms
+#'
+#' @return
+#' @export
+
+.dot_plot_enrichr_semantics <- function(dt,
                                        semantics = "microglial") {
   semantics_rows <- dt$description[grepl(paste0(semantics), dt$description, fixed = TRUE)]
   dt <- na.omit(dt)
@@ -246,152 +254,17 @@ dot_plot_enrichr_semantics <- function(dt,
 }
 
 
-
-#' Creates a functional enrichment dotplot
-#'
-#' @param enrichment.results
-#' @param factor
-#' @param alpha
-#' @param max.pathways
-#' @param text_size
-#' @param dot_size
-#'
-#' @return
-#' @export
-#'
-#' @examples
-dotplot_enrichment_MOFA <- function(enrichment.results, factor, alpha = 0.1, max.pathways = 25,
-                                    text_size = 1.0, dot_size = 5.0) {
-  # Sanity checks
-  stopifnot(is.numeric(alpha))
-  stopifnot(length(factor) == 1)
-  if (is.numeric(factor)) factor <- colnames(enrichment.results$pval.adj)[factor]
-  if (!factor %in% colnames(enrichment.results$pval)) {
-    stop(paste0("No gene set enrichment calculated for factor ", factor))
-  }
-
-  # get p-values
-  p.values <- enrichment.results$pval.adj
-
-  # Get data
-  tmp <- data.frame(
-    pvalues = p.values[, factor, drop = TRUE],
-    pathway = rownames(p.values)
-  )
-
-  # Filter out pathways
-  tmp <- tmp[tmp$pvalue <= alpha, , drop = FALSE]
-  if (nrow(tmp) == 0) stop("No siginificant pathways at the specified alpha threshold")
-
-  # If there are too many pathways enriched, just keep the 'max_pathways' more significant
-  if (nrow(tmp) > max.pathways) tmp <- head(tmp[order(tmp$pvalue), ], n = max.pathways)
-
-  # Convert pvalues to log scale
-  tmp$logp <- -log10(tmp$pvalue + 1e-100)
-
-  # order according to significance
-  tmp$pathway <- factor(tmp$pathway <- rownames(tmp), levels = tmp$pathway[order(tmp$pvalue, decreasing = TRUE)])
-  tmp$start <- 0
-
-  ggplot2::ggplot(tmp, aes_string(x = "logp", y = "pathway")) +
-    geom_point(aes(fill = logp),
-      size = 5,
-      shape = 21, alpha = 0.7, color = "black"
-    ) +
-    scale_size(name = "size", range = c(3, 8)) +
-    xlab("-log10(p value)") +
-    ylab("") +
-    scale_fill_gradient(
-      low = "navy", high = "gold", name = "-log10(p value)",
-      guide = guide_colorbar(reverse = TRUE),
-      limits = c(0, max(tmp$logp)),
-      aesthetics = c("fill")
-    ) +
-    cowplot::theme_cowplot() +
-    cowplot::background_grid()
-}
-
-
-
-
-#' Creates a functional enrichment dotplot based on a given semantics
-#'
-#'
-#' @param enrichment.results
-#' @param semantics
-#' @param factor
-#' @param alpha
-#' @param max.pathways
-#' @param text_size
-#' @param dot_size
-#'
-#' @return
-#' @export
-#'
-#' @examples
-dotplot_enrichment_MOFA_semantics <- function(enrichment.results, semantics, factor, alpha = 0.05, max.pathways = 25,
-                                              text_size = 1.0, dot_size = 5.0) {
-  factor <- seq(1, dim(enrichment.results$pval.adj)[2], by = 1)
-  # get p-values
-  p.values <- enrichment.results$pval.adj
-
-  # Get data
-  tmp <- data.frame(
-    pvalues = p.values[, factor, drop = TRUE],
-    pathway = rownames(p.values)
-  )
-
-  # order according to significance
-  semantics_rows <- rownames(tmp)[grepl(paste0(semantics), rownames(tmp), fixed = TRUE)]
-  tmp <- tmp[which(rownames(tmp) %in% semantics_rows), ]
-
-  data_long <- gather(tmp, factor, pvalue, pvalues.Factor1:pvalues.Factor11, factor_key = TRUE)
-  data_long$factor <- substr(data_long$factor, 9, 20)
-  paths <- unique(data_long$pathway)
-  data_long$logpvalue <- -log10(data_long$pvalue)
-
-  semantics_plots <- list()
-
-  for (i in paths) {
-    print(i)
-    data <- data_long[which(data_long$pathway == i), ]
-    plot <- ggplot2::ggplot(data, aes_string(x = "logpvalue", y = "factor")) +
-      geom_point(aes(fill = logpvalue),
-        size = 5,
-        shape = 21, alpha = 0.7, color = "black"
-      ) +
-      scale_size(name = "size", range = c(3, 8)) +
-      xlab("-log10(p value)") +
-      xlim(c(0, 1)) +
-      ylab("") +
-      ggtitle(paste0(i)) +
-      scale_fill_gradient(
-        low = "navy", high = "gold", name = "-log10(p value)",
-        guide = guide_colorbar(reverse = TRUE),
-        limits = c(0, max(data$logpvalue)),
-        aesthetics = c("fill")
-      ) +
-      cowplot::theme_cowplot() +
-      cowplot::background_grid()
-
-    semantics_plots[[i]] <- plot
-  }
-  return(semantics_plots)
-}
-
-
 #' Functional enrichment based on given reference annotations
 #'
-#' @param genes
-#' @param reference
-#' @param genesets
-#' @param adj
-#' @param verbose
+#' @param genes Gene list (vector)
+#' @param reference Reference background (vector)
+#' @param genesets List of genesets
+#' @param adj Multiple testing adjustment method. Default to 'fdr'
+#' @param verbose Default to FALSE
 #'
-#' @return
+#' @return Functional enrichment result
 #' @export
-#'
-#' @examples
+
 enrichment_custom <- function(genes, reference, genesets, adj = "fdr", verbose = FALSE) {
   tab <- lapply(1:length(genesets), function(i) {
     if (verbose == TRUE) {
@@ -454,13 +327,13 @@ enrichment_custom <- function(genes, reference, genesets, adj = "fdr", verbose =
 
 #' Cell type enrichment of communities
 #'
-#' @param multiassay
-#' @param communities
+#' @param multiassay  Multiassay experiment object generated by Omix
+#' @param communities communities generated from `.communities_network()`
 #'
-#' @return
+#' @return List of results
 #' @export
 #'
-#' @examples
+
 cell_type_enrichment <- function(multiassay,
                                  communities) {
   background_genes <- .get_background(multiassay)

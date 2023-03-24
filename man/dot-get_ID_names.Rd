@@ -24,6 +24,9 @@
 
 \item{to}{Possible nomenclatures include \code{uniprot_id} ,\code{ensembl_gene_id}, \code{gene_name}}
 }
+\value{
+vector of new IDs
+}
 \description{
 Convert nomenclature
 }

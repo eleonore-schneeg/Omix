@@ -11,6 +11,9 @@ get_module_annotation(gene_list, moduleColors)
 
 \item{moduleColors}{from WGCNA}
 }
+\value{
+Functional annotation of modules
+}
 \description{
 Get module functional annotation
 }

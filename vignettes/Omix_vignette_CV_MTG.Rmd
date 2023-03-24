@@ -5,8 +5,10 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
     self_contained: yes
+    theme: "flatly"
     toc: true
     toc_float: true
+    fig_caption: true
     toc_depth: 3
     code_folding: show
     df_print: paged
@@ -71,6 +73,9 @@ Call required packages for vignette:
 ```{r}
 library(Omix)
 library(purrr)
+library(ggplot2)
+library(enrichR)
+library(EnsDb.Hsapiens.v86)
 ```
 
 First we must load the data from Omix for the vignette:
@@ -261,11 +266,12 @@ the first level, here control is the reference. The function requires to run `pr
 first, with covariates of interest. These are adjusted for in the DE. 
 
 ```{r}
-multiomics_object_MTG=rna_DE_analysis(multiomics_object_MTG,
+multiomics_object_MTG=rna_DE_analysis(multiassay=multiomics_object_MTG,
                     dependent='diagnosis',
                     levels=c('Control','AD'),
                     filter_protein_coding = TRUE,
                     log2FoldChange = 0.2)
+
 ```
 
 Differential expression results for transcripts are saved in the `multiomics_object_MTG@metadata$DEG` slot 
@@ -288,7 +294,7 @@ Volcano plot of differentially expressed genes is saved in the `multiomics_objec
 
 ```{r, message=FALSE}
 library(plotly)
-volcano_interactive(multiomics_object_MTG@metadata[["DEG"]]$ADvsControl)
+volcano_interactive(multiomics_object_MTG@metadata[["DEG"]]$ADvsControl, padj=0.05)
 ```
 
 ## Proteomics differential expression using limma
@@ -324,7 +330,7 @@ DT::datatable(multiomics_object_MTG@metadata$DEP$ADvsControl,
 Volcano plot of differentially abundant proteins is saved in the `multiomics_object_MTG@metadata$DEP$plot` slot
 
 ```{r}
-volcano_interactive(multiomics_object_MTG@metadata[["DEP"]]$ADvsControl)
+volcano_interactive(multiomics_object_MTG@metadata[["DEP"]]$ADvsControl, padj=0.05)
 ```
 
 

@@ -11,7 +11,6 @@
 #' distirbution plots of the weights, and dataframes of the weights for each omic layer.
 #' @export
 #'
-#' @examples
 extract_weigths <- function(model,
                             factor = 1,
                             threshold = 0.3,

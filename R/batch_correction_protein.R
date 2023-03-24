@@ -1,15 +1,14 @@
 ################################################################################
-#' Calling different proteomics correction methods
+#' Calling different proteomics correction methods. Internal to `process_protein()`
 #'
-#' @param matrix
-#' @param batch_map
-#' @param batch
-#' @param correction_method
+#' @param matrix Protein abundance matrix
+#' @param batch_map Automatically generated in `process_protein()`
+#' @param batch Batch column name
+#' @param correction_method `Combat` or `Median_centering`
 #'
-#' @return
+#' @return Batch corrected matrix
 #' @export
-#'
-#' @examples
+
 batch_correction_protein <- function(matrix,
                                      batch_map,
                                      batch,
