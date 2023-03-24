@@ -142,7 +142,6 @@ RUN install2.r -e \
       remotes \
       enrichR \
       magrittr \
-      stats \
       lme4 \
       dplyr \
       matrixStats \
