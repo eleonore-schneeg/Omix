@@ -3,7 +3,7 @@
 ## Use rstudio installs binaries from RStudio's RSPM service by default,
 ## Uses the latest stable ubuntu, R and Bioconductor versions. Created on unbuntu 20.04, R 4.0 and BiocManager 3.12
 #FROM rocker/rstudio:4.2.2
-FROM rocker/rstudio:4.0.1
+FROM rocker/rstudio:4.0.2
 
 #FROM r-base:4.0.2
 RUN apt-get update && apt-get install -f && apt-get install -y python3 python3-setuptools python3-dev python3-pip
