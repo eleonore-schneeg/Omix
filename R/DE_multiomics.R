@@ -42,7 +42,7 @@ DE_multiomics <- function(multiassay,
       ))
     }
   } else {
-    cov_var <- NULL
+    cov_var <- NA
   }
 
   dependent_var <- paste(dependent, collapse = " + ")

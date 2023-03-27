@@ -218,7 +218,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 #' @param dt functional enrichment results
 #' @param semantics vector of biological terms
 #'
-#' @return
+#' @return functional enrichement plot
 #' @export
 
 .dot_plot_enrichr_semantics <- function(dt,

@@ -10,7 +10,6 @@
 #' matrix_to_long long_to_matrix
 #' @export
 #'
-#' @examples
 median_centering_correction <- function(matrix, batch_map, batch) {
   batch_map <- batch_map[colnames(matrix), ]
   log_matrix <- matrix

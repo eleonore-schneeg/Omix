@@ -141,7 +141,6 @@ RUN install2.r -e \
       devtools \
       remotes \
       enrichR \
-      ggpp \
       magrittr \
       lme4 \
       dplyr \
@@ -206,9 +205,9 @@ RUN install2.r -e \
 RUN Rscript -e  'reticulate::py_config()'
 
 ## Install from GH the following
-RUN installGithub.r cran/heatmap.plus \
-    xlucpu/MOVICS \
-&& rm -rf /tmp/downloaded_packages
+#RUN installGithub.r cran/heatmap.plus \
+#    xlucpu/MOVICS \
+#&& rm -rf /tmp/downloaded_packages
 
 ## Install Omix package
 # Copy description

@@ -88,10 +88,7 @@ Imports:
       msigdbr,
       reticulate,
       plotly,
-      MOVICS,
       DT
-Remotes:
-      xlucpu/MOVICS
 Suggests: 
     knitr,
     rmarkdown

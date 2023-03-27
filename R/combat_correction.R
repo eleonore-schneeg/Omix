@@ -8,8 +8,7 @@
 #' @importFrom proBatch correct_with_ComBat_df quantile_normalize_dm
 #' matrix_to_long long_to_matrix
 #' @export
-#'
-#' @examples
+
 combat_correction <- function(matrix, batch_map, batch) {
   batch_map <- batch_map[colnames(matrix), ]
   log_matrix <- matrix

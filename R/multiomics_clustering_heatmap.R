@@ -29,7 +29,7 @@
 #' @importFrom circlize colorRamp2
 #' @importFrom dplyr %>%
 #' @references Gu Z, Eils R, Schlesner M (2016). Complex heatmaps reveal patterns and correlations in multidimensional genomic data. Bioinformatics.
-#' @export
+
 multiomics_clustering_heatmap<- function(data             = NULL,
                          is.binary        = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
                          row.title        = c("Data1","Data2","Data3","Data4","Data5","Data6"),
@@ -51,16 +51,16 @@ multiomics_clustering_heatmap<- function(data             = NULL,
                          height           = 4,
                          fig.path         = getwd(),
                          fig.name         = "moheatmap") {
-  
+
 
   defaultW <- getOption("warn")
   options(warn = -1)
-  
+
   # check data
   if(is.null(names(data))){
     names(data) <- sprintf("dat%s", 1:length(data))
   }
-  
+
   n_dat <- length(data)
   if(n_dat > 6){
     stop('current verision of MOVICS can support up to 6 datasets.')
@@ -68,21 +68,21 @@ multiomics_clustering_heatmap<- function(data             = NULL,
   if(n_dat < 2){
     stop('current verision of MOVICS needs at least 2 omics data.')
   }
-  
+
   colvec <- clust.col[1:length(unique(clust.res$clust))]
   names(colvec) <- paste0("CS",unique(clust.res$clust))
-  
+
   if(!is.null(annCol) & !is.null(annColors)) {
-    
+
     annCol <- annCol[colnames(data[[1]]), , drop = FALSE]
     annCol$Subtype <- paste0("CS",clust.res[colnames(data[[1]]),"clust"])
     annColors[["Subtype"]] <- colvec
-    
+
     if(is.null(clust.dend)) {
       clust.res <- clust.res[order(clust.res$clust),]
       annCol <- annCol[clust.res$samID, , drop = FALSE]
     }
-    
+
     ha <- ComplexHeatmap::HeatmapAnnotation(df     = annCol,
                                             col    = annColors,
                                             border = FALSE)
@@ -91,26 +91,26 @@ multiomics_clustering_heatmap<- function(data             = NULL,
                          row.names = colnames(data[[1]]),
                          stringsAsFactors = FALSE)
     annColors <- list("Subtype" = colvec)
-    
+
     if(is.null(clust.dend)) {
       clust.res <- clust.res[order(clust.res$clust),]
       annCol <- annCol[clust.res$samID,,drop = FALSE]
     }
-    
+
     ha <- ComplexHeatmap::HeatmapAnnotation(df     = annCol,
                                             col    = annColors,
                                             border = FALSE)
   }
-  
+
   if(!is.null(annRow)) {
     if(!is.list(annRow)) {stop("argument of annRow should be a list!")}
   }
-  
+
   ht <- list()
   for (i in 1:n_dat) {
-    
+
     hcg <- hclust(ClassDiscovery::distanceMatrix(as.matrix(t(data[[i]])), clust.dist.row[i]), clust.method.row[i])
-    
+
     if(is.null(annRow[[i]][1])) {
       rowlab <- ""
       rowlab.index <- 0
@@ -121,10 +121,10 @@ multiomics_clustering_heatmap<- function(data             = NULL,
       rowlab <- intersect(rownames(data[[i]]),annRow[[i]])
       rowlab.index <- match(rowlab, rownames(data[[i]]))
     }
-    
+
     if(is.null(clust.dend)) {
       data <- lapply(data, function(x) x[,clust.res$samID])
-      
+
       if(!is.binary[i]) {
         ht[[i]] <-  ComplexHeatmap::Heatmap(matrix               = as.matrix(data[[i]]),
                                             row_title            = row.title[i],
@@ -151,7 +151,7 @@ multiomics_clustering_heatmap<- function(data             = NULL,
                                                                                                              labels_gp  = grid::gpar(fontsize = 7))))
       } else {
         col_fun = circlize::colorRamp2(c(0, 1), color[[i]])
-        
+
         ht[[i]] <-  ComplexHeatmap::Heatmap(matrix               = as.matrix(data[[i]]),
                                             row_title            = row.title[i],
                                             name                 = legend.name[i],
@@ -177,7 +177,7 @@ multiomics_clustering_heatmap<- function(data             = NULL,
                                                                                                              padding    = grid::unit(0.8, "mm"),
                                                                                                              labels_gp  = grid::gpar(fontsize = 7))))
       }
-      
+
     } else {
       if(!is.binary[i]) {
         ht[[i]] <-  ComplexHeatmap::Heatmap(matrix               = as.matrix(data[[i]]),
@@ -205,7 +205,7 @@ multiomics_clustering_heatmap<- function(data             = NULL,
                                                                                                              labels_gp  = grid::gpar(fontsize = 7))))
       } else {
         col_fun = circlize::colorRamp2(c(0, 1), color[[i]])
-        
+
         ht[[i]] <-  ComplexHeatmap::Heatmap(matrix               = as.matrix(data[[i]]),
                                             row_title            = row.title[i],
                                             name                 = legend.name[i],
@@ -233,7 +233,7 @@ multiomics_clustering_heatmap<- function(data             = NULL,
       }
     }
   }
-  
+
   if(n_dat == 1){
     ht_list <- ht[[1]]
   }
@@ -252,7 +252,7 @@ multiomics_clustering_heatmap<- function(data             = NULL,
   if(n_dat == 6){
     ht_list <- ht[[1]] %v% ht[[2]] %v% ht[[3]] %v% ht[[4]] %v% ht[[5]] %v% ht[[6]]
   }
-  
+
   outFile <- file.path(fig.path,paste0(fig.name,".pdf"))
   if(is.null(annCol)) {
     pdf(outFile, width = width, height = height * n_dat/2)
@@ -261,10 +261,10 @@ multiomics_clustering_heatmap<- function(data             = NULL,
   }
   draw(ht_list, merge_legend = TRUE, heatmap_legend_side = "right") # output to pdf
   invisible(dev.off())
-  
+
   draw(ht_list, merge_legend = TRUE, heatmap_legend_side = "right") # output to screen
-  
+
   options(warn = defaultW)
-  
+
   return(ht_list)
 }

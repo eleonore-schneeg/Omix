@@ -365,9 +365,7 @@ integrate_with_MEIFESTO <- function(multimodal_omics,
 #'
 #' @return a list object with `multimodal_object` and `model` slots
 
-#' @importFrom MOVICS getClustNum getiClusterBayes
-#' @export
-#'
+
 
 integrate_with_iCluster <- function(multimodal_omics,
                                     try.N.clust = 2:4) {
