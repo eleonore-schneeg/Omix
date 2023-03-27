@@ -1,10 +1,10 @@
 bioc_pkgs<-c(
-  "MultiAssayExperiment",
-  "SummarizedExperiment",
+  "MatrixGenerics",
+  "DelayedArray",
+  "ensembldb",
   "proBatch",
   "mixOmics",
   'basilisk',
-  "MOFA2",
   "ComplexHeatmap",
   "circlize",
   'BiocGenerics',
@@ -15,7 +15,6 @@ bioc_pkgs<-c(
   'enrichplot',
   'biomaRt',
   'edgeR',
-  'EWCE',
   'GenomicRanges',
   'AnnotationDbi',
   'WGCNA',
@@ -26,7 +25,11 @@ bioc_pkgs<-c(
   'limma',
   'Biobase',
   'EnsDb.Hsapiens.v86',
-  'msigdbr'
+  'msigdbr',
+  "SummarizedExperiment",
+  'SingleCellExperiment',
+  "MultiAssayExperiment",
+  'EWCE'
 )
 
 
