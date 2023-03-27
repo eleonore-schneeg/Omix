@@ -40,7 +40,16 @@ bioc_pkgs<-c(
   'msigdbr',
   "SummarizedExperiment",
   'SingleCellExperiment',
-  "MultiAssayExperiment"
+  "MultiAssayExperiment",
+  'rhdf5',
+  'dplyr',
+  'tidyr',
+  'reshape2', 'pheatmap', 'corrplot',
+  'ggplot2', 'ggbeeswarm', 'scales', 'GGally', 'doParallel', 'RColorBrewer',
+  'cowplot', 'ggrepel', 'foreach', 'reticulate', 'HDF5Array', 'DelayedArray',
+  'ggpubr', 'forcats', 'Rtsne', 'uwot',
+  'systemfonts', 'ragg', 'Cairo', 'ggrastr', 'basilisk', 'mvtnorm','MOFA2',
+  'EWCE','slingshot'
 )
 
 
