@@ -50,6 +50,7 @@ bioc_pkgs<-c(
   'ggpubr', 'forcats', 'Rtsne', 'uwot',
   'systemfonts', 'ragg', 'Cairo', 'ggrastr', 'basilisk', 'mvtnorm','MOFA2',
   'EWCE','slingshot'
+
 )
 
 
