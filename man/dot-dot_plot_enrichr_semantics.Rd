@@ -11,6 +11,9 @@
 
 \item{semantics}{vector of biological terms}
 }
+\value{
+functional enrichement plot
+}
 \description{
 Curates dotplot for \code{pathway_analysis_enrichr()} on a required semantics
 }
