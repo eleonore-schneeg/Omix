@@ -146,6 +146,7 @@ RUN install2.r -e \
       dplyr \
       matrixStats \
       purrr \
+      Matrix \
       rmarkdown \
       tidyverse \
       paletteer \
