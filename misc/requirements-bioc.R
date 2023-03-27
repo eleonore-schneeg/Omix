@@ -20,7 +20,6 @@ bioc_pkgs<-c(
   'WGCNA',
   'limma',
   'S4Vectors',
-  'slingshot',
   'DESeq2',
   'limma',
   'Biobase',
@@ -28,8 +27,7 @@ bioc_pkgs<-c(
   'msigdbr',
   "SummarizedExperiment",
   'SingleCellExperiment',
-  "MultiAssayExperiment",
-  'EWCE'
+  "MultiAssayExperiment"
 )
 
 
