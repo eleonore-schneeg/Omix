@@ -9,7 +9,16 @@ FROM rocker/rstudio:4.0.2
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends apt-utils \
 	&& apt-get install -f \
-	&& apt-get install -y --no-install-recommends python3 \
+	&& apt-get install -y --no-install-recommends \
+	## Basic deps
+	gcc \
+	gdb \
+	libxml2-dev \
+	libz-dev \
+	liblzma-dev \
+	libbz2-dev \
+	libgit2-dev \
+	python3 \
 	python3-setuptools \
 	python3-dev \
 	python3-pip \
@@ -22,14 +31,6 @@ RUN apt-get update \
 	libxt-dev \
 	libharfbuzz-dev \
 	libfribidi-dev \
-	## Basic deps
-	gcc \
-	gdb \
-	libxml2-dev \
-	libz-dev \
-	liblzma-dev \
-	libbz2-dev \
-	libgit2-dev \
 	## sys deps from bioc_full
 	pkg-config \
 	fortran77-compiler \
@@ -109,6 +110,7 @@ RUN apt-get update \
 	qpdf \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
+
 
 # Install mofapy2
 RUN python3 -m pip install 'https://github.com/bioFAM/mofapy2/tarball/master'
