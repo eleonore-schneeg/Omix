@@ -22,15 +22,6 @@ RUN apt-get update \
 	python3-setuptools \
 	python3-dev \
 	python3-pip \
-	libcurl4-openssl-dev \
-	libcairo2-dev \
-	libfreetype6-dev \
-	libpng-dev \
-	libtiff5-dev \
-	libjpeg-dev \
-	libxt-dev \
-	libharfbuzz-dev \
-	libfribidi-dev \
 	## sys deps from bioc_full
 	pkg-config \
 	fortran77-compiler \
@@ -108,6 +99,16 @@ RUN apt-get update \
 	libsbml5-dev \
 	## qpdf needed to stop R CMD Check warning
 	qpdf \
+	## MOFA
+	libcurl4-openssl-dev \
+	libcairo2-dev \
+	libfreetype6-dev \
+	libpng-dev \
+	libtiff5-dev \
+	libjpeg-dev \
+	libxt-dev \
+	libharfbuzz-dev \
+	libfribidi-dev \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
