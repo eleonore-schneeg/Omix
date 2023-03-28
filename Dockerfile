@@ -5,6 +5,10 @@
 
 FROM rocker/rstudio:4.0.2
 
+## Add packages dependencies
+RUN apt-get update && apt-get install -f && apt-get install -y python3 python3-setuptools python3-dev python3-pip
+RUN apt-get install -y libcurl4-openssl-dev
+RUN apt-get install -y libcairo2-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libxt-dev libharfbuzz-dev libfribidi-dev
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends apt-utils \
@@ -15,11 +19,8 @@ RUN apt-get update \
 	libz-dev \
 	liblzma-dev \
 	libbz2-dev \
+	libpng-dev \
 	libgit2-dev \
-	python3 \
-	python3-setuptools \
-	python3-dev \
-	python3-pip \
 	## sys deps from bioc_full
 	pkg-config \
 	fortran77-compiler \
@@ -57,8 +58,6 @@ RUN apt-get update \
 	libmodule-build-perl \
 	libapparmor-dev \
 	libprotoc-dev \
-	libraptor2-dev \
-	librasqal3-dev \
 	librdf0-dev \
 	libmagick++-dev \
 	libsasl2-dev \
@@ -87,12 +86,6 @@ RUN apt-get update \
 	tcl8.6-dev \
 	tk-dev \
 	default-jdk \
-	imagemagick \
-	tabix \
-	ggobi \
-	graphviz \
-	protobuf-compiler \
-	jags \
 	## Additional resources
 	xfonts-100dpi \
 	xfonts-75dpi \
@@ -100,16 +93,6 @@ RUN apt-get update \
 	libsbml5-dev \
 	## qpdf needed to stop R CMD Check warning
 	qpdf \
-	## MOFA
-	libcurl4-openssl-dev \
-	libcairo2-dev \
-	libfreetype6-dev \
-	libpng-dev \
-	libtiff5-dev \
-	libjpeg-dev \
-	libxt-dev \
-	libharfbuzz-dev \
-	libfribidi-dev \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
