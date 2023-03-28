@@ -157,6 +157,16 @@ RUN install2.r -e \
 ## Install Bioconductor packages
 COPY ./misc/requirements-bioc.R .
 
+# Install bioconductor dependencies
+RUN R --vanilla -e "\
+  if (!requireNamespace('BiocManager', quietly = TRUE)) install.packages('BiocManager', repos = 'https://cran.r-project.org'); \
+  sapply(c('rhdf5', 'dplyr', 'tidyr', 'reshape2', 'pheatmap', 'corrplot', \
+           'ggplot2', 'ggbeeswarm', 'scales', 'GGally', 'doParallel', 'RColorBrewer', \
+           'cowplot', 'ggrepel', 'foreach', 'reticulate', 'HDF5Array', 'DelayedArray', \
+           'ggpubr', 'forcats', 'Rtsne', 'uwot', \
+           'systemfonts', 'ragg', 'Cairo', 'ggrastr', 'basilisk', 'mvtnorm'), \
+         BiocManager::install)"
+
 RUN Rscript -e 'requireNamespace("BiocManager"); BiocManager::install(ask=F);' \
 && Rscript requirements-bioc.R \
 && rm -rf /tmp/downloaded_packages
