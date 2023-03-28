@@ -57,6 +57,8 @@ RUN apt-get update \
 	libmodule-build-perl \
 	libapparmor-dev \
 	libprotoc-dev \
+	libraptor2-dev \
+	librasqal3-dev \
 	librdf0-dev \
 	libmagick++-dev \
 	libsasl2-dev \
