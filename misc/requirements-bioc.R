@@ -3,10 +3,12 @@ bioc_pkgs<-c(
   'BiocGenerics',
   'BiocStyle',
   'biomaRt',
+  "SummarizedExperiment",
+  'DESeq2',
+  "MatrixGenerics",
   'DelayedArray',
   'DelayedMatrixStats',
   'edgeR',
-  'EWCE',
   'GenomicRanges',
   'graph',
   'IRanges',
@@ -14,8 +16,6 @@ bioc_pkgs<-c(
   'multtest',
   'preprocessCore',
   'rhdf5',
-  "MatrixGenerics",
-  "DelayedArray",
   "ensembldb",
   "proBatch",
   "mixOmics",
@@ -29,15 +29,14 @@ bioc_pkgs<-c(
   'AnnotationDbi',
   'WGCNA',
   'S4Vectors',
-  'DESeq2',
   'EnsDb.Hsapiens.v86',
   'msigdbr',
-  "SummarizedExperiment",
   'SingleCellExperiment',
   "MultiAssayExperiment",
   'HDF5Array',
   'MOFA2',
-  'slingshot'
+  'slingshot',
+  'EWCE'
 )
 
 
