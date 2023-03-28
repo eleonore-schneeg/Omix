@@ -35,9 +35,12 @@ RUN apt-get update \
 	libfftw3-dev \
 	libopenbabel-dev \
 	libopenmpi-dev \
+	libxt-dev \
 	libudunits2-dev \
 	libgeos-dev \
 	libproj-dev \
+	libcairo2-dev \
+	libtiff5-dev \
 	libreadline-dev \
 	libgsl0-dev \
 	libgslcblas0 \
@@ -47,6 +50,7 @@ RUN apt-get update \
 	libgmp3-dev \
 	libhdf5-dev \
 	libncurses-dev \
+	libbz2-dev \
 	libxpm-dev \
 	liblapack-dev \
 	libv8-dev \
@@ -55,8 +59,6 @@ RUN apt-get update \
 	libmodule-build-perl \
 	libapparmor-dev \
 	libprotoc-dev \
-	libraptor2-dev \
-	librasqal3-dev \
 	librdf0-dev \
 	libmagick++-dev \
 	libsasl2-dev \
