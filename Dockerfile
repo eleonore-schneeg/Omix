@@ -55,7 +55,6 @@ RUN apt-get update \
 	libmodule-build-perl \
 	libapparmor-dev \
 	libprotoc-dev \
-    libcurl4-gnutls-dev \
 	libraptor2-dev \
 	librasqal3-dev \
 	librdf0-dev \
