@@ -153,9 +153,7 @@ RUN install2.r -e \
 	  scales \
       && rm -rf /tmp/downloaded_packages
 
-RUN install2.r -e \
-      ClassDiscovery \
-      && rm -rf /tmp/downloaded_packages
+
 ## Install Bioconductor packages
 COPY ./misc/requirements-bioc.R .
 
