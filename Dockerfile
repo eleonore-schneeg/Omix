@@ -2,32 +2,33 @@
 
 ## Use rstudio installs binaries from RStudio's RSPM service by default,
 ## Uses the latest stable ubuntu, R and Bioconductor versions. Created on unbuntu 20.04, R 4.0 and BiocManager 3.12
-#FROM rocker/rstudio:4.2.2
+
 FROM rocker/rstudio:4.0.2
 
-#FROM r-base:4.0.2
-RUN apt-get update && apt-get install -f && apt-get install -y python3 python3-setuptools python3-dev python3-pip
-RUN apt-get install -y libcurl4-openssl-dev
-RUN apt-get install -y libcairo2-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libxt-dev libharfbuzz-dev libfribidi-dev
 
-# Install mofapy2
-RUN python3 -m pip install 'https://github.com/bioFAM/mofapy2/tarball/master'
-
-## Add packages dependencies
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends apt-utils \
-	&& apt-get install -y --no-install-recommends \
+	&& apt-get install -f \
+	&& apt-get install -y --no-install-recommends python3 \
+	python3-setuptools \
+	python3-dev \
+	python3-pip \
+	libcurl4-openssl-dev \
+	libcairo2-dev \
+	libfreetype6-dev \
+	libpng-dev \
+	libtiff5-dev \
+	libjpeg-dev \
+	libxt-dev \
+	libharfbuzz-dev \
+	libfribidi-dev \
 	## Basic deps
+	gcc \
 	gdb \
 	libxml2-dev \
-	#python3-pip \
-	#python3 \
-  #python3-setuptools \
-  #python3-dev \
 	libz-dev \
 	liblzma-dev \
 	libbz2-dev \
-	libpng-dev \
 	libgit2-dev \
 	## sys deps from bioc_full
 	pkg-config \
@@ -42,12 +43,9 @@ RUN apt-get update \
 	libfftw3-dev \
 	libopenbabel-dev \
 	libopenmpi-dev \
-	libxt-dev \
 	libudunits2-dev \
 	libgeos-dev \
 	libproj-dev \
-	libcairo2-dev \
-	libtiff5-dev \
 	libreadline-dev \
 	libgsl0-dev \
 	libgslcblas0 \
@@ -57,7 +55,6 @@ RUN apt-get update \
 	libgmp3-dev \
 	libhdf5-dev \
 	libncurses-dev \
-	libbz2-dev \
 	libxpm-dev \
 	liblapack-dev \
 	libv8-dev \
@@ -66,6 +63,9 @@ RUN apt-get update \
 	libmodule-build-perl \
 	libapparmor-dev \
 	libprotoc-dev \
+    libcurl4-gnutls-dev \
+	libraptor2-dev \
+	librasqal3-dev \
 	librdf0-dev \
 	libmagick++-dev \
 	libsasl2-dev \
@@ -94,12 +94,12 @@ RUN apt-get update \
 	tcl8.6-dev \
 	tk-dev \
 	default-jdk \
-	#imagemagick \
-	#tabix \
-	#ggobi \
-	#graphviz \
-	#protobuf-compiler \
-	#jags \
+	imagemagick \
+	tabix \
+	ggobi \
+	graphviz \
+	protobuf-compiler \
+	jags \
 	## Additional resources
 	xfonts-100dpi \
 	xfonts-75dpi \
@@ -107,31 +107,21 @@ RUN apt-get update \
 	libsbml5-dev \
 	## qpdf needed to stop R CMD Check warning
 	qpdf \
+	#cmake
+	build-essential \
+	wget \
 	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
-
-#RUN apt-get update \
-#    && apt-get install -y libcurl4-openssl-dev
-#RUN apt-get update \
-#    && apt-get install -y libcairo2-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libxt-dev libharfbuzz-dev libfribidi-dev
+	&& rm -rf /var/lib/apt/lists/* \
+	&& wget https://github.com/Kitware/CMake/releases/download/v3.24.1/cmake-3.24.1-Linux-x86_64.sh \
+      -q -O /tmp/cmake-install.sh \
+      && chmod u+x /tmp/cmake-install.sh \
+      && mkdir /opt/cmake-3.24.1 \
+      && /tmp/cmake-install.sh --skip-license --prefix=/opt/cmake-3.24.1 \
+      && rm /tmp/cmake-install.sh \
+      && ln -s /opt/cmake-3.24.1/bin/* /usr/local/bin
 
 # Install mofapy2
-#RUN python3 -m pip install 'https://github.com/bioFAM/mofapy2/tarball/master'
-#RUN pip3 install mofapy2==0.6.3
-#RUN pip3 install mofapy2
-#RUN pip3 install 'https://github.com/bioFAM/mofapy2/tarball/master'
-
-#RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | \
-#tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
-#&& curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | \
-#tee /usr/share/keyrings/cloud.google.gpg && apt-get update -y \
-#&& apt-get install google-cloud-sdk -y
-
-#RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" \
-#-o "awscliv2.zip"
-
-#RUN unzip awscliv2.zip && ./aws/install \
-#&& rm -rf awscliv2.zip
+RUN python3 -m pip install 'https://github.com/bioFAM/mofapy2/tarball/master'
 
 RUN install2.r -e \
       cli \
@@ -155,65 +145,48 @@ RUN install2.r -e \
       igraph \
       plotly \
       ggplot2 \
+	  ggbeeswarm \
+	  GGally \
+	  ggrastr \
       cowplot \
       httr \
       jsonlite \
       reshape2 \
+	  pheatmap \
       ghql \
       viridis \
       tidyr \
       tibble \
       visNetwork \
-      ggpubr \
       ggsignif \
       DT \
-      viridis \
-      ggpubr \
       RColorBrewer \
+	  reticulate \
       corrplot \
+	  doParallel \
       stringr \
-      purrr \
       ggrepel \
+	  foreach \
+	  forcats \
+	  systemfonts \
+	  ragg \
       SNFtool \
+	  Cairo \
+	  mvtnorm \
+	  scales \
+	  ClassDiscovery\
       && rm -rf /tmp/downloaded_packages
-
-# Install bioconductor dependencies
-#RUN R --vanilla -e "\
-#  if (!requireNamespace('BiocManager', quietly = TRUE)) install.packages('BiocManager', repos = 'https://cran.r-project.org'); \
-#  sapply(c('rhdf5', 'dplyr', 'tidyr', 'reshape2', 'pheatmap', 'corrplot', \
- #          'ggplot2', 'ggbeeswarm', 'scales', 'GGally', 'doParallel', 'RColorBrewer', \
-  #         'cowplot', 'ggrepel', 'foreach', 'reticulate', 'HDF5Array', 'DelayedArray', \
-   #        'ggpubr', 'forcats', 'Rtsne', 'uwot', \
-    #       'systemfonts', 'ragg', 'Cairo', 'ggrastr', 'basilisk', 'mvtnorm','MOFA2', \
-     #        'EWCE','slingshot'), \
-      #   BiocManager::install)" \
 
 
 ## Install Bioconductor packages
 COPY ./misc/requirements-bioc.R .
-RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-   libfftw3-dev \
-   gcc && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+
 RUN Rscript -e 'requireNamespace("BiocManager"); BiocManager::install(ask=F);' \
 && Rscript requirements-bioc.R \
 && rm -rf /tmp/downloaded_packages
 
-RUN install2.r -e \
-      ClassDiscovery \
-      && rm -rf /tmp/downloaded_packages
-
-
 RUN Rscript -e  'reticulate::py_config()'
 
-## Install from GH the following
-#RUN installGithub.r cran/heatmap.plus \
-#    xlucpu/MOVICS \
-#&& rm -rf /tmp/downloaded_packages
-
-## Install Omix package
-# Copy description
 WORKDIR Omix
 ADD . .
 
