@@ -8,10 +8,8 @@ FROM rocker/rstudio:4.0.2
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends apt-utils \
-	&& apt-get install -f \
 	&& apt-get install -y --no-install-recommends \
 	## Basic deps
-	gcc \
 	gdb \
 	libxml2-dev \
 	libz-dev \
