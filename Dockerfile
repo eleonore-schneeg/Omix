@@ -171,7 +171,7 @@ SNFtool \
 Cairo \
 mvtnorm \
 scales \
-#ClassDiscovery \
+ClassDiscovery \
 && rm -rf /tmp/downloaded_packages
 
 
