@@ -120,59 +120,59 @@ RUN apt-get update \
 RUN python3 -m pip install mofapy2
 
 RUN install2.r -e \
-    cli \
-    basetheme \
-    statmod \
-    assertthat \
-    BiocManager \
-    devtools \
-    remotes \
-    enrichR \
-    magrittr \
-    lme4 \
-    dplyr \
-    matrixStats \
-    purrr \
-    Matrix \
-    rmarkdown \
-    tidyverse \
-    paletteer \
-    data.table \
-    ggpubr \
-    igraph \
-    plotly \
-    ggplot2 \
-	  ggbeeswarm \
-	  GGally \
-	  ggrastr \
-    cowplot \
-    httr \
-    jsonlite \
-    reshape2 \
-	  pheatmap \
-    ghql \
-    viridis \
-    tidyr \
-    tibble \
-    visNetwork \
-    ggsignif \
-    DT \
-    RColorBrewer \
-	  reticulate \
-    corrplot \
-	  doParallel \
-    stringr \
-    ggrepel \
-	  foreach \
-	  forcats \
-	  systemfonts \
-	  ragg \
-    SNFtool \
-	  Cairo \
-	  mvtnorm \
-	  scales \
-	  ClassDiscovery\
-    && rm -rf /tmp/downloaded_packages
+cli \
+basetheme \
+statmod \
+assertthat \
+BiocManager \
+devtools \
+remotes \
+enrichR \
+magrittr \
+lme4 \
+dplyr \
+matrixStats \
+purrr \
+Matrix \
+rmarkdown \
+tidyverse \
+paletteer \
+data.table \
+ggpubr \
+igraph \
+plotly \
+ggplot2 \
+ggbeeswarm \
+GGally \
+ggrastr \
+cowplot \
+httr \
+jsonlite \
+reshape2 \
+pheatmap \
+ghql \
+viridis \
+tidyr \
+tibble \
+visNetwork \
+ggsignif \
+DT \
+RColorBrewer \
+reticulate \
+corrplot \
+doParallel \
+stringr \
+ggrepel \
+foreach \
+forcats \
+systemfonts \
+ragg \
+SNFtool \
+Cairo \
+mvtnorm \
+scales \
+ClassDiscovery\
+&& rm -rf /tmp/downloaded_packages
 
 
 ## Install Bioconductor packages
