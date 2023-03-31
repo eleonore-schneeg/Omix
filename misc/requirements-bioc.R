@@ -1,10 +1,8 @@
 bioc_pkgs<-c(
-  'AnnotationDbi',
   'basilisk',
   'Biobase',
   'BiocGenerics',
   'BiocStyle',
-  'biomaRt',
   'circlize',
   'clusterProfiler',
   'ComplexHeatmap',
@@ -14,20 +12,19 @@ bioc_pkgs<-c(
   'edgeR',
   'enrichplot',
   'SummarizedExperiment',
-  'ensembldb',
-  'EnsDb.Hsapiens.v86',
   'fgsea',
   'GenomicRanges',
   'graph',
   'HDF5Array',
   'IRanges',
   'limma',
-  'DESeq2',
   'mixOmics',
-  'MOFA2',
   'msigdbr',
   'MultiAssayExperiment',
   'multtest',
+  'AnnotationDbi',
+  'ensembldb',
+  'EnsDb.Hsapiens.v86',
   'org.Hs.eg.db',
   'preprocessCore',
   'proBatch',
@@ -36,8 +33,12 @@ bioc_pkgs<-c(
   'SingleCellExperiment',
   'EWCE',
   'slingshot',
-  'WGCNA'
+  'WGCNA',
+  'DESeq2',
+  'MOFA2'
 )
+
 
 requireNamespace("BiocManager")
 BiocManager::install(bioc_pkgs, ask=F)
+

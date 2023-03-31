@@ -3,11 +3,10 @@
 ## Uses the latest stable ubuntu, R and Bioconductor versions.
 ## Created on unbuntu 20.04, R 4.0 and BiocManager 3.12
 
-FROM rocker/rstudio:4.0.2
+FROM rocker/rstudio:4.2.3
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends apt-utils \
-	#&& apt-get install -f \
 	&& apt-get install -y --no-install-recommends \
 	python3 \
 	python3-setuptools \
@@ -114,67 +113,58 @@ RUN apt-get update \
       && mkdir /opt/cmake-3.24.1 \
       && /tmp/cmake-install.sh --skip-license --prefix=/opt/cmake-3.24.1 \
       && rm /tmp/cmake-install.sh \
-      && ln -s /opt/cmake-3.24.1/bin/* /usr/local/bin
+      && ln -s /opt/cmake-3.24.1/bin/* /usr/local/bin \
+  # Install mofapy2
+  && python3 -m pip install mofapy2
 
-# Install mofapy2
-RUN python3 -m pip install mofapy2
-
-RUN install2.r -e \
-cli \
-basetheme \
-statmod \
-assertthat \
-BiocManager \
-devtools \
-remotes \
-enrichR \
-magrittr \
-lme4 \
-dplyr \
-matrixStats \
-purrr \
-Matrix \
-rmarkdown \
+#Set CRAN mirror
+RUN echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' \
+>>"${R_HOME}/etc/Rprofile.site" \
+#Install CRAN pkgs
+&& install2.r -e -s \
 tidyverse \
-paletteer \
+BiocManager \
+basetheme \
 data.table \
-ggpubr \
-igraph \
-plotly \
-ggplot2 \
-ggbeeswarm \
-GGally \
-ggrastr \
-cowplot \
-httr \
-jsonlite \
-reshape2 \
-pheatmap \
-ghql \
-viridis \
-tidyr \
-tibble \
-visNetwork \
-ggsignif \
-DT \
-RColorBrewer \
-reticulate \
-corrplot \
+devtools \
 doParallel \
-stringr \
-ggrepel \
+DT \
+enrichR \
 foreach \
-forcats \
-systemfonts \
-ragg \
-SNFtool \
-Cairo \
+ggpubr \
+ggrastr \
+ggrepel \
+ggsignif \
+GGally \
+ggbeeswarm \
+ghql \
+httr \
+igraph \
+jsonlite \
+lme4 \
+magrittr \
+Matrix \
+matrixStats \
 mvtnorm \
+paletteer \
+pheatmap \
+plotly \
+ragg \
+RColorBrewer \
+remotes \
+reshape2 \
+reticulate \
+rmarkdown \
 scales \
+SNFtool \
+statmod \
+systemfonts \
+viridis \
+visNetwork \
 && rm -rf /tmp/downloaded_packages
 
-
 ## Install Bioconductor packages
+
 COPY ./misc/requirements-bioc.R .
 
 RUN Rscript -e 'requireNamespace("BiocManager"); BiocManager::install(ask=F);' \

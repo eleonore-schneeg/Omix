@@ -21,7 +21,6 @@
 #' @importFrom ggplot2 ggplot ggsave
 #' @importFrom cowplot theme_cowplot background_grid
 #' @importFrom stringr str_wrap
-#' @importFrom assertthat assert_that
 #' @importFrom dplyr %>% mutate
 #' @importFrom purrr map map_chr discard
 #'
@@ -151,7 +150,6 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 #' @importFrom stats reorder
 #' @importFrom dplyr top_n
 #' @importFrom stringr str_wrap
-#' @importFrom cowplot theme_cowplot background_grid
 #' @import ggplot2
 #' @keywords internal
 
@@ -180,8 +178,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
     guides(size = guide_legend(
       override.aes = list(fill = "gold", color = "gold")
     )) +
-    cowplot::theme_cowplot() +
-    cowplot::background_grid()
+    theme_bw()
 }
 
 #' Curates dotplot for `pathway_analysis_enrichr()` on a required semantics
