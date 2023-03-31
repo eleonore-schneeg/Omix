@@ -39,6 +39,7 @@ Compare differential expressed genes and proteins
 }
 \seealso{
 Other Single-omic: 
+\code{\link{DE_multiomics}()},
 \code{\link{protein_DE_analysis}()},
 \code{\link{rna_DE_analysis}()}
 }

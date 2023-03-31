@@ -18,3 +18,13 @@ multiassay object with custom slot
 \description{
 Adds a custom processed proteomics dataset to multiassay object
 }
+\seealso{
+Other Helper: 
+\code{\link{counts_rna}()},
+\code{\link{extract_multiomic_signature}()},
+\code{\link{extract_weigths}()},
+\code{\link{format_res_deseq}()},
+\code{\link{format_res_limma}()},
+\code{\link{processed_rna}()}
+}
+\concept{Helper}

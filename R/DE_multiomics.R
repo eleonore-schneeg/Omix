@@ -11,7 +11,7 @@
 #'
 #' @return List of differential expression results
 #'
-#' @family "Single-omic
+#' @family Single-omic
 #'
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
 #' getWithColData sampleMap

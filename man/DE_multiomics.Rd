@@ -32,4 +32,10 @@ List of differential expression results
 \description{
 Performs DE on multiomics object from the processed slots
 }
-\concept{"Single-omic}
+\seealso{
+Other Single-omic: 
+\code{\link{protein_DE_analysis}()},
+\code{\link{rna_DE_analysis}()},
+\code{\link{single_omic_comparisons}()}
+}
+\concept{Single-omic}

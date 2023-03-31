@@ -34,6 +34,7 @@ Downstream analysis for integrated multi-omics data
 }
 \seealso{
 Other Multi-omic integration downstream analysis: 
+\code{\link{clustering_DE_analysis}()},
 \code{\link{integrative_results_clustering}()},
 \code{\link{integrative_results_supervised}()},
 \code{\link{multiomics_modules}()}

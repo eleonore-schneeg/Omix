@@ -18,3 +18,19 @@ circular_heatmap(
 \description{
 Title
 }
+\seealso{
+Other Plotting: 
+\code{\link{communities_network}()},
+\code{\link{community_graph}()},
+\code{\link{getMoHeatmap}},
+\code{\link{interactive_network}()},
+\code{\link{multiomics_network_cluster}()},
+\code{\link{multiomics_network_matrix}()},
+\code{\link{multiomics_network}()},
+\code{\link{plot_OpenTarget}()},
+\code{\link{volcano_interactive_comparison}()},
+\code{\link{volcano_interactive}()},
+\code{\link{volcano_plot_deseq}()},
+\code{\link{volcano_plot_limma}()}
+}
+\concept{Plotting}

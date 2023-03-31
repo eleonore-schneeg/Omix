@@ -6,6 +6,9 @@
 #' @param batch batch covariate
 #'
 #' @return Median normalised data frame
+#'
+#' @family Pre-processing
+#'
 #' @importFrom proBatch center_feature_batch_medians_df quantile_normalize_dm
 #' matrix_to_long long_to_matrix
 #' @export

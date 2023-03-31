@@ -52,6 +52,12 @@
     <loc>/reference/combat_correction.html</loc>
   </url>
   <url>
+    <loc>/reference/communities_network.html</loc>
+  </url>
+  <url>
+    <loc>/reference/community_graph.html</loc>
+  </url>
+  <url>
     <loc>/reference/counts_rna.html</loc>
   </url>
   <url>
@@ -103,6 +109,9 @@
     <loc>/reference/dot-multiomics_network_matrix.html</loc>
   </url>
   <url>
+    <loc>/reference/dot_plot_enrichr_semantics.html</loc>
+  </url>
+  <url>
     <loc>/reference/dotplot_enrichment_MOFA.html</loc>
   </url>
   <url>
@@ -133,10 +142,28 @@
     <loc>/reference/getMoHeatmap.html</loc>
   </url>
   <url>
+    <loc>/reference/get_ID_names.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_ID_type.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_background.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_metadata.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_module_annotation.html</loc>
   </url>
   <url>
     <loc>/reference/get_multimodal_object.html</loc>
+  </url>
+  <url>
+    <loc>/reference/impute_distribution.html</loc>
+  </url>
+  <url>
+    <loc>/reference/impute_minimum_value.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
@@ -169,10 +196,22 @@
     <loc>/reference/integrative_results_unsupervised.html</loc>
   </url>
   <url>
+    <loc>/reference/interactive_network.html</loc>
+  </url>
+  <url>
     <loc>/reference/median_centering_correction.html</loc>
   </url>
   <url>
     <loc>/reference/multiomics_modules.html</loc>
+  </url>
+  <url>
+    <loc>/reference/multiomics_network.html</loc>
+  </url>
+  <url>
+    <loc>/reference/multiomics_network_cluster.html</loc>
+  </url>
+  <url>
+    <loc>/reference/multiomics_network_matrix.html</loc>
   </url>
   <url>
     <loc>/reference/pathway_analysis_enrichr.html</loc>

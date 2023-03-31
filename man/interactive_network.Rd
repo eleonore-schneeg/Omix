@@ -22,6 +22,11 @@ Get interactive network from igraph object
 }
 \seealso{
 Other Plotting: 
+\code{\link{circular_heatmap}()},
+\code{\link{communities_network}()},
+\code{\link{community_graph}()},
+\code{\link{getMoHeatmap}},
+\code{\link{multiomics_network_cluster}()},
 \code{\link{multiomics_network_matrix}()},
 \code{\link{multiomics_network}()},
 \code{\link{plot_OpenTarget}()},

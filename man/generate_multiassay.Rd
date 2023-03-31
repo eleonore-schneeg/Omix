@@ -71,6 +71,7 @@ Other Pre-processing:
 \code{\link{batch_correction_protein}()},
 \code{\link{combat_correction}()},
 \code{\link{filter_protein}()},
+\code{\link{median_centering_correction}()},
 \code{\link{process_protein}()},
 \code{\link{process_rna}()}
 }

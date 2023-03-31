@@ -23,6 +23,9 @@
 #' @param fig.path A string value to indicate the output path for storing the comprehensive heatmap.
 #' @param fig.name A string value to indicate the name of the comprehensive heatmap.
 #' @return A pdf of multi-omics comprehensive heatmap
+#'
+#' @family Plotting
+#'
 #' @importFrom ComplexHeatmap HeatmapAnnotation Heatmap rowAnnotation anno_mark draw ht_opt %v%
 #' @importFrom ClassDiscovery distanceMatrix
 #' @importFrom grDevices pdf dev.off colorRampPalette

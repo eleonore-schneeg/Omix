@@ -250,6 +250,9 @@ process_protein <- function(multiassay,
 #' @param custom_processed_df processed dataframe
 #'
 #' @return multiassay object with custom slot
+#'
+#' @family Helper
+#'
 #' @export
 #'
 processed_proteomics <- function(multiassay,

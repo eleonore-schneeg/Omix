@@ -19,3 +19,13 @@ Median normalised data frame
 \description{
 Proteomics normalisation batch correction using median centering method
 }
+\seealso{
+Other Pre-processing: 
+\code{\link{batch_correction_protein}()},
+\code{\link{combat_correction}()},
+\code{\link{filter_protein}()},
+\code{\link{generate_multiassay}()},
+\code{\link{process_protein}()},
+\code{\link{process_rna}()}
+}
+\concept{Pre-processing}

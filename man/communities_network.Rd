@@ -19,3 +19,19 @@ List object including \code{community_object} and \code{communities}
 \description{
 Detects communities in multi-omics network
 }
+\seealso{
+Other Plotting: 
+\code{\link{circular_heatmap}()},
+\code{\link{community_graph}()},
+\code{\link{getMoHeatmap}},
+\code{\link{interactive_network}()},
+\code{\link{multiomics_network_cluster}()},
+\code{\link{multiomics_network_matrix}()},
+\code{\link{multiomics_network}()},
+\code{\link{plot_OpenTarget}()},
+\code{\link{volcano_interactive_comparison}()},
+\code{\link{volcano_interactive}()},
+\code{\link{volcano_plot_deseq}()},
+\code{\link{volcano_plot_limma}()}
+}
+\concept{Plotting}

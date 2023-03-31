@@ -154,7 +154,7 @@ multiomics_network <- function(multiassay,
 
 #' @import igraph
 #'
-#' @export
+#' @keywords internal
 .GetGraph <- function(calib_object = NULL, adjacency = NULL,
                       node_label = NULL, node_color = NULL, node_shape = NULL,
                       weighted = NULL, satellites = FALSE) {
@@ -277,6 +277,8 @@ interactive_network <- function(igraph,
 #'
 #' @return List object including `community_object` and `communities`
 #'
+#' @family Plotting
+#'
 #' @import igraph
 #'
 #' @export
@@ -331,6 +333,9 @@ communities_network <- function(igraph,
 #' in the network
 #'
 #' @return `Igraph` object
+#'
+#' @family Plotting
+#'
 #' @import igraph
 #' @export
 #'
@@ -409,6 +414,9 @@ multiomics_network_cluster <- function(multiassay,
 #' @param community Community of interest
 #'
 #' @return A list including `graph` and `hubs`
+#'
+#' @family Plotting
+#'
 #' @import igraph
 #' @export
 #'

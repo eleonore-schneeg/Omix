@@ -22,7 +22,12 @@ Get multiomics networks from multimodal object
 }
 \seealso{
 Other Plotting: 
+\code{\link{circular_heatmap}()},
+\code{\link{communities_network}()},
+\code{\link{community_graph}()},
+\code{\link{getMoHeatmap}},
 \code{\link{interactive_network}()},
+\code{\link{multiomics_network_cluster}()},
 \code{\link{multiomics_network}()},
 \code{\link{plot_OpenTarget}()},
 \code{\link{volcano_interactive_comparison}()},

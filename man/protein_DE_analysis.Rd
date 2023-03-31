@@ -39,6 +39,7 @@ Performs single omic analysis of proteomic layer.
 }
 \seealso{
 Other Single-omic: 
+\code{\link{DE_multiomics}()},
 \code{\link{rna_DE_analysis}()},
 \code{\link{single_omic_comparisons}()}
 }

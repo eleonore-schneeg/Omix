@@ -24,6 +24,7 @@ Other Pre-processing:
 \code{\link{batch_correction_protein}()},
 \code{\link{filter_protein}()},
 \code{\link{generate_multiassay}()},
+\code{\link{median_centering_correction}()},
 \code{\link{process_protein}()},
 \code{\link{process_rna}()}
 }

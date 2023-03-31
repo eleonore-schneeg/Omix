@@ -33,6 +33,7 @@ Performs single omic analysis of transcriptomics layer.
 }
 \seealso{
 Other Single-omic: 
+\code{\link{DE_multiomics}()},
 \code{\link{protein_DE_analysis}()},
 \code{\link{single_omic_comparisons}()}
 }

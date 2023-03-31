@@ -17,3 +17,4 @@ String of relevant factor
 \description{
 Selects the top factor that is most strongly associated with outcomes of interest
 }
+\keyword{internal}

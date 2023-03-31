@@ -20,3 +20,19 @@ A list including \code{graph} and \code{hubs}
 \description{
 Creates a subnetwork graph based on detected communities
 }
+\seealso{
+Other Plotting: 
+\code{\link{circular_heatmap}()},
+\code{\link{communities_network}()},
+\code{\link{getMoHeatmap}},
+\code{\link{interactive_network}()},
+\code{\link{multiomics_network_cluster}()},
+\code{\link{multiomics_network_matrix}()},
+\code{\link{multiomics_network}()},
+\code{\link{plot_OpenTarget}()},
+\code{\link{volcano_interactive_comparison}()},
+\code{\link{volcano_interactive}()},
+\code{\link{volcano_plot_deseq}()},
+\code{\link{volcano_plot_limma}()}
+}
+\concept{Plotting}

@@ -3,6 +3,8 @@
 #' @param network_communities The name of the network communities
 #' @param cell_type_communities Cell type enrichment of the community
 #'
+#' @family Plotting
+#'
 #' @export
 #'
 circular_heatmap <- function(network_communities,

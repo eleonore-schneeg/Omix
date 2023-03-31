@@ -6,6 +6,8 @@
 #' @param levels
 #' @param log2FoldChange
 #'
+#' @family Multi-omic integration downstream analysis
+#'
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
 #' @importFrom SummarizedExperiment SummarizedExperiment colData
 #' @importFrom stats as.formula

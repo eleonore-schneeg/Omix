@@ -278,7 +278,7 @@ integrative_results_unsupervised <- function(multiassay,
 #'
 #' @return String of relevant factor
 #' @importFrom MOFA2 correlate_factors_with_covariates
-#' @export
+#' @keywords internal
 
 MOFA_get_relevant_factor <- function(MOFAobject, covariate) {
   corr <- MOFA2::correlate_factors_with_covariates(MOFAobject,

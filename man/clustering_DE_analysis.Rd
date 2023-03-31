@@ -18,3 +18,11 @@ clustering_DE_analysis(
 \description{
 Performs differential expression between clusters
 }
+\seealso{
+Other Multi-omic integration downstream analysis: 
+\code{\link{integrative_results_clustering}()},
+\code{\link{integrative_results_supervised}()},
+\code{\link{integrative_results_unsupervised}()},
+\code{\link{multiomics_modules}()}
+}
+\concept{Multi-omic integration downstream analysis}
