@@ -35,9 +35,9 @@ jobs:
           load: true
           file: ./Dockerfile
           tags: |
-            nfancy/Omix:${{ env.packageVersion }}
-            nfancy/Omix:latest
-            nfancy/Omix:dev
+            nfancy/omix:${{ env.packageVersion }}
+            nfancy/omix:latest
+            nfancy/omix:dev
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
@@ -46,6 +46,6 @@ jobs:
 
       - name: push service
         run: |
-          docker push nfancy/Omix:${{ env.packageVersion }}
-          docker push nfancy/Omix:latest
-          docker push nfancy/Omix:dev
+          docker push nfancy/omix:${{ env.packageVersion }}
+          docker push nfancy/omix:latest
+          docker push nfancy/omix:dev
