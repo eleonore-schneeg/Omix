@@ -89,7 +89,8 @@ Imports:
       reticulate,
       plotly,
       DT,
-      basetheme
+      basetheme,
+      data.table
 Suggests: 
     knitr,
     rmarkdown

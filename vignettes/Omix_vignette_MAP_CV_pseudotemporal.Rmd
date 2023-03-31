@@ -508,7 +508,7 @@ intersect(weights$weights$ranked_weights_positive$rna,weights$weights$ranked_wei
 
 ```{r}
 
-Weights_down_n=.multiomics_network(multiassay=multiomics_object,
+Weights_down_n=multiomics_network(multiassay=multiomics_object,
                            list=weights$weights$ranked_weights_negative,
                            correlation_threshold =0.4)
 
@@ -522,7 +522,7 @@ The next step of the analysis is to find densily co-expressed communities of pro
 This function tries to find densely connected subgraphs in a graph by calculating the leading non-negative eigenvector of the modularity matrix of the graph.
 
 ```{r}
-communities <- .communities_network(igraph=Weights_down_n$graph,
+communities <- communities_network(igraph=Weights_down_n$graph,
                                     community_detection='leading_eigen')
 
 ```
@@ -568,20 +568,20 @@ We can look at each communities:
 
 ```{r}
 
-community_1=.community_graph(igraph=Weights_down_n$graph,
+community_1=community_graph(igraph=Weights_down_n$graph,
                             community_object=communities$community_object,
                             community=1)
-.interactive_network(igraph=community_1$graph,communities=FALSE)
+interactive_network(igraph=community_1$graph,communities=FALSE)
 ```
 
 #### Community 2
 
 ```{r}
 
-community_2=.community_graph(igraph=Weights_down_n$graph,
+community_2=community_graph(igraph=Weights_down_n$graph,
                             community_object=communities$community_object,
                             community=2)
-.interactive_network(igraph=community_2$graph,communities=FALSE)
+interactive_network(igraph=community_2$graph,communities=FALSE)
 ```
 
 #### Community hubs 

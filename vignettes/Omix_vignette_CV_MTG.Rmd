@@ -456,7 +456,7 @@ integrative_results_MTG$detrimental$multiomics_signature
 ## Multi-omics network of detrimental features 
 
 ```{r}
-.interactive_network(integrative_results_MTG$detrimental$network$graph, communities = FALSE)
+interactive_network(integrative_results_MTG$detrimental$network$graph, communities = FALSE)
 ```
 
 

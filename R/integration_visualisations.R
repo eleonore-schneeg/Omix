@@ -152,6 +152,9 @@ multiomics_network <- function(multiassay,
     findInterval(x, seq(-1, 1, length.out = colsteps))])
 }
 
+#' @import igraph
+#'
+#' @export
 .GetGraph <- function(calib_object = NULL, adjacency = NULL,
                       node_label = NULL, node_color = NULL, node_shape = NULL,
                       weighted = NULL, satellites = FALSE) {
@@ -328,6 +331,7 @@ communities_network <- function(igraph,
 #' in the network
 #'
 #' @return `Igraph` object
+#' @import igraph
 #' @export
 #'
 
@@ -336,7 +340,6 @@ multiomics_network_cluster <- function(multiassay,
                                         cluster = 1,
                                         list,
                                         correlation_threshold = 0.5) {
-  library(igraph)
   features_interest <- c(list[[1]], list[[2]])
   multimodal_object <- multiassay@metadata$multimodal_object$omics
 
@@ -406,6 +409,7 @@ multiomics_network_cluster <- function(multiassay,
 #' @param community Community of interest
 #'
 #' @return A list including `graph` and `hubs`
+#' @import igraph
 #' @export
 #'
 
