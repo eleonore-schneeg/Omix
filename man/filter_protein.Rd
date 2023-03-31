@@ -24,3 +24,12 @@ Filtered protein matrix
 \description{
 Data filtering function
 }
+\seealso{
+Other Pre-processing: 
+\code{\link{batch_correction_protein}()},
+\code{\link{combat_correction}()},
+\code{\link{generate_multiassay}()},
+\code{\link{process_protein}()},
+\code{\link{process_rna}()}
+}
+\concept{Pre-processing}

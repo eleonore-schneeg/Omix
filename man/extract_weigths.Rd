@@ -2,7 +2,8 @@
 % Please edit documentation in R/extract_weights.R
 \name{extract_weigths}
 \alias{extract_weigths}
-\title{Extract_weigths from MOFA model for a given factor of interest at a defined absolute threshold}
+\title{Extract_weigths from MOFA model for a given factor of interest at a
+defined absolute threshold}
 \usage{
 extract_weigths(
   model,
@@ -12,20 +13,33 @@ extract_weigths(
 )
 }
 \arguments{
-\item{model}{MOFA model from integration in \code{multiassay@metadata$integration$MOFA}}
+\item{model}{MOFA model from integration in
+\code{multiassay@metadata$integration$MOFA}}
 
 \item{factor}{Factor to extract weight from}
 
 \item{threshold}{Absolute threshold to filter weights}
 
-\item{sense_check_variable}{default to \code{NULL}. High weights should coincide with
-stronger correlation if the sense_check_variable is an important driver of
-variation in the designated factor. Will be used to generate a plot if set to a covariate.}
+\item{sense_check_variable}{default to \code{NULL}. High weights should
+coincide with stronger correlation if the sense_check_variable is an
+important driver of variation in the designated factor. Will be used to
+generate a plot if set to a covariate.}
 }
 \value{
-List with positive and negative weights above and below the specified threshold,
-distirbution plots of the weights, and dataframes of the weights for each omic layer.
+List with positive and negative weights above and below the
+specified threshold, distirbution plots of the weights, and dataframes
+of the weights for each omic layer.
 }
 \description{
-Extract_weigths from MOFA model for a given factor of interest at a defined absolute threshold
+Extract_weigths from MOFA model for a given factor of interest at a
+defined absolute threshold
 }
+\seealso{
+Other Helper: 
+\code{\link{counts_rna}()},
+\code{\link{extract_multiomic_signature}()},
+\code{\link{format_res_deseq}()},
+\code{\link{format_res_limma}()},
+\code{\link{processed_rna}()}
+}
+\concept{Helper}

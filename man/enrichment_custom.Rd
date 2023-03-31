@@ -23,3 +23,10 @@ Functional enrichment result
 \description{
 Functional enrichment based on given reference annotations
 }
+\seealso{
+Other Enrichment analysis: 
+\code{\link{GSEA}()},
+\code{\link{cell_type_enrichment}()},
+\code{\link{pathway_analysis_enrichr}()}
+}
+\concept{Enrichment analysis}

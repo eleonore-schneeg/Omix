@@ -25,8 +25,10 @@
 #
 #' @return a MultiAssayExperiment object with `protein_processed` slot
 #'
+#' @family Pre-processing
+#'
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
-#'  getWithColData sampleMap
+#' getWithColData sampleMap metadata experiments
 #' @importFrom SummarizedExperiment SummarizedExperiment assay rowData
 #' @export
 #'
@@ -90,12 +92,12 @@ process_protein <- function(multiassay,
     cli::cli_alert_success(
       "Imputation of remaining missing values based on distribution"
     )
-    matrix <- .impute_distribution(matrix)
+    matrix <- impute_distribution(matrix)
   }
   if (imputation == "minimum_value") {
-    cli::cli_alert_success("Imputation of remaining missing values based on 50% of
-                minimum level of abundance for each protein")
-    matrix <- .impute_minimum_value(matrix)
+    cli::cli_alert_success("Imputation of remaining missing values based on
+    50% of minimum level of abundance for each protein")
+    matrix <- impute_minimum_value(matrix)
   }
 
   if (imputation == "zero") {
@@ -104,7 +106,7 @@ process_protein <- function(multiassay,
       is.numeric,
       function(x) {
         ifelse(is.na(x),
-          0, x
+               0, x
         )
       }
     )
@@ -136,26 +138,29 @@ process_protein <- function(multiassay,
 
     covariates_data <- MultiAssayExperiment::colData(protein_raw)[, c(covariates)]
     covariates_data <- data.frame(covariates_data)
-    covariates_data=covariates_data %>%  mutate(across(where(is.character),as.factor))
-    covariates_data=covariates_data %>%  mutate(across(where(is.factor),as.numeric))
+    covariates_data <- covariates_data %>%
+      mutate(across(where(is.character), as.factor))
+    covariates_data <- covariates_data %>%
+      mutate(across(where(is.factor), as.numeric))
 
-    for(i in colnames(covariates_data)){
+    for (i in colnames(covariates_data)){
 
-    if(all(!is.na(covariates_data[,i]))==FALSE){
-      stop(cli::cli_alert_danger(
-        paste(i,"Contains missing data, please impute or remove this covariate",
-              sep = " "
-        )))
+      if (all(!is.na(covariates_data[, i])) == FALSE) {
+        stop(cli::cli_alert_danger(
+          paste(i, "Contains missing data,
+                please impute or remove this covariate",
+                sep = " "
+          )))
       }
     }
 
     matrix <- limma::removeBatchEffect(
       matrix,
-      batch=NULL,
+      batch = NULL,
       covariates = covariates_data,
       design = model.matrix(~ colData[[dependent]]),
-        data = colData
-      )
+      data = colData
+    )
 
     matrix <- as.data.frame(matrix)
   }
@@ -169,7 +174,7 @@ process_protein <- function(multiassay,
     q2 <- quantile(matrix, probs = c(0.95), na.rm = TRUE)
 
     idx <- ((rowSums(matrix, 2) / ncol(matrix) > q) &
-      (rowSums(matrix, 2) / ncol(matrix) < q2))
+              (rowSums(matrix, 2) / ncol(matrix) < q2))
     matrix <- matrix[idx, ]
     dim4 <- dim(matrix)[1]
     cli::cli_alert_success(paste(
@@ -182,11 +187,11 @@ process_protein <- function(multiassay,
   if (remove_sample_outliers == TRUE) {
     cli::cli_alert_success("REMOVING SAMPLE OUTLIERS")
     dim5 <- dim(matrix)[2]
-    pca <- prcomp(t(matrix), scale. = T, rank. = 1)
+    pca <- prcomp(t(matrix), scale. = TRUE, rank. = 1)
     U <- pca$x
     outliers <- rownames(apply(U, 2, function(x) {
       which(abs(x - mean(x))
-      >= (3 * sd(x)))
+            >= (3 * sd(x)))
     }))
     matrix <- matrix[, colnames(matrix) %!in% outliers]
     dim6 <- dim(matrix)[2]
@@ -195,7 +200,8 @@ process_protein <- function(multiassay,
       dim5, " samples detected and dropped"
     ))
 
-    metadata(multiassay)$OutliersFlags$protein <- outliers
+    MultiAssayExperiment::metadata(multiassay)$OutliersFlags$protein <-
+      outliers
   }
 
 
@@ -210,11 +216,12 @@ process_protein <- function(multiassay,
   map_df$assay <- "protein_processed"
 
   multiassay <- c(multiassay,
-    protein_processed = matrix,
-    sampleMap = map_df
+                  protein_processed = matrix,
+                  sampleMap = map_df
   )
 
-  metadata(multiassay)$parameters_processing_protein <- list(
+  MultiAssayExperiment::metadata(multiassay)$parameters_processing_protein <-
+    list(
     filter = filter,
     min_sample = min_sample,
     dependent = dependent,
@@ -246,7 +253,7 @@ process_protein <- function(multiassay,
 #' @export
 #'
 processed_proteomics <- function(multiassay,
-                          custom_processed_df) {
+                                 custom_processed_df) {
   matrix <- as.data.frame(custom_processed_df)
   map <- MultiAssayExperiment::sampleMap(multiassay)
   map_df <- data.frame(map@listData)
@@ -257,17 +264,18 @@ processed_proteomics <- function(multiassay,
   ), ][c("primary", "colname")]
   map_df$assay <- "protein_processed"
 
-  rm.protein_processed <- !grepl(
+  rm_protein_processed <- !grepl(
     "protein_processed",
-    names(experiments(multiassay))
+    names(MultiAssayExperiment::experiments(multiassay))
   )
-  multiassay <- multiassay[, , rm.protein_processed]
+  multiassay <- multiassay[, , rm_protein_processed]
   multiassay <- c(multiassay,
-    protein_processed = matrix,
-    sampleMap = map_df
+                  protein_processed = matrix,
+                  sampleMap = map_df
   )
 
-  metadata(multiassay)$parameters_processing_protein$custom_processed_df <- TRUE
+  MultiAssayExperiment::metadata(
+    multiassay)$parameters_processing_protein$custom_processed_df <- TRUE
 
   cli::cli_alert_success("Custom processed proteomics added!")
 }

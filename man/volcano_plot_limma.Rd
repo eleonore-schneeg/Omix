@@ -19,3 +19,14 @@ Volcano plot
 \description{
 Builds a volcano plot from limma results
 }
+\seealso{
+Other Plotting: 
+\code{\link{interactive_network}()},
+\code{\link{multiomics_network_matrix}()},
+\code{\link{multiomics_network}()},
+\code{\link{plot_OpenTarget}()},
+\code{\link{volcano_interactive_comparison}()},
+\code{\link{volcano_interactive}()},
+\code{\link{volcano_plot_deseq}()}
+}
+\concept{Plotting}

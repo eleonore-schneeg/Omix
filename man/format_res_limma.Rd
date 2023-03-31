@@ -16,7 +16,8 @@ format_res_limma(
 \arguments{
 \item{dt}{Differential expression results dataframe from limma}
 
-\item{gene_id_conversion}{Default to NULL. Can provide a dataframe with \code{gene_name}
+\item{gene_id_conversion}{Default to NULL.
+Can provide a dataframe with \code{gene_name}
 and \code{uniprot_id} columns to easily convert nomenclature.}
 
 \item{log2FoldChange}{Log2FC absolute threshold}
@@ -31,3 +32,12 @@ Formatted data frame
 \description{
 Formatting differential expression results from limma
 }
+\seealso{
+Other Helper: 
+\code{\link{counts_rna}()},
+\code{\link{extract_multiomic_signature}()},
+\code{\link{extract_weigths}()},
+\code{\link{format_res_deseq}()},
+\code{\link{processed_rna}()}
+}
+\concept{Helper}

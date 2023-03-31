@@ -4,7 +4,7 @@
 \alias{GSEA}
 \title{Performs functional gene set enrichment analysis}
 \usage{
-GSEA(gene_list, myGO, pval)
+GSEA(gene_list, pval)
 }
 \arguments{
 \item{gene_list}{vector of genes}
@@ -17,3 +17,10 @@ List of results
 \description{
 Performs functional gene set enrichment analysis
 }
+\seealso{
+Other Enrichment analysis: 
+\code{\link{cell_type_enrichment}()},
+\code{\link{enrichment_custom}()},
+\code{\link{pathway_analysis_enrichr}()}
+}
+\concept{Enrichment analysis}

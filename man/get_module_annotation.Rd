@@ -17,3 +17,4 @@ Functional annotation of modules
 \description{
 Get module functional annotation
 }
+\keyword{internal}

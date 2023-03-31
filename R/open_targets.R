@@ -1,15 +1,80 @@
 #' Interface to OpenTargets database
 #'
-#' @param disease_id OpenTargets disease id. Default to "MONDO_0004975" (Alzheimer's Disease)
-#' Different disease ontologies can be found on https://www.ebi.ac.uk/ols/ontologies
+#' @param disease_id OpenTargets disease id. Default to "MONDO_0004975"
+#' (Alzheimer's Disease) Different disease ontologies can be found on
+#' https://www.ebi.ac.uk/ols/ontologies
 #' @param size Default to 3000
+#' @param gene input gene vector
 #'
 #' @return ggplot showing association scores from OpenTargets
-#' @export
 #'
+#' @family Plotting
+#' @import ggplot2
+#' @export
 
-OpenTargets <- function(disease_id="MONDO_0004975",
-                        size=3000) {
+
+plot_OpenTarget <- function(disease_id = "MONDO_0004975",
+                            size = 1000,
+                            genes) {
+  opentarget_results <- get_diseaseAssociations_df(
+    disease_id = disease_id,
+    size = size
+  )
+
+  final <- opentarget_results[
+    which(opentarget_results$targetSymbol %in% genes),
+  ]
+  # Heatmap
+  p <- ggplot(final, aes(variable, targetSymbol, fill = value)) +
+    geom_tile() +
+    labs(
+      x = "Association scores from OpenTargets",
+      y = paste("Targets associated with", (final$diseaseName)),
+      title = ""
+    ) +
+    scale_fill_gradient(low = "white", high = "darkblue") +
+    guides(fill = guide_colorbar("Score (%)")) +
+    theme(
+      axis.text.x = element_text(size = rel(1.0), color = "black"),
+      axis.text.y = element_text(size = rel(1.1), color = "black"),
+      axis.line = element_blank(),
+      axis.ticks = element_blank(),
+      panel.background = element_blank(),
+      strip.background = element_blank(),
+      strip.text = element_text(size = rel(1.0))
+    )
+  p
+  return(p)
+}
+
+
+#' @importFrom dplyr %>% rename
+#' @importFrom tidyr unnest pivot_wider
+#' @importFrom purrr flatten
+#' @importFrom reshape2 melt
+#' @keywords internal
+
+get_diseaseAssociations_df <- function(disease_id = "MONDO_0004975",
+                                       size = 1000) {
+  data <- OpenTargets(disease_id, size = size)
+  data <- data %>%
+    as.data.frame() %>%
+    dplyr::rename(overallScore = score) %>%
+    tidyr::unnest(datatypeScores) %>%
+    tidyr::pivot_wider(names_from = "id", values_from = "score")
+  suppressMessages(data <- reshape2::melt(data))
+  return(data)
+}
+
+
+
+#' @importFrom httr POST
+#' @importFrom jsonlite fromJSON
+#' @keywords internal
+
+
+OpenTargets <- function(disease_id,
+                        size) {
   query_url <- "https://api.platform.opentargets.org/api/v4/graphql"
 
   # Building query:
@@ -46,7 +111,11 @@ OpenTargets <- function(disease_id="MONDO_0004975",
         "
   )
   # Retrieve data:
-  response <- httr::POST(url = query_url, body = request_body, encode = "json")
+  response <- httr::POST(
+    url = query_url,
+    body = request_body,
+    encode = "json"
+  )
 
   # Parse data:
   char <- rawToChar(response$content)
@@ -61,57 +130,8 @@ OpenTargets <- function(disease_id="MONDO_0004975",
   associations$targetSymbol <- associations$target$approvedSymbol
 
   # Dropping unused columns and return:
-  return(associations[, c("targetId", "targetSymbol", "diseaseName", "score", "datatypeScores")])
-}
-
-
-get_diseaseAssociations_df <- function(disease_id = "MONDO_0004975", size = 1000) {
-  library(dplyr)
-  library(ghql)
-  library(jsonlite)
-  library(reshape2)
-
-  data <- OpenTargets(disease_id, size = size)
-  data <- as.data.frame(data)
-  data <- as.data.frame(data) %>%
-    flatten() %>%
-    rename(overallScore = score) %>%
-    tidyr::unnest(datatypeScores) %>%
-    tidyr::pivot_wider(names_from = "id", values_from = "score")
-  data <- reshape2::melt(data)
-  return(data)
-}
-
-
-# data=get_diseaseAssociations_df(disease_id = 'MONDO_0004975')
-
-filter_OpenTarget <- function(opentarget_results = data, genes) {
-  library(reshape2)
-  final <- opentarget_results[which(opentarget_results$targetSymbol %in% genes), ]
-  return(final)
-}
-
-plot_filter_OpenTarget <- function(opentarget_results = data, genes) {
-  library(reshape2)
-  library(plotly)
-
-
-  final <- opentarget_results[which(opentarget_results$targetSymbol %in% genes), ]
-  # Heatmap
-  p <- ggplot(final, aes(variable, targetSymbol, fill = value)) +
-    geom_tile() +
-    labs(x = "Association scores from OpenTargets", y = paste("Targets associated with", (final$diseaseName)), title = "") +
-    scale_fill_gradient(low = "white", high = "darkblue") +
-    guides(fill = guide_colorbar("Score (%)")) +
-    theme(
-      axis.text.x = element_text(size = rel(1.0), color = "black"),
-      axis.text.y = element_text(size = rel(1.1), color = "black"),
-      axis.line = element_blank(),
-      axis.ticks = element_blank(),
-      panel.background = element_blank(),
-      strip.background = element_blank(),
-      strip.text = element_text(size = rel(1.0))
-    )
-  p
-  return(p)
+  return(associations[, c(
+    "targetId", "targetSymbol", "diseaseName",
+    "score", "datatypeScores"
+  )])
 }

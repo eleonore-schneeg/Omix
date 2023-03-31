@@ -61,6 +61,9 @@
     <loc>/reference/dot-community_graph.html</loc>
   </url>
   <url>
+    <loc>/reference/dot-dot_plot_enrichr_semantics.html</loc>
+  </url>
+  <url>
     <loc>/reference/dot-dotplot_enrichr.html</loc>
   </url>
   <url>
@@ -115,6 +118,9 @@
     <loc>/reference/extract_weigths.html</loc>
   </url>
   <url>
+    <loc>/reference/filter_protein.html</loc>
+  </url>
+  <url>
     <loc>/reference/format_res_deseq.html</loc>
   </url>
   <url>
@@ -128,6 +134,9 @@
   </url>
   <url>
     <loc>/reference/get_module_annotation.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_multimodal_object.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
@@ -169,6 +178,9 @@
     <loc>/reference/pathway_analysis_enrichr.html</loc>
   </url>
   <url>
+    <loc>/reference/plot_OpenTarget.html</loc>
+  </url>
+  <url>
     <loc>/reference/plot_geneset_clusters.html</loc>
   </url>
   <url>
@@ -197,6 +209,9 @@
   </url>
   <url>
     <loc>/reference/single_omic_comparison.html</loc>
+  </url>
+  <url>
+    <loc>/reference/single_omic_comparisons.html</loc>
   </url>
   <url>
     <loc>/reference/vertical_integration.html</loc>

@@ -5,31 +5,36 @@
 #' interest in `names(multiassay@metadata$DEG)` and
 #' `names(multiassay@metadata$DEP)`
 #' @param pvalue Comparison reference.can be set to `pval` or `adj`, to consider
-#' the normal p values or the ones after multiple testing correction, respectively.
-#'  With pvalue == `all`, no p value threshold is applied and all genes will be compared.
-#' all genes are kept and only the direction is compared.
+#' the normal p values or the ones after multiple testing correction,
+#' respectively. With pvalue == `all`, no p value threshold is applied and all genes will be
+#'  compared. all genes are kept and only the direction is compared.
 #' @param threshold is the pvalue threshold. Default to 0.05
 #' @param filtering_options default to `NULL`. if set to `both_significant`the
 #' returned dataframe will only display genes that are significant at both
 #' transcriptomics and proteomics levels. Setting the parameter to `either`will
 #' return genes that are significant in at least one layer.
+#'
 #' @return A list object with `dataframe` and `plot` slots
-#' @export
+#'
+#' @family Single-omic
+#'
 #' @importFrom ggpubr ggscatter
+#' @import ggplot2
+#' @export
 #'
 
 single_omic_comparisons <- function(multiassay,
-                                   slot = "ADvsControl",
-                                   threshold = 0.05,
-                                   pvalue = c("adj", "pval", "all"),
-                                   filtering_options='both_significant') {
+                                    slot = "ADvsControl",
+                                    threshold = 0.05,
+                                    pvalue = c("adj", "pval", "all"),
+                                    filtering_options = "both_significant") {
   DEG <- multiassay@metadata$DEG[paste(slot)][[paste(slot)]]
   DEP <- multiassay@metadata$DEP[paste(slot)][[paste(slot)]]
-    t <- merge(DEG, DEP, by = "gene_name")
+  t <- merge(DEG, DEP, by = "gene_name")
 
   if (pvalue == "adj") {
     t$pvalue_category <- ifelse(t$padj.x <= threshold & t$padj.y <= threshold,
-                                "double_platform",
+      "double_platform",
       ifelse(t$padj.x <= threshold & t$padj.y > threshold, "transcriptomics_only",
         ifelse(t$padj.x > threshold & t$padj.y <= threshold, "proteomics_only", NA)
       )
@@ -37,9 +42,12 @@ single_omic_comparisons <- function(multiassay,
   }
 
   if (pvalue == "pval") {
-    t$pvalue_category <- ifelse(t$pvalue.x <= threshold & t$pvalue.y <= threshold, "double_platform",
-      ifelse(t$pvalue.x <= threshold & t$pvalue.y > threshold, "transcriptomics_only",
-        ifelse(t$pvalue.x > threshold & t$pvalue.y <= threshold, "proteomics_only", NA)
+    t$pvalue_category <- ifelse(t$pvalue.x <= threshold & t$pvalue.y <= threshold,
+                                "double_platform",
+      ifelse(t$pvalue.x <= threshold & t$pvalue.y > threshold,
+             "transcriptomics_only",
+        ifelse(t$pvalue.x > threshold & t$pvalue.y <= threshold,
+               "proteomics_only", NA)
       )
     )
   }
@@ -100,23 +108,22 @@ single_omic_comparisons <- function(multiassay,
   }
 
 
-  if( is.null(filtering_options)){
-
-    df=t
+  if (is.null(filtering_options)) {
+    df <- t
   }
-  if( !is.null(filtering_options)){
-
-    if(filtering_options=='both_significant'){
-      t_double=t[which(t$pvalue_category=='double_platform'),]
+  if (!is.null(filtering_options)) {
+    if (filtering_options == "both_significant") {
+      t_double <- t[which(t$pvalue_category == "double_platform"), ]
     }
-    if(filtering_options=='either'){
-      t_double=t[which(t$pvalue_category!='never_significant'),]
+    if (filtering_options == "either") {
+      t_double <- t[which(t$pvalue_category != "never_significant"), ]
     }
-    df= t_double
+    df <- t_double
   }
 
-  list=list(dataframe=df,
-            plot=comparison_volcano)
+  list <- list(
+    dataframe = df,
+    plot = comparison_volcano
+  )
   return(list)
 }
-

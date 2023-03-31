@@ -27,3 +27,8 @@ list of of plots - one for each module provided
 \description{
 Generates a plot relating modules eigenvalue along pseudotime
 }
+\seealso{
+Other Pseudotime inference: 
+\code{\link{pseudotime_inference}()}
+}
+\concept{Pseudotime inference}

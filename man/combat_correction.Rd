@@ -10,6 +10,8 @@ combat_correction(matrix, batch_map, batch)
 \item{matrix}{protein abundance matrix}
 
 \item{batch_map}{generated internally to \code{batch_correction_protein()}}
+
+\item{batch}{Batch levels}
 }
 \value{
 Combat corrected data frame
@@ -17,3 +19,12 @@ Combat corrected data frame
 \description{
 Proteomics normalisation batch correction using Combat
 }
+\seealso{
+Other Pre-processing: 
+\code{\link{batch_correction_protein}()},
+\code{\link{filter_protein}()},
+\code{\link{generate_multiassay}()},
+\code{\link{process_protein}()},
+\code{\link{process_rna}()}
+}
+\concept{Pre-processing}

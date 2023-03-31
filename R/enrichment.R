@@ -14,9 +14,9 @@
 #' @return enrichment_result a list of data.frames containing enrichment output
 #' and a list of plots of top 10 significant genesets.
 #'
-#' @family Impacted pathway analysis
+#' @family Enrichment analysis
 #'
-#' @importFrom enrichR enrichr listEnrichrDbs
+#' @importFrom enrichR enrichr
 #' @importFrom cli cli_alert_info cli_text
 #' @importFrom ggplot2 ggplot ggsave
 #' @importFrom cowplot theme_cowplot background_grid
@@ -42,7 +42,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
                                      output_dir = ".",
                                      min_overlap = 3,
                                      plot_n = 20) {
-  dbs <- enrichR::listEnrichrDbs()
+  eval(parse(text = "enrichR:::.onAttach()")) # R CMD check workaround
 
   res <- enrichR::enrichr(
     genes = as.character(interest_gene),
@@ -126,6 +126,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 #'
 #' @param res Internal to `pathway_analysis_enrichr()`
 #' @param min_overlap Default to 3
+#' @importFrom dplyr transmute
 #'
 #' @keywords internal
 
@@ -134,8 +135,6 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
   res_table <- res %>%
     as.data.frame() %>%
     dplyr::transmute(
-      # geneset = res,
-      # geneset = .get_geneset(Term),
       description = gsub("\\(GO:.*|Homo sapiens.R-HSA.*|WP.*", "", Term),
       size = as.numeric(gsub(".*\\/", "", Overlap)),
       overlap = as.numeric(gsub("\\/.*", "", Overlap)),
@@ -147,47 +146,19 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 
   res_table <- res_table[which(res_table$overlap >= min_overlap), ]
 }
-# res_table$geneset <- ifelse(is.na(res_table$geneset),
-#   res_table$description,
-#   res_table$geneset
-# )
-# res_table <- res_table %>% dplyr::mutate("-Log10(FDR)" = as.numeric(
-#   format(-log10(FDR), format = "e", digits = 2)
-# ))
-#   res_table$genes <- res$Genes
-#
-#   text_out <- "thyroid|glomerular|renal|retina|nigra|vessel|estrogen|steroid|androgen|artery|bone|skeletal|muscle|aorta|cartilage|pancreatic|myoblast|embryonic|amyotrophic|neural tube|virus|circadian|ectoderm|stem cell|vitamin|chylomicron|coronary|osteoclast|addiction|tumor|myometrial|prolactin|glioblastoma|sensory|cancer|carcinoma|hepatitis|oocyte|cardiomyocyte|heart|cardiac|eye|kidney|viral|ear|infection|auditory|Allograft|lupus|graft|rett|nose"
-#
-#   res_table <- res_table %>%
-#     dplyr::filter(!grepl(text_out, description, ignore.case = T)) %>%
-#     filter(size >= 5 & size <= 300) %>%
-#     mutate(FDR = p.adjust(pval, method = "BH"))
-#
-#   res_table <- res_table[res_table$FDR <= 0.1, ]
-#   return(res_table)
-# }
-
-# .get_geneset <- function(term) {
-#   # geneset <- purrr::map_chr(
-#   #   as.character(term),
-#   #   ~ strsplit(., "(", fixed = TRUE)[[1]][2]
-#   # )
-#
-#   geneset <- purrr::map_chr(as.character(term),
-#                             ~ str_extract(. , "GO:.*|R-HSA.*|WP.*"))
-#   geneset <- gsub("\\)|Homo sapiens", "", geneset)
-#   geneset <- as.character(geneset)
-#   return(geneset)
-# }
 
 #' dotplot for ORA. x axis perturbation, y axis description
 #' @importFrom stats reorder
+#' @importFrom dplyr top_n
+#' @importFrom stringr str_wrap
+#' @importFrom cowplot theme_cowplot background_grid
+#' @import ggplot2
 #' @keywords internal
 
 
 .dotplot_enrichr <- function(dt, plot_n = 20) {
   dt <- na.omit(dt)
-  dt <- top_n(dt, plot_n, -FDR)
+  dt <- dplyr::top_n(dt, plot_n, -FDR)
   dt$description <- stringr::str_wrap(dt$description, 40)
 
   ggplot2::ggplot(dt, aes(
@@ -219,11 +190,12 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 #' @param semantics vector of biological terms
 #'
 #' @return functional enrichement plot
-#' @export
+#' @keywords internal
 
-.dot_plot_enrichr_semantics <- function(dt,
-                                       semantics = "microglial") {
-  semantics_rows <- dt$description[grepl(paste0(semantics), dt$description, fixed = TRUE)]
+dot_plot_enrichr_semantics <- function(dt,
+                                        semantics = "microglial") {
+  semantics_rows <- dt$description[grepl(paste0(semantics),
+                                         dt$description, fixed = TRUE)]
   dt <- na.omit(dt)
   dt <- dt[which(dt$description %in% semantics_rows), ]
   dt$description <- stringr::str_wrap(dt$description, 40)
@@ -263,9 +235,17 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 #' @param verbose Default to FALSE
 #'
 #' @return Functional enrichment result
+#'
+#' @family Enrichment analysis
+#'
+#' @importFrom dplyr mutate_at mutate select everything
 #' @export
 
-enrichment_custom <- function(genes, reference, genesets, adj = "fdr", verbose = FALSE) {
+enrichment_custom <- function(genes,
+                              reference,
+                              genesets,
+                              adj = "fdr",
+                              verbose = FALSE) {
   tab <- lapply(1:length(genesets), function(i) {
     if (verbose == TRUE) {
       cat("processing term", i, names(genesets)[i], "\n")
@@ -285,7 +265,8 @@ enrichment_custom <- function(genes, reference, genesets, adj = "fdr", verbose =
     GninSet <- length(genes) - GinSet
     fmat <- matrix(c(GinSet, RinSet, GninSet, RninSet),
       nrow = 2,
-      ncol = 2, byrow = F
+      ncol = 2,
+      byrow = FALSE
     )
     colnames(fmat) <- c("inSet", "ninSet")
     rownames(fmat) <- c("genes", "reference")
@@ -293,7 +274,8 @@ enrichment_custom <- function(genes, reference, genesets, adj = "fdr", verbose =
     pval <- as.numeric(format(fish$p.value, format = "e", digits = 2))
     inSet <- RinSet + GinSet
     pct_overlap <- round((GinSet / inSet) * 100, 2)
-    res <- c(GinSet, inSet, geneset_size, pct_overlap, enrichment_ratio, pval, overlap_genes)
+    res <- c(GinSet, inSet, geneset_size, pct_overlap,
+             enrichment_ratio, pval, overlap_genes)
     res
   })
   rtab <- do.call("rbind", tab)
@@ -319,7 +301,7 @@ enrichment_custom <- function(genes, reference, genesets, adj = "fdr", verbose =
     dplyr::mutate(padj = p.adjust(pval), method = adj) %>%
     dplyr::mutate(padj = as.numeric(format(padj, format = "e", digits = 2)))
   tab.out <- tab.out %>%
-    dplyr::select(-overlap_genes, everything(), overlap_genes)
+    dplyr::select(-overlap_genes, dplyr::everything(), overlap_genes)
 
   return(tab.out)
 }
@@ -328,16 +310,20 @@ enrichment_custom <- function(genes, reference, genesets, adj = "fdr", verbose =
 #' Cell type enrichment of communities
 #'
 #' @param multiassay  Multiassay experiment object generated by Omix
-#' @param communities communities generated from `.communities_network()`
+#' @param communities communities generated from `communities_network()`
 #'
 #' @return List of results
+#'
+#' @family Enrichment analysis
+#'
+#' @importFrom EWCE bootstrap_enrichment_test
+#' @importFrom ggplot2 ggtitle
 #' @export
 #'
 
 cell_type_enrichment <- function(multiassay,
                                  communities) {
-  background_genes <- .get_background(multiassay)
-  #load(file = "~/RDS_ukdri/multiomics/multiomics/pipeline_17_05/3_UNI_OMIC/CellTypeData_all_ds.rda") # loads ctd
+  background_genes <- get_background(multiassay)
 
   hits <- communities
   hits <- lapply(hits, function(x) {
@@ -349,7 +335,6 @@ cell_type_enrichment <- function(multiassay,
   reps <- 100
   annotLevel <- 1
 
-  #sct <- ctd[2] # want to get cell type annotation 2
   sct <- ctd
   results <- list()
   results <- lapply(hits, function(x) {
@@ -378,12 +363,14 @@ cell_type_enrichment <- function(multiassay,
   plot_cell_enrichment <- list()
   plot_cell_enrichment <- lapply(plots, function(x) x[["plain"]])
   plot_cell_enrichment <- lapply(names(plot_cell_enrichment), function(x) {
-    plot_cell_enrichment[[x]] + ggplot2::ggtitle(paste("Cell type enrichment in community #", x))
+    plot_cell_enrichment[[x]] +
+      ggplot2::ggtitle(paste("Cell type enrichment in community #", x))
   })
 
   names(resultsPlots) <- names(hits)
   names(plot_cell_enrichment) <- names(hits)
-  cell_type_enrichment <- list(results = resultsPlots, plots = plot_cell_enrichment)
+  cell_type_enrichment <- list(results = resultsPlots,
+                               plots = plot_cell_enrichment)
 
   return(cell_type_enrichment)
 }

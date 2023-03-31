@@ -9,13 +9,14 @@
 #' integration
 #' @param dependent Dependent variable for the DeSEQ2 analysis, usually the
 #' disease group variable
-#' @param design Design matrix (design = "full"): The strength of all
+#' @param design Available options "cor" and "full". Default is "cor".
+#' Design matrix (design = "full"): The strength of all
 #' relationships between dataframes is maximised (= 1) – a “fully connected” design.
 #' If design is set on cor, the correlation between PC1 of each dataset will be
 #' set for the design matrix
 #' @param ncomp Number of components in `DIABLO`,`sMBPLS`
-#' @param range List of the range of numbers of features to keep in the tuning phase.
-#' First element must be for rna, second for proteins
+#' @param range List of the range of numbers of features to keep in the tuning
+#' phase. First element must be for rna, second for proteins
 #' @param ID_type Default to gene_name
 #' @param levels Character vector with reference group as first element.
 #' Set parameter as NULL if dependent is NULL.
@@ -28,6 +29,9 @@
 #'
 #' @return Returns an integrated object in `multiassay@metadata$integration` to
 #' be used for further analysis
+#'
+#' @family Multi-omic integration
+#'
 #' @export
 #'
 
@@ -36,180 +40,133 @@ vertical_integration <- function(multiassay,
                                    "rna_processed",
                                    "protein_processed"
                                  ),
-                                 integration = c("MOFA", "DIABLO", "sMBPLS",
-                                                 "iCluster", "MEIFESTO"),
+                                 integration,
                                  intersect_genes = FALSE,
                                  ID_type = "gene_name",
                                  dependent = "Group",
                                  levels = c("Control", "Case"),
-                                 design = c("cor", "full"),
+                                 design = "cor",
                                  ncomp = 2,
                                  range = list(
                                    mRNA = seq(5, 100, by = 10),
                                    proteins = seq(5, 100, by = 10)
                                  ),
-                                 list.keepX = list(mRNA = c(50), proteins = c(50)),
+                                 list.keepX = list(mRNA = c(50),
+                                                   proteins = c(50)),
                                  num_factors = 10,
                                  time = "pseudotime",
                                  scale_views = TRUE,
                                  try.N.clust = 2:4,
-                                 most_variable_feature = FALSE,...) {
-  multiassay_arg=multiassay
-  args <- list(
-    multiassay = multiassay_arg,
-    slots = slots,
-    intersect_genes = intersect_genes,
-    ID_type = ID_type
-  )
+                                 most_variable_feature = FALSE) {
 
-  multimodal<- do.call('.get_multimodal_object', args)
+  fargs <- c(as.list(environment()))
+
+  multimodal <- do.call(get_multimodal_object, fargs)
 
   multimodal_omics <- multimodal[[1]]
 
   if (most_variable_feature == TRUE) {
-    ### Keep only the most variable features in the high dimensional transcriptomics for modelling
-    ### omics layers should be the same dimensions
+    # Keep only the most variable features in the high dimensional
+    # transcriptomics for modelling
+    # omics layers should be the same dimensions
     max_features <- dim(multimodal_omics[[2]])[1]
-    keep <- order(apply(multimodal_omics[[1]], 1, var), decreasing = TRUE)[1:max_features]
+    keep <- order(apply(multimodal_omics[[1]], 1, var),
+                  decreasing = TRUE)[1:max_features]
     multimodal_omics[[1]] <- multimodal_omics[[1]][keep, ]
 
-    cli::cli_alert_success(paste(max_features,'most variable features kept for analysis.'))
+    cli::cli_alert_success(paste(max_features,
+                                 "most variable features kept for analysis."))
   }
 
   metadata <- multimodal[[2]]
 
-  Y <- metadata[[paste(dependent)]]
+  Y <- metadata[[dependent]]
 
   if (integration == "DIABLO") {
-
     Y <- factor(Y, levels = levels)
 
     args1 <- list(
-      multimodal_omics=multimodal_omics,
+      multimodal_omics = multimodal_omics,
       Y = Y,
-      design = design,
-      ncomp = ncomp,
-      range = range
+      design = fargs$design,
+      ncomp = fargs$ncomp,
+      range = fargs$range
     )
 
-    int <- do.call('integrate_with_DIABLO', args1)
+    int <- do.call(integrate_with_DIABLO, args1)
     cli::cli_alert_success("VERTICAL INTEGRATION WITH DIABLO")
-
-  #   int <- integrate_with_DIABLO(
-  #     multimodal_omics,
-  #     Y = Y,
-  #     design = design,
-  #     ncomp = ncomp,
-  #     range = range
-  #   )
-  # }
   }
+
   if (integration == "sMBPLS") {
     Y <- as.matrix(Y)
     rownames(Y) <- rownames(metadata)
-  #   int <- integrate_with_sMBPLS(
-  #     multimodal_omics,
-  #     Y = Y,
-  #     design = design,
-  #     ncomp = ncomp,
-  #     list.keepX = list.keepX
-  #   )
-  # }
 
     args2 <- list(
-      multimodal_omics=multimodal_omics,
+      multimodal_omics = multimodal_omics,
       Y = Y,
-      design = design,
-      ncomp = ncomp,
-      list.keepX = list.keepX
+      design = fargs$design,
+      ncomp = fargs$ncomp,
+      list.keepX = fargs$list.keepX
     )
 
-    int <- do.call('integrate_with_sMBPLS', args2)
+    int <- do.call(integrate_with_sMBPLS, args2)
     cli::cli_alert_success("VERTICAL INTEGRATION WITH sMBPLS")
-
   }
   if (integration == "MBPLS") {
     Y <- as.matrix(Y)
     rownames(Y) <- rownames(metadata)
-  #   int <- integrate_with_MBPLS(
-  #     multimodal_omics,
-  #     Y = Y,
-  #     design = design,
-  #     ncomp = ncomp
-  #   )
-  # }
+
     args3 <- list(
-      multimodal_omics=multimodal_omics,
+      multimodal_omics = multimodal_omics,
       Y = Y,
-      design = design,
-      ncomp = ncomp
+      design = fargs$design,
+      ncomp = fargs$ncomp
     )
 
-    int <- do.call('integrate_with_MBPLS', args3)
+    int <- do.call(integrate_with_MBPLS, args3)
     cli::cli_alert_success("VERTICAL INTEGRATION WITH MBPLS")
-
-
-   }
+  }
   if (integration == "MOFA") {
-  #   int <- integrate_with_MOFA(multimodal_omics,
-  #     num_factors = num_factors,
-  #     scale_views = scale_views,
-  #     metadata = metadata
-  #   )
-  # }
-
     args4 <- list(
-    multimodal_omics=multimodal_omics,
-    num_factors = num_factors,
-    scale_views = scale_views,
-    metadata = metadata
+      multimodal_omics = multimodal_omics,
+      num_factors = fargs$num_factors,
+      scale_views = fargs$scale_views,
+      metadata = metadata
     )
 
-    int <- do.call('integrate_with_MOFA', args4)
+    int <- do.call(integrate_with_MOFA, args4)
     cli::cli_alert_success("VERTICAL INTEGRATION WITH MOFA")
   }
 
   if (integration == "MEIFESTO") {
-  #   int <- integrate_with_MEIFESTO(multimodal_omics,
-  #     num_factors = num_factors,
-  #     scale_views = scale_views,
-  #     metadata = metadata,
-  #     time = time
-  #   )
-  # }
-
     args5 <- list(
-      multimodal_omics=multimodal_omics,
-      num_factors = num_factors,
-      scale_views = scale_views,
+      multimodal_omics = multimodal_omics,
+      num_factors = fargs$num_factors,
+      scale_views = fargs$scale_views,
       metadata = metadata,
-      time = time
+      time = fargs$time
     )
 
-        int <- do.call('integrate_with_MEIFESTO', args5)
+    int <- do.call(integrate_with_MEIFESTO, args5)
     cli::cli_alert_success("VERTICAL INTEGRATION WITH MEIFESTO")
-
   }
 
   if (integration == "iCluster") {
-
     multimodal <- lapply(multimodal_omics, data.frame)
-    # int <- integrate_with_iCluster(
-    #   multimodal_omics = multimodal_omics,
-    #   try.N.clust = try.N.clust
-    # )
 
     args6 <- list(
       multimodal_omics = multimodal_omics,
-      try.N.clust = try.N.clust
+      try.N.clust = fargs$try.N.clust
     )
 
-    int <- do.call('integrate_with_iCluster', args6)
+    int <- do.call(integrate_with_iCluster, args6)
     cli::cli_alert_success("VERTICAL INTEGRATION CLUSTERING WITH ICLUSTER")
   }
-  names(multimodal[[1]])=c('mRNA','proteins')
-  multiassay@metadata$multimodal_object <- list(omics=lapply(multimodal[[1]],as.data.frame),
-                                                metadata =  multimodal[[2]])
+  names(multimodal[[1]]) <- c("mRNA", "proteins")
+  multiassay@metadata$multimodal_object <- list(
+    omics = lapply(multimodal[[1]], as.data.frame),
+    metadata = multimodal[[2]]
+  )
   multiassay@metadata$integration[[paste(integration)]] <- int[[2]]
 
   return(multiassay)

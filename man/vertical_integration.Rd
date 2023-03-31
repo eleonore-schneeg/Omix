@@ -7,12 +7,12 @@
 vertical_integration(
   multiassay,
   slots = c("rna_processed", "protein_processed"),
-  integration = c("MOFA", "DIABLO", "sMBPLS", "iCluster", "MEIFESTO"),
+  integration,
   intersect_genes = FALSE,
   ID_type = "gene_name",
   dependent = "Group",
   levels = c("Control", "Case"),
-  design = c("cor", "full"),
+  design = "cor",
   ncomp = 2,
   range = list(mRNA = seq(5, 100, by = 10), proteins = seq(5, 100, by = 10)),
   list.keepX = list(mRNA = c(50), proteins = c(50)),
@@ -20,8 +20,7 @@ vertical_integration(
   time = "pseudotime",
   scale_views = TRUE,
   try.N.clust = 2:4,
-  most_variable_feature = FALSE,
-  ...
+  most_variable_feature = FALSE
 )
 }
 \arguments{
@@ -43,15 +42,16 @@ disease group variable}
 \item{levels}{Character vector with reference group as first element.
 Set parameter as NULL if dependent is NULL.}
 
-\item{design}{Design matrix (design = "full"): The strength of all
+\item{design}{Available options "cor" and "full". Default is "cor".
+Design matrix (design = "full"): The strength of all
 relationships between dataframes is maximised (= 1) – a “fully connected” design.
 If design is set on cor, the correlation between PC1 of each dataset will be
 set for the design matrix}
 
 \item{ncomp}{Number of components in \code{DIABLO},\code{sMBPLS}}
 
-\item{range}{List of the range of numbers of features to keep in the tuning phase.
-First element must be for rna, second for proteins}
+\item{range}{List of the range of numbers of features to keep in the tuning
+phase. First element must be for rna, second for proteins}
 
 \item{list.keepX}{if integration == \code{sMBPLS}, number of features to keep per view.}
 
@@ -72,3 +72,13 @@ be used for further analysis
 \description{
 Patient specific vertical integration
 }
+\seealso{
+Other Multi-omic integration: 
+\code{\link{integrate_with_DIABLO}()},
+\code{\link{integrate_with_MBPLS}()},
+\code{\link{integrate_with_MEIFESTO}()},
+\code{\link{integrate_with_MOFA}()},
+\code{\link{integrate_with_iCluster}()},
+\code{\link{integrate_with_sMBPLS}()}
+}
+\concept{Multi-omic integration}

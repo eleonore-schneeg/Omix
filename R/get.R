@@ -9,27 +9,26 @@
 #' @return  colData
 
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
-#'  getWithColData sampleMap
-#' @export
+#' @importFrom MultiAssayExperiment getWithColData sampleMap
+#' @keywords internal
 #'
 #'
-.get_metadata <- function(multiassay,
+get_metadata <- function(multiassay,
                           omic,
                           slot = c("rna_processed", "protein_processed")) {
-  data <- multiassay@ExperimentList@listData[[paste(slot)]]
 
   if (omic == "protein") {
     raw <- MultiAssayExperiment::getWithColData(multiassay,
       i = "protein_raw",
       mode = "replace",
-      verbose = F
+      verbose = FALSE
     )
   }
   if (omic == "rna") {
     raw <- MultiAssayExperiment::getWithColData(multiassay,
       i = "rna_raw",
       mode = "replace",
-      verbose = F
+      verbose = FALSE
     )
   }
   colData <- data.frame(SummarizedExperiment::colData(raw))
@@ -52,28 +51,35 @@
 #' `generate_multiassay`function
 #' @param id Character vector to convert
 #' @param omic Supported omic layers include `protein` or `rna`
-#' @param from Possible nomenclatures include `uniprot_id` ,`ensembl_gene_id`, `gene_name`
-#' @param to  Possible nomenclatures include `uniprot_id` ,`ensembl_gene_id`, `gene_name`
+#' @param from Possible nomenclatures include `uniprot_id` ,
+#' `ensembl_gene_id`, `gene_name`
+#' @param to  Possible nomenclatures include `uniprot_id` ,
+#' `ensembl_gene_id`, `gene_name`
 #'
 #' @return vector of new IDs
-#' @export
+#' @keywords internal
 #'
-.get_ID_names <- function(multiassay,
+get_ID_names <- function(multiassay,
                           id,
                           omic = "protein",
                           from = "uniprot_id",
                           to = "gene_name") {
-
   if (omic == "protein") {
-    elementMetadata <- data.frame(multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData)
-    new_id <- elementMetadata[[paste(to)]][match(id,
-              elementMetadata[[paste(from)]])]
+    elementMetadata <- data.frame(
+      multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData)
+    new_id <- elementMetadata[[paste(to)]][match(
+      id,
+      elementMetadata[[paste(from)]]
+    )]
     new_id[is.na(new_id)] <- id[is.na(new_id)]
   }
   if (omic == "rna") {
-    elementMetadata <- data.frame(multiassay@ExperimentList@listData[["rna_raw"]]@elementMetadata@listData)
-    new_id <- elementMetadata[[paste(to)]][match(id,
-              elementMetadata[[paste(from)]])]
+    elementMetadata <- data.frame(
+      multiassay@ExperimentList@listData[["rna_raw"]]@elementMetadata@listData)
+    new_id <- elementMetadata[[paste(to)]][match(
+      id,
+      elementMetadata[[paste(from)]]
+    )]
     new_id[is.na(new_id)] <- id[is.na(new_id)]
   }
 
@@ -92,23 +98,27 @@
 #' default to `full`.
 #'
 #' @return Background genes character vector
-#' @export
+#' @keywords internal
 #'
-.get_background <- function(multiassay,
+get_background <- function(multiassay,
                             of = "full") {
-  multiassay=multiassay
+  multiassay <- multiassay
   if (of == "full") {
     background <- union(
-      multiassay@ExperimentList@listData[["rna_raw"]]@elementMetadata@listData[["gene_name"]],
-      multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData[["gene_name"]]
+      multiassay@ExperimentList@listData[[
+        "rna_raw"]]@elementMetadata@listData[["gene_name"]],
+      multiassay@ExperimentList@listData[[
+        "protein_raw"]]@elementMetadata@listData[["gene_name"]]
     )
   }
 
   if (of == "rna") {
-    background <- multiassay@ExperimentList@listData[["rna_raw"]]@elementMetadata@listData[["gene_name"]]
+    background <- multiassay@ExperimentList@listData[[
+      "rna_raw"]]@elementMetadata@listData[["gene_name"]]
   }
   if (of == "protein") {
-    background <- multiassay@ExperimentList@listData[["protein_raw"]]@elementMetadata@listData[["gene_name"]]
+    background <- multiassay@ExperimentList@listData[[
+      "protein_raw"]]@elementMetadata@listData[["gene_name"]]
   }
 
   return(background)
@@ -121,12 +131,11 @@
 #'
 #' @return ID type between `entrez_gene_id`,`gene_name`,`ensembl_gene_id`,
 #' `uniprot_id`, `not_identified`
-#' @export
+#' @keywords internal
 #'
 
-.get_ID_type <- function(character_vector) {
-
-  test <- sub("\\;.*", "",character_vector[1])
+get_ID_type <- function(character_vector) {
+  test <- sub("\\;.*", "", character_vector[1])
 
   if (isTRUE(grepl(
     "^[A-Z0-9-]+$|^C[0-9XY]+orf[0-9]+$",
@@ -169,25 +178,23 @@
 #' Default to gene_name
 #'
 #' @return A list object containing the multimodal object and metadata
-#' @import MultiAssayExperiment
-#' @export
+#' @importFrom MultiAssayExperiment complete.cases intersectRows
+#' @keywords internal
 #'
 
-.get_multimodal_object <- function(multiassay,
-                                   slots = c(
-                                     "rna_processed",
-                                     "protein_processed"
-                                   ),
-                                   intersect_genes = FALSE,
-                                   ID_type = "gene_name", ...) {
-
+get_multimodal_object <- function(multiassay,
+                                  slots = c(
+                                    "rna_processed",
+                                    "protein_processed"
+                                  ),
+                                  intersect_genes = FALSE,
+                                  ID_type = "gene_name",
+                                  ...) {
   multi <- multiassay[, , c(slots[1], slots[2])]
-  complete <- MultiAssayExperiment::complete.cases(multi)
   CompleteMulti <- multi[, MultiAssayExperiment::complete.cases(multi), ]
 
   if (intersect_genes == TRUE) {
-
-    id1=rownames(CompleteMulti@ExperimentList@listData[[paste(slots[1])]])
+    id1 <- rownames(CompleteMulti@ExperimentList@listData[[paste(slots[1])]])
     args1 <- list(
       multiassay = multiassay,
       id = id1,
@@ -196,11 +203,11 @@
       to = "gene_name"
     )
 
-    names <- do.call('.get_ID_names', args1)
+    names <- do.call(".get_ID_names", args1)
     names <- make.unique(names)
     rownames(CompleteMulti@ExperimentList@listData[[paste(slots[1])]]) <- names
 
-    id2= rownames(CompleteMulti@ExperimentList@listData[[paste(slots[2])]])
+    id2 <- rownames(CompleteMulti@ExperimentList@listData[[paste(slots[2])]])
     args2 <- list(
       multiassay = multiassay,
       id = id2,
@@ -209,12 +216,13 @@
       to = "gene_name"
     )
 
-    names <- do.call('.get_ID_names', args2)
+    names <- do.call(get_ID_names, args2)
     names <- make.unique(names)
     rownames(CompleteMulti@ExperimentList@listData[[paste(slots[2])]]) <- names
 
     CompleteMulti <- MultiAssayExperiment::intersectRows(
-      CompleteMulti[, , slots])
+      CompleteMulti[, , slots]
+    )
   }
 
   metadata <- data.frame(MultiAssayExperiment::colData(CompleteMulti))
@@ -222,13 +230,12 @@
   multimodal_omics <- lapply(multimodal_omics, "colnames<-", rownames(metadata))
 
   if (ID_type == "gene_name") {
-
-    args=list(character_vector=rownames(CompleteMulti@ExperimentList@listData[[paste(slots[1])]]))
-    id_1 <- do.call(".get_ID_type",args)
+    args <- list(character_vector = rownames(
+      CompleteMulti@ExperimentList@listData[[paste(slots[1])]]))
+    id_1 <- do.call(get_ID_type, args)
 
     if (id_1 != "gene_name") {
-
-      id3=rownames(CompleteMulti@ExperimentList@listData[[paste(slots[1])]])
+      id3 <- rownames(CompleteMulti@ExperimentList@listData[[paste(slots[1])]])
       args3 <- list(
         multiassay = multiassay,
         id = id3,
@@ -237,18 +244,17 @@
         to = "gene_name"
       )
 
-      names <- do.call('.get_ID_names', args3)
+      names <- do.call(get_ID_names, args3)
       names <- make.unique(names)
       rownames(multimodal_omics[[1]]) <- names
-
     }
 
-    args=list(character_vector=rownames(CompleteMulti@ExperimentList@listData[[paste(slots[2])]]))
-    id_2 <- do.call(".get_ID_type",args)
+    args <- list(character_vector = rownames(
+      CompleteMulti@ExperimentList@listData[[paste(slots[2])]]))
+    id_2 <- do.call(get_ID_type, args)
 
     if (id_2 != "gene_name") {
-
-      id4=rownames(CompleteMulti@ExperimentList@listData[[paste(slots[2])]])
+      id4 <- rownames(CompleteMulti@ExperimentList@listData[[paste(slots[2])]])
       args4 <- list(
         multiassay = multiassay,
         id = id4,
@@ -257,7 +263,7 @@
         to = "gene_name"
       )
 
-      names <- do.call('.get_ID_names', args4)
+      names <- do.call(get_ID_names, args4)
       names <- make.unique(names)
       rownames(multimodal_omics[[2]]) <- names
     }
@@ -277,15 +283,20 @@
 #' @param moduleColors from WGCNA
 #'
 #' @return Functional annotation of modules
-#' @export
+#' @importFrom AnnotationDbi mapIds
+#' @importFrom WGCNA GOenrichmentAnalysis
+#' @keywords internal
 #'
 get_module_annotation <- function(gene_list,
                                   moduleColors) {
-  library(org.Hs.eg.db)
-  entrez <- AnnotationDbi::mapIds(org.Hs.eg.db, sub("\\_.*", "", gene_list),
-                                  "ENTREZID", "SYMBOL")
-  GOenr <- WGCNA::GOenrichmentAnalysis(moduleColors, entrez, organism = "human",
-                                       nBestP = 1, ontologies = "BP")
+  entrez <- AnnotationDbi::mapIds(
+    org.Hs.eg.db::org.Hs.eg.db, sub("\\_.*", "", gene_list),
+    "ENTREZID", "SYMBOL"
+  )
+  GOenr <- WGCNA::GOenrichmentAnalysis(moduleColors, entrez,
+    organism = "human",
+    nBestP = 1, ontologies = "BP"
+  )
   tab <- GOenr$bestPTerms$BP$forModule
   names <- NULL
   for (i in 1:length(tab)) {

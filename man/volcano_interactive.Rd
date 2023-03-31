@@ -7,8 +7,8 @@
 volcano_interactive(data, log2FoldChange = 0.25, padj = 0.05)
 }
 \arguments{
-\item{data}{Formatted Differential expression results from \code{format_res_deseq()} or
-\code{format_res_limma()}}
+\item{data}{Formatted Differential expression results from
+\code{format_res_deseq()} or \code{format_res_limma()}}
 
 \item{log2FoldChange}{Log2FC absolute threshold. Default to 0.25}
 
@@ -20,3 +20,14 @@ Interactive volcano plot
 \description{
 Builds an interactive volcano plot using plotly
 }
+\seealso{
+Other Plotting: 
+\code{\link{interactive_network}()},
+\code{\link{multiomics_network_matrix}()},
+\code{\link{multiomics_network}()},
+\code{\link{plot_OpenTarget}()},
+\code{\link{volcano_interactive_comparison}()},
+\code{\link{volcano_plot_deseq}()},
+\code{\link{volcano_plot_limma}()}
+}
+\concept{Plotting}

@@ -2,7 +2,8 @@
 % Please edit documentation in R/batch_correction_protein.R
 \name{batch_correction_protein}
 \alias{batch_correction_protein}
-\title{Calling different proteomics correction methods. Internal to \code{process_protein()}}
+\title{Calling different proteomics correction methods.
+Internal to \code{process_protein()}}
 \usage{
 batch_correction_protein(matrix, batch_map, batch, correction_method)
 }
@@ -19,5 +20,15 @@ batch_correction_protein(matrix, batch_map, batch, correction_method)
 Batch corrected matrix
 }
 \description{
-Calling different proteomics correction methods. Internal to \code{process_protein()}
+Calling different proteomics correction methods.
+Internal to \code{process_protein()}
 }
+\seealso{
+Other Pre-processing: 
+\code{\link{combat_correction}()},
+\code{\link{filter_protein}()},
+\code{\link{generate_multiassay}()},
+\code{\link{process_protein}()},
+\code{\link{process_rna}()}
+}
+\concept{Pre-processing}

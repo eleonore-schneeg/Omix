@@ -61,3 +61,12 @@ a MultiAssayExperiment object with \code{protein_processed} slot
 \description{
 Process bulk proteomics data
 }
+\seealso{
+Other Pre-processing: 
+\code{\link{batch_correction_protein}()},
+\code{\link{combat_correction}()},
+\code{\link{filter_protein}()},
+\code{\link{generate_multiassay}()},
+\code{\link{process_rna}()}
+}
+\concept{Pre-processing}

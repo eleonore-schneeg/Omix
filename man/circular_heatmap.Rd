@@ -11,7 +11,9 @@ circular_heatmap(
 )
 }
 \arguments{
-\item{data}{}
+\item{network_communities}{The name of the network communities}
+
+\item{cell_type_communities}{Cell type enrichment of the community}
 }
 \description{
 Title

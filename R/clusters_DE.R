@@ -6,17 +6,14 @@
 #' @param levels
 #' @param log2FoldChange
 #'
-#' @return
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
 #' @importFrom SummarizedExperiment SummarizedExperiment colData
 #' @importFrom stats as.formula
-#' @importFrom lme4
 #' @importFrom limma makeContrasts lmFit contrasts.fit eBayes topTable
-#' @importFrom dplyr
 #'
 #' @export
 #'
-#' @examples
+
 clustering_DE_analysis <- function(normalized_data = multimodal$rna_processed,
                                    colData,
                                    dependent = "Cluster",

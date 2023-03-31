@@ -9,6 +9,9 @@
 #' groups for retention
 #'
 #' @return Filtered protein matrix
+#'
+#' @family Pre-processing
+#'
 #' @export
 #'
 

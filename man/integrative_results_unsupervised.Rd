@@ -19,10 +19,12 @@ integrative_results_unsupervised(
 
 \item{dependent}{Dependent variable for groups.}
 
-\item{correlation_threshold}{Absolute correlation threshold to draw edges in the network}
+\item{correlation_threshold}{Absolute correlation threshold to draw edges
+in the network}
 
-\item{disease_id}{OpenTargets disease id. Default to "MONDO_0004975" (Alzheimer's Disease)
-Different disease ontologies can be found on https://www.ebi.ac.uk/ols/ontologies}
+\item{disease_id}{OpenTargets disease id. Default to "MONDO_0004975"
+(Alzheimer's Disease) Different disease ontologies can be found on
+https://www.ebi.ac.uk/ols/ontologies}
 }
 \value{
 List object of integrated results
@@ -30,3 +32,10 @@ List object of integrated results
 \description{
 Downstream analysis for integrated multi-omics data
 }
+\seealso{
+Other Multi-omic integration downstream analysis: 
+\code{\link{integrative_results_clustering}()},
+\code{\link{integrative_results_supervised}()},
+\code{\link{multiomics_modules}()}
+}
+\concept{Multi-omic integration downstream analysis}

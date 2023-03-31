@@ -1,24 +1,19 @@
 bioc_pkgs<-c(
-  'batchelor',
   'Biobase',
   'BiocGenerics',
   'BiocStyle',
   'biomaRt',
   'DelayedArray',
   'DelayedMatrixStats',
-  'DropletUtils',
   'edgeR',
   'EWCE',
   'GenomicRanges',
   'graph',
   'IRanges',
   'limma',
-  'MAST',
   'multtest',
   'preprocessCore',
   'rhdf5',
-  'S4Vectors',
-  'scater',
   "MatrixGenerics",
   "DelayedArray",
   "ensembldb",
@@ -31,7 +26,6 @@ bioc_pkgs<-c(
   'org.Hs.eg.db',
   'clusterProfiler',
   'enrichplot',
-  'edgeR',
   'AnnotationDbi',
   'WGCNA',
   'S4Vectors',
@@ -41,18 +35,10 @@ bioc_pkgs<-c(
   "SummarizedExperiment",
   'SingleCellExperiment',
   "MultiAssayExperiment",
-  'rhdf5',
-  'dplyr',
-  'tidyr',
-  'reshape2', 'pheatmap', 'corrplot',
-  'ggplot2', 'ggbeeswarm', 'scales', 'GGally', 'doParallel', 'RColorBrewer',
-  'cowplot', 'ggrepel', 'foreach', 'reticulate', 'HDF5Array', 'DelayedArray',
-  'ggpubr', 'forcats', 'Rtsne', 'uwot',
-  'systemfonts', 'ragg', 'Cairo', 'ggrastr', 'basilisk', 'mvtnorm','MOFA2',
-  'EWCE','slingshot'
-
+  'HDF5Array',
+  'MOFA2',
+  'slingshot'
 )
-
 
 requireNamespace("BiocManager")
 BiocManager::install(bioc_pkgs, ask=F)

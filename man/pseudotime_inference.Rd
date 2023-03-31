@@ -16,11 +16,13 @@ pseudotime_inference(
 \arguments{
 \item{model}{MOFA model from integration in \code{multiassay@metadata$integration$MOFA}}
 
-\item{clusters}{cluster generated from MOFA2::cluster_samples or other clustering method}
+\item{clusters}{cluster generated from MOFA2::cluster_samples or other
+clustering method}
 
 \item{time_factor}{MOFA factor corresponding to time}
 
-\item{second_factor}{MOFA factor used as other axis of variation in the embedding}
+\item{second_factor}{MOFA factor used as other axis of variation in
+the embedding}
 }
 \value{
 A list object with \code{model} and \code{plot} slots
@@ -28,3 +30,8 @@ A list object with \code{model} and \code{plot} slots
 \description{
 Pseudotime_inference based on integrated embeddings and clusters
 }
+\seealso{
+Other Pseudotime inference: 
+\code{\link{pseudotime_ordering_modules}()}
+}
+\concept{Pseudotime inference}

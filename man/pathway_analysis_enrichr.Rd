@@ -35,4 +35,10 @@ and a list of plots of top 10 significant genesets.
 \description{
 Performs impacted pathway analysis with a list of genes.
 }
-\concept{Impacted pathway analysis}
+\seealso{
+Other Enrichment analysis: 
+\code{\link{GSEA}()},
+\code{\link{cell_type_enrichment}()},
+\code{\link{enrichment_custom}()}
+}
+\concept{Enrichment analysis}

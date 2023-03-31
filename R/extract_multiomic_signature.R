@@ -6,19 +6,18 @@
 #' @param component Chosen component for downstream analysis. Default to 1
 #'
 #' @return List object
+#'
+#' @family Helper
+#'
+#' @importFrom mixOmics selectVar
 #' @export
 #'
 extract_multiomic_signature <- function(multiassay,
                                         integration = "DIABLO",
                                         component = 1) {
   model <- multiassay@metadata$integration[[paste(integration)]]
-  matrix <- cbind(model$X[[1]], model$X[[2]])
 
   loadings <- mixOmics::selectVar(model, comp = component)
-  Loadings <- c(
-    loadings[["mRNA"]][["name"]],
-    loadings[["proteins"]][["name"]]
-  )
 
   df1 <- tibble::rownames_to_column(loadings$mRNA$value, "feature")
   df1$`Omic.layer` <- "rna"
@@ -29,10 +28,18 @@ extract_multiomic_signature <- function(multiassay,
   data_loadings_positive <- data_loadings[data_loadings$value.var > 0, ]
   data_loadings_negative <- data_loadings[data_loadings$value.var < 0, ]
 
-  rna_positive <- data_loadings_positive$feature[data_loadings_positive$Omic.layer == "rna"]
-  rna_negative <- data_loadings_negative$feature[data_loadings_negative$Omic.layer == "rna"]
-  protein_positive <- data_loadings_positive$feature[data_loadings_positive$Omic.layer == "protein"]
-  protein_negative <- data_loadings_negative$feature[data_loadings_negative$Omic.layer == "protein"]
+  rna_positive <- data_loadings_positive$feature[
+    data_loadings_positive$Omic.layer == "rna"
+  ]
+  rna_negative <- data_loadings_negative$feature[
+    data_loadings_negative$Omic.layer == "rna"
+  ]
+  protein_positive <- data_loadings_positive$feature[
+    data_loadings_positive$Omic.layer == "protein"
+  ]
+  protein_negative <- data_loadings_negative$feature[
+    data_loadings_negative$Omic.layer == "protein"
+  ]
 
   if (integration == "sMBPLS") {
     if (model[["loadings"]][["Y"]][1] == 1) {

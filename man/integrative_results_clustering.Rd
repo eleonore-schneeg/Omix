@@ -21,13 +21,15 @@ integrative_results_clustering(
 
 \item{integration}{Possible multiomics clustering include \code{iCluster}}
 
-\item{enrichment_method}{Available methods include \code{enrichGO} and \code{enrichr}. Default to \code{enrichr}.}
+\item{enrichment_method}{Available methods include \code{enrichGO} and \code{enrichr}.
+Default to \code{enrichr}.}
 
 \item{annotations_continuous}{continuous covariates}
 
 \item{annotations_cat}{categorical covariates}
 
-\item{correlation_threshold}{Absolute correlation threshold to draw edges in the network}
+\item{correlation_threshold}{Absolute correlation threshold to draw edges
+in the network}
 
 \item{geneset}{Default to NULL}
 }
@@ -37,3 +39,10 @@ List object of integrated results
 \description{
 Downstream analysis for integrated multi-omics clustering
 }
+\seealso{
+Other Multi-omic integration downstream analysis: 
+\code{\link{integrative_results_supervised}()},
+\code{\link{integrative_results_unsupervised}()},
+\code{\link{multiomics_modules}()}
+}
+\concept{Multi-omic integration downstream analysis}

@@ -7,7 +7,8 @@
 volcano_interactive_comparison(data)
 }
 \arguments{
-\item{data}{Formatted Comparative Differential expression results from \code{single_omic_comparisons()}}
+\item{data}{Formatted Comparative Differential expression results
+from \code{single_omic_comparisons()}}
 }
 \value{
 Interactive plot
@@ -15,3 +16,14 @@ Interactive plot
 \description{
 Builds an interactive comparison plot using plotly
 }
+\seealso{
+Other Plotting: 
+\code{\link{interactive_network}()},
+\code{\link{multiomics_network_matrix}()},
+\code{\link{multiomics_network}()},
+\code{\link{plot_OpenTarget}()},
+\code{\link{volcano_interactive}()},
+\code{\link{volcano_plot_deseq}()},
+\code{\link{volcano_plot_limma}()}
+}
+\concept{Plotting}

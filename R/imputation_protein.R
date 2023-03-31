@@ -7,13 +7,13 @@
 # standard deviation that is a fraction of the standard deviation of
 # the sample distribution.
 #' @param df Data frame to be imputed
-#' @param width Coefficient shrinking standard deviation with. Default to 0.3
-#' @param downshift Coefficient shifting the mean of imputed values. Default to 1.8
+#' @param width Coefficient shrinking standard deviation with. Default 0.3
+#' @param downshift Coefficient shifting the mean of imputed values. Default 1.8
 #'
 #' @return Imputed data frame
-#' @export
+#' @keywords internal
 
-.impute_distribution <- function(df, width = 0.3, downshift = 1.8) {
+impute_distribution <- function(df, width = 0.3, downshift = 1.8) {
   for (i in colnames(df)) {
     non_missing <- !is.na(df[[i]])
     temp.sd <- width * sd(df[[i]][non_missing], na.rm = TRUE) # shrink sd width
@@ -32,17 +32,17 @@
 #' @return Imputed data frame
 #'
 #' @importFrom matrixStats rowMins
-#' @export
+#' @keywords internal
 #'
 
-.impute_minimum_value <- function(df) {
+impute_minimum_value <- function(df) {
   for (i in colnames(df)) {
-    protein_minimum_imputation <- 0.5 * matrixStats::rowMins(as.matrix(df), na.rm = T)
+    protein_minimum_imputation <- 0.5 * matrixStats::rowMins(
+      as.matrix(df),
+      na.rm = TRUE
+    )
     missing <- is.na(df[[i]])
     df[[i]][missing] <- protein_minimum_imputation[missing]
   }
   return(df)
 }
-
-
-

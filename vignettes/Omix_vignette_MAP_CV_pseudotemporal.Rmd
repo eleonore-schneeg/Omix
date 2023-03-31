@@ -25,7 +25,7 @@ editor_options:
 BiocStyle::markdown()
 knitr::opts_chunk$set(tidy = FALSE,
                       message = TRUE,
-                      warning=FALSE)
+                      warning = FALSE)
 options(knitr.duplicate.label = "allow")
 ```
 
@@ -72,20 +72,12 @@ Call required packages for vignette:
 ```{r}
 library(Omix)
 library(purrr)
-library(fgsea)
-library(slingshot)
 library(ggplot2)
-library(MOFA2)
-library(visNetwork)
-library(plotly)
-library(igraph)
-library(EnsDb.Hsapiens.v86)
 ```
 
 First we must load the data from Omix for the vignette:
 
 ```{r}
-library(utils)
 outputDir <- tempdir()
 rawdata_rna_fp <- file.path(outputDir, "raw_counts_MTG_SSC_CV.rds")
 rawdata_protein_fp <- file.path(outputDir, "raw_proteomics_MTG_SSC_CV.rds")
@@ -207,6 +199,11 @@ The package currently supports transcriptomics and proteomics bulk data only.
 
 
 ```{r}
+
+individual_metadata$diagnosis <- factor(individual_metadata$diagnosis,
+                                        levels = c("Control", "AD"))
+individual_metadata$sex <- factor(individual_metadata$sex)
+
 multiomics_object=generate_multiassay(rawdata_rna =rawdata_rna,
                                    rawdata_protein = rawdata_protein,
                                    individual_to_sample=FALSE,
@@ -230,7 +227,7 @@ The following steps will process and perform QC on each omic layers of the
 
 ```{r}
 multiomics_object=process_rna(multiassay=multiomics_object,
-            transformation='rlog',
+            transformation='vst',
             protein_coding=TRUE,
             min_count = 10,
             min_sample = 0.5,
@@ -288,8 +285,8 @@ multiomics_object=process_protein(
 We need to create a new pseudo-temporal variable based on brain regions, 1 for MTG as it comes earlier in the disease trajectory, and 2 for SSC.
 
 ```{r , message = FALSE}
-library(MultiAssayExperiment)
-MultiAssayExperiment::colData(multiomics_object)$pseudotime=ifelse(colData(multiomics_object)$brain_region=='MTG',1,2)
+MultiAssayExperiment::colData(multiomics_object)$pseudotime=
+  ifelse(MultiAssayExperiment::colData(multiomics_object)$brain_region=='MTG',1,2)
 ```
 
 
@@ -329,10 +326,6 @@ print(multiomics_object@metadata$integration$MEIFESTO)
 All downstream analyses will be performed on the integrated object stored in the `integrated` slot.
 
 ```{r, message=FALSE}
-library(MOFA2)
-library(ggplot2)
-library(ggpubr)
-library(ggsignif)
 integrated_object=multiomics_object@metadata$integration$MEIFESTO
 ```
 
@@ -664,7 +657,7 @@ protein_enrichment$Plot
 
 `multiomics_modules` compute the module eigen value (PC1 of scaled transcriptomics/proteomics expression) and correlates it to chosen covariates
 
-```{r, message= FALSE}
+```{r, message= FALSE, warning=FALSE}
 modules=multiomics_modules(multiassay=multiomics_object,
                               metadata=MOFA2::samples_metadata(integrated_object),
                               covariates=c('pseudotime','PHF1','amyloid','pTau'),
@@ -708,7 +701,8 @@ plot(gb)
 #### Amyloid 
 
 ```{r, message= FALSE}
-modules$metadata_modules$Braak=factor(modules$metadata_modules$Braak, levels = c("0","1","2","3","4","5","6"))
+modules$metadata_modules$Braak=factor(modules$metadata_modules$Braak, 
+                                      levels = c("0","1","2","3","4","5","6"))
 modules$metadata_modules$Braak_num=as.numeric(modules$metadata_modules$Braak)
 gg=ggpubr::ggscatter(modules$metadata_modules, y = "amyloid", x = "Braak_num", palette = "jco",
                      add = "reg.line", conf.int = TRUE,  label.x = 4,  add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
@@ -726,9 +720,14 @@ plot(gb)
 
 ```{r, message= FALSE}
 for(i in colnames(modules$modules_eigen_value)){
-gg=ggpubr::ggscatter(modules$metadata_modules, x = "pseudotime", y = paste(i),
-          color = "diagnosis", palette = "jco",
-          add = "reg.line", conf.int = TRUE)+stat_cor(aes(color = diagnosis), label.x = 1)
+gg=ggpubr::ggscatter(modules$metadata_modules, 
+                     x = "pseudotime", 
+                     y = paste(i),
+          color = "diagnosis",
+          palette = "jco",
+          add = "reg.line", 
+          conf.int = TRUE)+
+  ggpubr::stat_cor(aes(color = diagnosis), label.x = 1)
 plot(gg)
 }
 ```
@@ -738,8 +737,13 @@ plot(gg)
 ```{r, message= FALSE}
 
 for(i in colnames(modules$modules_eigen_value)){
-gg=ggpubr::ggscatter(modules$metadata_modules, x = "PHF1", y = paste(i), palette = "jco",
-                     add = "reg.line", conf.int = TRUE,   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+gg=ggpubr::ggscatter(modules$metadata_modules,
+                     x = "PHF1", 
+                     y = paste(i),
+                     palette = "jco",
+                     add = "reg.line", 
+                     conf.int = TRUE, 
+                     add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
                      cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
                      cor.coeff.args = list(method = "pearson", label.x = 2, label.sep = "\n"))
 
@@ -756,10 +760,17 @@ There is a stronger relationhsip between module eigen values and infered multi-o
 ```{r, message= FALSE}
 
 for(i in colnames(modules$modules_eigen_value)){
-gg=ggpubr::ggboxplot(modules$metadata_modules, x = "diagnosis", y = paste(i),add='jitter', color="diagnosis")+
-  xlab('Diagnosis')+ylab(paste('Eigen value in',i))+theme_classic()+
-  geom_signif(comparisons = list(c('AD', 'Control')))+
-  scale_color_manual(values = c("#2E9FDF","#E7B800"))+facet_wrap(~brain_region)
+gg=ggpubr::ggboxplot(modules$metadata_modules,
+                     x = "diagnosis", 
+                     y = paste(i),
+                     add='jitter', 
+                     color="diagnosis")+
+  xlab('Diagnosis')+
+  ylab(paste('Eigen value in',i))+
+  theme_classic()+
+  ggsignif::geom_signif(comparisons = list(c('AD', 'Control')))+
+  scale_color_manual(values = c("#2E9FDF","#E7B800"))+
+  facet_wrap(~brain_region)
 plot(gg)
 }
 ```
@@ -767,8 +778,15 @@ plot(gg)
 ```{r}
 
 for(i in colnames(modules$modules_eigen_value)){
-gg=ggpubr::ggboxplot(modules$metadata_modules, x = "Braak", y = paste(i),add='jitter', color="Braak")+
-  xlab('Diagnosis')+ylab(paste('Eigen value in',i))+theme_classic()+facet_wrap(~brain_region)
+gg=ggpubr::ggboxplot(modules$metadata_modules, 
+                     x = "Braak", 
+                     y = paste(i),
+                     add='jitter', 
+                     color="Braak")+
+  xlab('Diagnosis')+
+  ylab(paste('Eigen value in',i))+
+  theme_classic()+
+  facet_wrap(~brain_region)
 plot(gg)
 }
 ```
@@ -777,9 +795,15 @@ plot(gg)
 ```{r}
 
 for(i in colnames(modules$modules_eigen_value)){
-gg=ggpubr::ggboxplot(modules$metadata_modules, x = "brain_region", y = paste(i),add='jitter',color='brain_region')+
-  xlab('Diagnosis')+ylab(paste('Eigen value in',i))+theme_classic()+
-  geom_signif(comparisons = list(c('MTG', 'SSC')))+
+gg=ggpubr::ggboxplot(modules$metadata_modules, 
+                     x = "brain_region", 
+                     y = paste(i),
+                     add='jitter',
+                     color='brain_region')+
+  xlab('Diagnosis')+
+  ylab(paste('Eigen value in',i))+
+  theme_classic()+
+  ggsignif::geom_signif(comparisons = list(c('MTG', 'SSC')))+
   scale_color_manual(values = c("#DC0000FF","forestgreen"))
 plot(gg)
 }

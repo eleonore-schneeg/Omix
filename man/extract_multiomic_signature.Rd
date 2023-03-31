@@ -20,3 +20,12 @@ List object
 \description{
 Extracts a multi-omics signature from loadings
 }
+\seealso{
+Other Helper: 
+\code{\link{counts_rna}()},
+\code{\link{extract_weigths}()},
+\code{\link{format_res_deseq}()},
+\code{\link{format_res_limma}()},
+\code{\link{processed_rna}()}
+}
+\concept{Helper}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate_multiassay.R
 \name{generate_multiassay}
 \alias{generate_multiassay}
-\title{Generate a MultiAssayExperiment object from single-omics data}
+\title{Generate a MultiAssayExperiment object from multiple single-omics data}
 \usage{
 generate_multiassay(
   rawdata_rna,
@@ -54,8 +54,9 @@ and \code{metadata_protein} to the \code{individual_metadata}}
 \item{rna_qc_data}{Logical whether to add rna QC data.}
 
 \item{rna_qc_data_matrix}{A data.frame containing RNA qc level data where
-rownames are same as the colnames of \code{rawdata_rna} data.frame.
-@param organism The organism type for transcripts and proteins.
+rownames are same as the colnames of \code{rawdata_rna} data.frame.}
+
+\item{organism}{The organism type for transcripts and proteins.
 Possible values are \code{human} and \code{mouse}. Default to \code{human}.}
 }
 \value{
@@ -65,3 +66,12 @@ a MultiAssayExperiment object
 Generate a MultiAssayExperiment object from single-omics data matrix
 and metadata. Currently supports transcriptomics and proteomics data only.
 }
+\seealso{
+Other Pre-processing: 
+\code{\link{batch_correction_protein}()},
+\code{\link{combat_correction}()},
+\code{\link{filter_protein}()},
+\code{\link{process_protein}()},
+\code{\link{process_rna}()}
+}
+\concept{Pre-processing}

@@ -55,3 +55,12 @@ a MultiAssayExperiment object with \code{rna_processed} slot
 \description{
 Process batch transcriptomics data
 }
+\seealso{
+Other Pre-processing: 
+\code{\link{batch_correction_protein}()},
+\code{\link{combat_correction}()},
+\code{\link{filter_protein}()},
+\code{\link{generate_multiassay}()},
+\code{\link{process_protein}()}
+}
+\concept{Pre-processing}

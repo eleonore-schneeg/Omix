@@ -22,14 +22,17 @@
 #'
 #' @return a MultiAssayExperiment object with `rna_processed` slot
 #'
+#' @family Pre-processing
+#'
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
-#'  getWithColData sampleMap
+#' @importFrom MultiAssayExperiment getWithColData sampleMap metadata
 #' @importFrom SummarizedExperiment SummarizedExperiment assay rowData
 #' @importFrom DESeq2 DESeqDataSetFromMatrix counts
 #' @importFrom stats prcomp model.matrix
 #' @importFrom magrittr set_names
 #' @importFrom cli cli_alert_danger style_bold cli_alert_success
 #' @importFrom limma removeBatchEffect
+#' @importFrom dplyr %>%
 #'
 #' @export
 
@@ -45,8 +48,6 @@ process_rna <- function(multiassay,
                         batch_correction,
                         batch,
                         remove_sample_outliers) {
-
-  library(dplyr)
   "%!in%" <- function(x, y) !("%in%"(x, y))
   suppressWarnings({
     rna_raw <- MultiAssayExperiment::getWithColData(
@@ -100,7 +101,6 @@ process_rna <- function(multiassay,
   dim1 <- as.numeric(dim(dds)[1])
 
   cli::cli_alert_success("NORMALISATION & TRANSFORMATION")
-  # matrix <- DESeq2::counts(dds, normalized=TRUE)
 
   if (transformation == "log2") {
     matrix <- data.frame(log2(DESeq2::counts(dds, normalized = TRUE) + 1))
@@ -120,7 +120,8 @@ process_rna <- function(multiassay,
     cli::cli_alert_success("GENE FILTERING")
     if (protein_coding == TRUE) {
       cli::cli_alert_success("Keeping only protein coding genes")
-      protein_coding <- SummarizedExperiment::rowData(rna_raw)$gene_biotype == "protein_coding" &
+      protein_coding <- SummarizedExperiment::rowData(
+        rna_raw)$gene_biotype == "protein_coding" &
         !is.na(SummarizedExperiment::rowData(rna_raw)$gene_biotype)
       dds <- dds[protein_coding, ]
       cli::cli_alert_success(paste(
@@ -179,44 +180,44 @@ process_rna <- function(multiassay,
 
     covariates_data <- MultiAssayExperiment::colData(rna_raw)[, c(covariates)]
     covariates_data <- data.frame(covariates_data)
-    covariates_data=covariates_data %>%  mutate(across(where(is.character),as.factor))
-    covariates_data=covariates_data %>%  mutate(across(where(is.factor),as.numeric))
+    covariates_data <- covariates_data %>%
+      mutate(across(where(is.character), as.factor))
+    covariates_data <- covariates_data %>%
+      mutate(across(where(is.factor), as.numeric))
 
-    for(i in colnames(covariates_data)){
-
-      if(all(!is.na(covariates_data[,i]))==FALSE){
+    for (i in colnames(covariates_data)) {
+      if (all(!is.na(covariates_data[, i])) == FALSE) {
         stop(cli::cli_alert_danger(
-          paste(i,"Contains missing data, please impute or remove this covariate",
-                sep = " "
-          )))
+          paste(i, "Contains missing data, please impute or remove this covariate",
+            sep = " "
+          )
+        ))
       }
     }
 
-if(is.null(batch)){
-    matrix <- limma::removeBatchEffect(
-      matrix,
-      batch=NULL,
-      covariates = covariates_data,
-      design = model.matrix(~ colData[[dependent]],
-        data = colData
+    if (is.null(batch)) {
+      matrix <- limma::removeBatchEffect(
+        matrix,
+        batch = NULL,
+        covariates = covariates_data,
+        design = model.matrix(~ colData[[dependent]],
+          data = colData
+        )
       )
-    )
-  }
-    if(!is.null(batch)){
-
-    batch_data <- colData[batch]
-    batch_data[[batch]] <- as.factor(batch_data[[batch]])
-
-    matrix <- limma::removeBatchEffect(
-      matrix,
-      batch = batch_data[[batch]],
-      covariates = covariates_data,
-      design = stats::model.matrix(~ colData[[dependent]],
-                            data = colData
-      )
-    )
     }
+    if (!is.null(batch)) {
+      batch_data <- colData[batch]
+      batch_data[[batch]] <- as.factor(batch_data[[batch]])
 
+      matrix <- limma::removeBatchEffect(
+        matrix,
+        batch = batch_data[[batch]],
+        covariates = covariates_data,
+        design = stats::model.matrix(~ colData[[dependent]],
+          data = colData
+        )
+      )
+    }
   }
   if (remove_sample_outliers == TRUE) {
     dim2 <- dim(matrix)[2]
@@ -252,13 +253,13 @@ if(is.null(batch)){
   )
 
 
-  metadata(multiassay)$dds <- dds
+  MultiAssayExperiment::metadata(multiassay)$dds <- dds
 
   if (remove_sample_outliers) {
-    metadata(multiassay)$OutliersFlags$rna <- outliers
+    MultiAssayExperiment::metadata(multiassay)$OutliersFlags$rna <- outliers
   }
 
-  metadata(multiassay)$parameters_processing_rna <- list(
+  MultiAssayExperiment::metadata(multiassay)$parameters_processing_rna <- list(
     min_count = min_count,
     min_sample = min_sample,
     dependent = dependent,

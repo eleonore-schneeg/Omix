@@ -25,7 +25,7 @@ editor_options:
 BiocStyle::markdown()
 knitr::opts_chunk$set(tidy = FALSE,
                       message = TRUE,
-                      warning=FALSE)
+                      warning = FALSE)
 options(knitr.duplicate.label = "allow")
 ```
 
@@ -74,8 +74,6 @@ Call required packages for vignette:
 library(Omix)
 library(purrr)
 library(ggplot2)
-library(enrichR)
-library(EnsDb.Hsapiens.v86)
 ```
 
 First we must load the data from Omix for the vignette:
@@ -90,7 +88,7 @@ metadata_rna_fp <- file.path(outputDir, "metadata_rna_MTG_CV.rds")
 metadata_prot_fp <-  file.path(outputDir, "metadata_prot_MTG_CV.rds")
 individual_metadata_fp <-file.path(outputDir, "metadata_map_MTG_CV_new.rds")
 ctd_fp <-file.path(outputDir, "ctd.rds")
-ensembl_fp  <-file.path(outputDir, "ensembl.rds")
+ensembl_fp  <- file.path(outputDir, "ensembl.rds")
 
 download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/raw_counts_MTG_CV.rds",destfile=rawdata_rna_fp,headers = c(Authorization = paste("token", "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")))
 
@@ -198,6 +196,13 @@ The package currently supports transcriptomics and proteomics bulk data only.
 
 
 ```{r}
+# Convert metadata type from character to factor
+
+individual_metadata$diagnosis <- factor(individual_metadata$diagnosis,
+                                        levels = c("Control", "AD"))
+individual_metadata$sex <- factor(individual_metadata$sex)
+
+#Generate multiassay object
 multiomics_object_MTG=generate_multiassay(rawdata_rna =rawdata_rna,
                                    rawdata_protein = rawdata_protein,
                                    individual_to_sample=FALSE,
@@ -221,7 +226,7 @@ The following steps will process and perform QC on each omic layers of the
 
 ```{r}
 multiomics_object_MTG=process_rna(multiassay=multiomics_object_MTG,
-            transformation='rlog',
+            transformation='vst',
             protein_coding=TRUE,
             min_count = 10,
             min_sample = 0.5,
@@ -293,7 +298,6 @@ DT::datatable(multiomics_object_MTG@metadata$DEG$ADvsControl,
 Volcano plot of differentially expressed genes is saved in the `multiomics_object_MTG@metadata$DEG$plot` slot
 
 ```{r, message=FALSE}
-library(plotly)
 volcano_interactive(multiomics_object_MTG@metadata[["DEG"]]$ADvsControl, padj=0.05)
 ```
 
@@ -414,7 +418,7 @@ multiomics_object_MTG=vertical_integration(multiomics_object_MTG,
                                 ID_type='gene_name',
                                 dependent='diagnosis',
                                 levels= c("Control", "AD"),
-                                design='cor',
+                                design="cor",
                                 ncomp=2,
                                 range=list(mRNA=seq(10,100,by=10),
                                               proteins=seq(10,100,by=10)))
@@ -429,8 +433,6 @@ containing, multi-omics signatures, network visualisation, cell type and functio
 enrichment, as well as comparison of signatures against the OpenTargets knowledge base.
 
 ```{r, message=FALSE}
-library(enrichR)
-
 integrative_results_MTG=integrative_results_supervised(multiomics_object_MTG,
                                 integration = "DIABLO",
                                 component = 1,

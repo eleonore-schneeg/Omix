@@ -4,96 +4,37 @@
 #' `generate_multiassay`function
 #' @param integration Possible multiomics clustering include `iCluster`
 #' @param annotations_cat categorical covariates
-#' @param correlation_threshold Absolute correlation threshold to draw edges in the network
-#' @param enrichment_method Available methods include `enrichGO` and `enrichr`. Default to `enrichr`.
+#' @param correlation_threshold Absolute correlation threshold to draw edges
+#' in the network
+#' @param enrichment_method Available methods include `enrichGO` and `enrichr`.
+#' Default to `enrichr`.
 #' @param annotations_continuous continuous covariates
 #' @param geneset Default to NULL
 #'
 #' @return List object of integrated results
+#'
+#' @family  Multi-omic integration downstream analysis
+#'
 #' @export
 #'
 integrative_results_clustering <- function(multiassay,
-                                           integration='iCluster',
+                                           integration = "iCluster",
                                            enrichment_method,
                                            annotations_continuous,
                                            annotations_cat,
                                            res.path,
                                            correlation_threshold = 0.5,
                                            geneset = NULL) {
-
   multimodal <- multiassay@metadata$multimodal_object$omics
   metadata <- multiassay@metadata$multimodal_object$metadata
   multimodal <- lapply(multimodal, data.frame)
 
-  cluster <-multiassay@metadata$integration[[paste(integration)]]
-
-  plot_data <- MOVICS::getStdiz(
-    data = multimodal,
-    halfwidth = c(2, 2),
-    centerFlag = c(T, T),
-    scaleFlag = c(T, T)
-  )
-
+  cluster <- multiassay@metadata$integration[[paste(integration)]]
 
   columns <- c(annotations_continuous, annotations_cat)
   annCol <- metadata[, c(paste(columns)), drop = FALSE]
 
-  # annColors <- list(
-  #   amyloid = circlize::colorRamp2(
-  #     breaks = c(
-  #       min(annCol$amyloid),
-  #       median(annCol$amyloid),
-  #       max(annCol$amyloid)
-  #     ),
-  #     colors = c("#0000AA", "#555555", "#AAAA00")
-  #   ),
-  #   nft = circlize::colorRamp2(
-  #     breaks = c(
-  #       min(annCol$nft),
-  #       median(annCol$nft),
-  #       max(annCol$nft)
-  #     ),
-  #     colors = c("#0000AA", "#555555", "#AAAA00")
-  #   ),
-  #   gpath = circlize::colorRamp2(
-  #     breaks = c(
-  #       min(annCol$gpath),
-  #       median(annCol$gpath),
-  #       max(annCol$gpath)
-  #     ),
-  #     colors = c("#0000AA", "#555555", "#AAAA00")
-  #   ),
-  #   progression = c(
-  #     "fast_progressing" = "green",
-  #     "slow_progressing" = "blue"
-  #   ),
-  #   cog_diag = c(
-  #     "CO" = "green",
-  #     "MCI" = "blue",
-  #     "AD" = "red"
-  #   ),
-  #   braaksc = c("3" = "blue", "4" = "red")
-  # )
-
   cli::cli_alert_success("MULTI-OMICS CLUSTERING HEATMAP")
-  # heatmap <- MOVICS::getMoHeatmap(
-  #   data = plot_data,
-  #   row.title = c("mRNA", "Proteins"),
-  #   is.binary = c(F, F), # the 4th data is mutation which is binary
-  #   legend.name = c("mRNA.counts", "Protein.abundance"),
-  #   clust.res = cluster$clust.res, # consensusMOIC results
-  #   clust.dend = NULL, # show no dendrogram for samples
-  #   show.rownames = c(F, F), # specify for each omics data
-  #   show.colnames = FALSE, # show no sample names
-  #   show.row.dend = c(F, F),
-  #   annCol = annCol, # show no dendrogram for features
-  #   annRow = annColors, # no selected features
-  #   width = 10, # width of each subheatmap
-  #   height = 5, # height of each subheatmap
-  #   fig.name = "Multiomics clustering heatmap",
-  #   fig.path = res.path
-  # )
-
   annCol <- mutate_if(annCol, is.character, as.factor)
 
   surv.info <- annCol
@@ -102,11 +43,12 @@ integrative_results_clustering <- function(multiassay,
   cli::cli_alert_success("RELATING CLUSTERS TO CLINICAL INFORMATION")
   clinical.clust <- MOVICS::compClinvar(
     moic.res = cluster,
-    var2comp = surv.info, # data.frame needs to summarize (must has row names of samples)
+    var2comp = surv.info, # data.frame needs to summarize
+                          # (must has row names of samples)
     strata = "Subtype",
     factorVars = c("var1", "var2", "var3", "var4"),
     doWord = TRUE,
-    includeNA = F, # generate .docx file in local path
+    includeNA = FALSE, # generate .docx file in local path
     tab.name = "Clinical features per clusters"
   )
 
@@ -149,7 +91,8 @@ integrative_results_clustering <- function(multiassay,
     )
   }
 
-  cli::cli_alert_success("BIPARTITE NETWORKS GENERATION OF DIFFERENTIALLY EXPRESSED FEATURES IN EACH CLUSTER")
+  cli::cli_alert_success("BIPARTITE NETWORKS GENERATION OF DIFFERENTIALLY
+                         EXPRESSED FEATURES IN EACH CLUSTER")
 
   Down_network <- list()
   Up_network <- list()
@@ -159,12 +102,13 @@ integrative_results_clustering <- function(multiassay,
   Down_cell_type <- list()
 
   for (i in names(Up)) {
-    cli::cli_alert_success(paste("UP REGULATED FEATURES (", i, ") DOWNSTREAM ANALYSIS"))
+    cli::cli_alert_success(paste("UP REGULATED FEATURES (", i, ")
+                                 DOWNSTREAM ANALYSIS"))
 
     cluster <- str_split(names(Up), "-", n = 2, simplify = FALSE)
     cluster <- readr::parse_number(cluster[[1]][1])
 
-    Up_network[[i]] <- .multiomics_network_cluster(
+    Up_network[[i]] <- multiomics_network_cluster(
       multiassay = multiassay,
       integration = "iCluster",
       cluster = cluster,
@@ -172,7 +116,7 @@ integrative_results_clustering <- function(multiassay,
       correlation_threshold = correlation_threshold
     )
     cli::cli_alert_success("DETECTION OF NETWORK COMMUNITIES")
-    Up_communities[[i]] <- .communities_network(Up_network[[i]])
+    Up_communities[[i]] <- communities_network(Up_network[[i]])
 
     cli::cli_alert_success("CELL TYPE ENRICHMENT OF COMMUNITIES")
     Up_cell_type[[i]] <- cell_type_enrichment(
@@ -182,11 +126,12 @@ integrative_results_clustering <- function(multiassay,
   }
 
   for (i in names(Down)) {
-    cli::cli_alert_success(paste("DOWN REGULATED FEATURES (", i, ") DOWNSTREAM ANALYSIS"))
+    cli::cli_alert_success(paste("DOWN REGULATED FEATURES (", i, ")
+                                 DOWNSTREAM ANALYSIS"))
 
-    cluster <- str_split(names(Down), "-", n = 2, simplify = FALSE)
+    cluster <- stringr::str_split(names(Down), "-", n = 2, simplify = FALSE)
     cluster <- readr::parse_number(cluster[[1]][1])
-    Down_network[[i]] <- .multiomics_network_cluster(
+    Down_network[[i]] <- multiomics_network_cluster(
       multiassay = multiassay,
       integration = "iCluster",
       cluster = cluster,
@@ -197,7 +142,7 @@ integrative_results_clustering <- function(multiassay,
 
 
     cli::cli_alert_success("DETECTION OF NETWORK COMMUNITIES")
-    Down_communities[[i]] <- .communities_network(Down_network[[i]])
+    Down_communities[[i]] <- communities_network(Down_network[[i]])
 
     cli::cli_alert_success("CELL TYPE ENRICHMENT OF COMMUNITIES")
 
@@ -221,7 +166,7 @@ integrative_results_clustering <- function(multiassay,
     })
   }
 
-  background <- .get_background(multiassay = multiassay, of = "full")
+  background <- get_background(multiassay = multiassay, of = "full")
 
 
   if (enrichment_method == "enrichr") {
@@ -233,28 +178,6 @@ integrative_results_clustering <- function(multiassay,
     }
   }
 
-  if (enrichment_method == "enrichKEGG") {
-    df <- DE_res[["rna"]][["CS1-CS2"]]
-    df <- df[which(df$de != "Not sig"), ]
-    entrez <- mapIds(org.Hs.eg.db, df$gene_name, "ENTREZID", "SYMBOL")
-    kk <- clusterProfiler::enrichKEGG(
-      gene = entrez,
-      organism = "hsa",
-      pvalueCutoff = 0.05
-    )
-
-    top_kk <- top_n(kk@result, 1, Count)
-    top_kk_id <- top_kk$ID
-    list <- df$log2FoldChange
-    names(list) <- mapIds(org.Hs.eg.db, df$gene_name, "ENTREZID", "SYMBOL")
-
-    top_kk_id <- pathview(
-      gene.data = list,
-      pathway.id = paste(top_kk_id),
-      species = "hsa",
-      limit = list(gene = round(max(abs(list)), 1))
-    )
-  }
 
   if (!is.null(custom_geneset)) {
     custom_Down <- list()

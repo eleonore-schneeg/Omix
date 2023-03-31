@@ -88,7 +88,8 @@ Imports:
       msigdbr,
       reticulate,
       plotly,
-      DT
+      DT,
+      basetheme
 Suggests: 
     knitr,
     rmarkdown

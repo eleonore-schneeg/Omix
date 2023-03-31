@@ -22,9 +22,9 @@ interest in \code{names(multiassay@metadata$DEG)} and
 \item{threshold}{is the pvalue threshold. Default to 0.05}
 
 \item{pvalue}{Comparison reference.can be set to \code{pval} or \code{adj}, to consider
-the normal p values or the ones after multiple testing correction, respectively.
-With pvalue == \code{all}, no p value threshold is applied and all genes will be compared.
-all genes are kept and only the direction is compared.}
+the normal p values or the ones after multiple testing correction,
+respectively. With pvalue == \code{all}, no p value threshold is applied and all genes will be
+compared. all genes are kept and only the direction is compared.}
 
 \item{filtering_options}{default to \code{NULL}. if set to \code{both_significant}the
 returned dataframe will only display genes that are significant at both
@@ -37,3 +37,9 @@ A list object with \code{dataframe} and \code{plot} slots
 \description{
 Compare differential expressed genes and proteins
 }
+\seealso{
+Other Single-omic: 
+\code{\link{protein_DE_analysis}()},
+\code{\link{rna_DE_analysis}()}
+}
+\concept{Single-omic}

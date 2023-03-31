@@ -1,5 +1,6 @@
 ################################################################################
-#' Calling different proteomics correction methods. Internal to `process_protein()`
+#' Calling different proteomics correction methods.
+#' Internal to `process_protein()`
 #'
 #' @param matrix Protein abundance matrix
 #' @param batch_map Automatically generated in `process_protein()`
@@ -7,6 +8,9 @@
 #' @param correction_method `Combat` or `Median_centering`
 #'
 #' @return Batch corrected matrix
+#'
+#' @family Pre-processing
+#'
 #' @export
 
 batch_correction_protein <- function(matrix,
@@ -20,11 +24,11 @@ batch_correction_protein <- function(matrix,
   )
   if (correction_method == "Combat") {
     cli::cli_alert_success("Performing combat batch correction")
-    matrix <- base::do.call(combat_correction, args)
+    matrix <- do.call(combat_correction, args)
   }
   if (correction_method == "Median_centering") {
     cli::cli_alert_success("Performing median centering batch correction")
-    matrix <- base::do.call(median_centering_correction, args)
+    matrix <- do.call(median_centering_correction, args)
   }
   return(matrix)
 }

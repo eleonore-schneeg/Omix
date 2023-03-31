@@ -1,5 +1,5 @@
 ################################################################################
-#' Generate a MultiAssayExperiment object from single-omics data
+#' Generate a MultiAssayExperiment object from multiple single-omics data
 #'
 #' Generate a MultiAssayExperiment object from single-omics data matrix
 #' and metadata. Currently supports transcriptomics and proteomics data only.
@@ -29,16 +29,18 @@
 #' @param rna_qc_data Logical whether to add rna QC data.
 #' @param rna_qc_data_matrix A data.frame containing RNA qc level data where
 #' rownames are same as the colnames of `rawdata_rna` data.frame.
-#'  @param organism The organism type for transcripts and proteins.
-#'  Possible values are `human` and `mouse`. Default to `human`.
+#' @param organism The organism type for transcripts and proteins.
+#' Possible values are `human` and `mouse`. Default to `human`.
 #'
 #' @return a MultiAssayExperiment object
+#'
+#' @family Pre-processing
 #'
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom magrittr set_names
 #' @importFrom cli cli_alert_danger style_bold cli_alert_success
-#' @importFrom AnnotationDbi select
+#' @importFrom S4Vectors DataFrame
 #' @export
 generate_multiassay <- function(rawdata_rna,
                                 rawdata_protein,
@@ -98,7 +100,7 @@ generate_multiassay <- function(rawdata_rna,
   }
 
 
- individual_metadata=as.data.frame(individual_metadata)
+  individual_metadata <- as.data.frame(individual_metadata)
 
   if (individual_to_sample == TRUE) {
     map_rna <- data.frame(
@@ -130,13 +132,13 @@ generate_multiassay <- function(rawdata_rna,
 
   rawdata_rna <- rawdata_rna[!duplicated(rownames(rawdata_rna)), ]
 
-  rna_id_type <- .get_ID_type(rownames(rawdata_rna))
+  rna_id_type <- get_ID_type(rownames(rawdata_rna))
 
   se_rna <- SummarizedExperiment::SummarizedExperiment(
     assays = list("rna_raw" = rawdata_rna),
-    colData = metadata_rna,
+    colData = S4Vectors::DataFrame(metadata_rna),
     rowData = magrittr::set_names(
-      data.frame(gene_id = as.character(rownames(rawdata_rna))),
+      S4Vectors::DataFrame(gene_id = as.character(rownames(rawdata_rna))),
       rna_id_type
     )
   )
@@ -144,12 +146,10 @@ generate_multiassay <- function(rawdata_rna,
   se_rna@metadata$metadata <- metadata_rna
 
   if (organism == "human") {
-    library("EnsDb.Hsapiens.v86")
-    EnsDb <- EnsDb.Hsapiens.v86
+    EnsDb <- EnsDb.Hsapiens.v86::EnsDb.Hsapiens.v86
   }
   if (organism == "mouse") {
-    library(org.Mm.eg.db)
-    EnsDb <- org.Mm.eg.db
+    EnsDb <- org.Mm.eg.db::org.Mm.eg.db
   }
 
   if (rna_id_type == "ensembl_gene_id") {
@@ -157,7 +157,7 @@ generate_multiassay <- function(rawdata_rna,
     cli::cli_alert_success("Ensembl ID conversion to gene symbol")
     cli::cli_alert_success("Retrieval of gene biotype")
 
-    rna_values <- se_rna@elementMetadata@listData[[paste(rna_id_type)]]
+    rna_values <- se_rna@elementMetadata@listData[[rna_id_type]]
 
     rna_df <- AnnotationDbi::select(EnsDb,
       keys = rna_values,
@@ -175,7 +175,7 @@ generate_multiassay <- function(rawdata_rna,
   }
 
   if (rna_id_type == "gene_name") {
-    rna_values <- se_rna@elementMetadata@listData[[paste(rna_id_type)]]
+    rna_values <- se_rna@elementMetadata@listData[[rna_id_type]]
     cli::cli_alert_success("Retrieval of gene biotype")
     rna_df <- AnnotationDbi::select(EnsDb,
       keys = rna_values,
@@ -192,13 +192,13 @@ generate_multiassay <- function(rawdata_rna,
   }
 
   rawdata_protein <- rawdata_protein[!duplicated(rownames(rawdata_protein)), ]
-  protein_id_type <- .get_ID_type(rownames(rawdata_protein))
+  protein_id_type <- get_ID_type(rownames(rawdata_protein))
 
   se_protein <- SummarizedExperiment::SummarizedExperiment(
     assays = list("protein_raw" = rawdata_protein),
-    colData = metadata_protein,
+    colData = S4Vectors::DataFrame(metadata_protein),
     rowData = magrittr::set_names(
-      data.frame(gene_id = as.character(rownames(rawdata_protein))),
+      S4Vectors::DataFrame(gene_id = as.character(rownames(rawdata_protein))),
       protein_id_type
     )
   )
@@ -208,7 +208,7 @@ generate_multiassay <- function(rawdata_rna,
   if (protein_id_type == "uniprot_id") {
     # ID conversion using biomart
     cli::cli_alert_success("UniProt ID conversion to gene name ")
-    protein_values <- se_protein@elementMetadata@listData[[paste(protein_id_type)]]
+    protein_values <- se_protein@elementMetadata@listData[[protein_id_type]]
     protein_values <- sub("\\-.*", "", protein_values)
 
 
@@ -225,15 +225,15 @@ generate_multiassay <- function(rawdata_rna,
   }
 
 
-  rownames(individual_metadata) <- individual_metadata[, paste(map_by_column)]
+  rownames(individual_metadata) <- individual_metadata[, map_by_column]
 
   multiassay <- MultiAssayExperiment::MultiAssayExperiment(
     list(
       "rna_raw" = se_rna,
       "protein_raw" = se_protein
     ),
-    colData = individual_metadata,
-    sampleMap = dfmap
+    colData = S4Vectors::DataFrame(individual_metadata),
+    sampleMap = S4Vectors::DataFrame(dfmap)
   )
 
   cli::cli_alert_success("RNA raw data loaded")
