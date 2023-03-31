@@ -1,6 +1,6 @@
 Package: Omix
 Title: A Multi-Omics Integration Toolkit
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: 
     c(
     person(given = "Eleonore",
