@@ -313,7 +313,7 @@ enrichment_custom <- function(genes,
 #'
 #' @family Enrichment analysis
 #'
-#' @importFrom EWCE bootstrap_enrichment_test
+#' @importFrom EWCE bootstrap_enrichment_test ewce_plot
 #' @importFrom ggplot2 ggtitle
 #' @export
 #'

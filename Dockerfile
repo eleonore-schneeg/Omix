@@ -120,17 +120,20 @@ RUN apt-get update \
 #Set CRAN mirror
 RUN echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' \
 >>"${R_HOME}/etc/Rprofile.site" \
+
 #Install CRAN pkgs
-&& install2.r -e -s \
-tidyverse \
+&& install2.r -e \
 BiocManager \
 basetheme \
 data.table \
 devtools \
 doParallel \
 DT \
+dplyr \
 enrichR \
 foreach \
+forcats \
+ggplot2 \
 ggpubr \
 ggrastr \
 ggrepel \
@@ -149,12 +152,17 @@ mvtnorm \
 paletteer \
 pheatmap \
 plotly \
+purrr \
 ragg \
 RColorBrewer \
+readr \
 remotes \
 reshape2 \
 reticulate \
 rmarkdown \
+tibble \
+tidyr \
+stringr \
 scales \
 SNFtool \
 statmod \

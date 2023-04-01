@@ -18,11 +18,15 @@ Maintainer: Eleonore Schneegans <eleonore.schneegans17@imperial.ac.uk>
 Description: Generalisable framework that can effectively process, integrate and analyse patient-specific multi-omic data in an end-to-end manner. 
 License: GPL (>= 3)
 Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown,
+    BiocStyle
 biocViews:
 Imports: 
-      tidyverse,
       AnnotationDbi,
       basetheme,
       basilisk,
@@ -33,11 +37,13 @@ Imports:
       ComplexHeatmap,
       corrplot,
       data.table,
+      dplyr,
       DT,
       edgeR,
       enrichplot,
       enrichR,
       fgsea,
+      ggplot2,
       ggpubr,
       ggrepel,
       httr,
@@ -46,32 +52,34 @@ Imports:
       limma,
       lme4,
       magrittr,
+      Matrix,
       matrixStats,
       mixOmics,
       msigdbr,
       SummarizedExperiment,
       MultiAssayExperiment,
-      ensembldb,
       EnsDb.Hsapiens.v86,
       org.Hs.eg.db,
       plotly,
+      purrr,
       proBatch,
       RColorBrewer,
+      readr,
       reshape2,
       reticulate,
       S4Vectors,
       slingshot,
       statmod,
       stats,
+      stringr,
+      tibble,
+      tidyr,
       viridis,
       visNetwork,
       WGCNA,
       DESeq2,
       EWCE,
-      MOFA2
-Suggests: 
-    knitr,
-    rmarkdown,
-    BiocStyle,
-    ggsignif
+      MOFA2,
+      BiocStyle,
+      ggsignif
 VignetteBuilder: knitr
