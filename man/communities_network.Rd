@@ -21,7 +21,6 @@ Detects communities in multi-omics network
 }
 \seealso{
 Other Plotting: 
-\code{\link{circular_heatmap}()},
 \code{\link{community_graph}()},
 \code{\link{getMoHeatmap}},
 \code{\link{interactive_network}()},

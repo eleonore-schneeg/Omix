@@ -11,6 +11,8 @@
 #'
 #' @family Pre-processing
 #'
+#' @importFrom cli cli_alert_success
+#'
 #' @export
 
 batch_correction_protein <- function(matrix,

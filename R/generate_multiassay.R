@@ -40,9 +40,8 @@
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom magrittr set_names
 #' @importFrom cli cli_alert_danger style_bold cli_alert_success
-#' @importFrom S4Vectors DataFrame
-#' @import EnsDb.Hsapiens.v86
-#' @import org.Mm.eg.db
+#' @importFrom org.Mm.eg.db org.Mm.eg.db
+#' @importFrom EnsDb.Hsapiens.v86 EnsDb.Hsapiens.v86
 #' @export
 generate_multiassay <- function(rawdata_rna,
                                 rawdata_protein,
@@ -148,12 +147,10 @@ generate_multiassay <- function(rawdata_rna,
   se_rna@metadata$metadata <- metadata_rna
 
   if (organism == "human") {
-    library(EnsDb.Hsapiens.v86)
-    EnsDb <- EnsDb.Hsapiens.v86
+    EnsDb <- EnsDb.Hsapiens.v86::EnsDb.Hsapiens.v86
   }
   if (organism == "mouse") {
-    library(org.Mm.eg.db)
-    EnsDb <- org.Mm.eg.db
+    EnsDb <- org.Mm.eg.db::org.Mm.eg.db
   }
 
   if (rna_id_type == "ensembl_gene_id") {

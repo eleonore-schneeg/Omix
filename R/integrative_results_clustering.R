@@ -15,6 +15,11 @@
 #'
 #' @family  Multi-omic integration downstream analysis
 #'
+#' @importFrom stringr str_split
+#' @importFrom cli cli_alert_success
+#' @importFrom readr parse_number
+#' @importFrom clusterProfiler compareCluster
+#'
 #' @export
 #'
 integrative_results_clustering <- function(multiassay,
@@ -105,7 +110,7 @@ integrative_results_clustering <- function(multiassay,
     cli::cli_alert_success(paste("UP REGULATED FEATURES (", i, ")
                                  DOWNSTREAM ANALYSIS"))
 
-    cluster <- str_split(names(Up), "-", n = 2, simplify = FALSE)
+    cluster <- stringr::str_split(names(Up), "-", n = 2, simplify = FALSE)
     cluster <- readr::parse_number(cluster[[1]][1])
 
     Up_network[[i]] <- multiomics_network_cluster(

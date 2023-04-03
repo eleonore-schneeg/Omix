@@ -13,13 +13,10 @@
 #'
 #' @family Single-omic
 #'
-#' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
-#' getWithColData sampleMap
-#' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom stats as.formula
-#' @importFrom magrittr set_names
-#' @importFrom cli cli_alert_danger style_bold cli_alert_success
-#' @importFrom limma makeContrasts lmFit contrasts.fit eBayes topTable
+#' @importFrom cli cli_alert_danger
+#' @importFrom limma makeContrasts lmFit contrasts.fit eBayes topTable voom
+#' @importFrom edgeR DGEList calcNormFactors
 #'
 #' @export
 #'

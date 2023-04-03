@@ -285,6 +285,7 @@ get_multimodal_object <- function(multiassay,
 #' @return Functional annotation of modules
 #' @importFrom AnnotationDbi mapIds
 #' @importFrom WGCNA GOenrichmentAnalysis
+#' @importFrom org.Hs.eg.db org.Hs.eg.db
 #' @keywords internal
 #'
 get_module_annotation <- function(gene_list,

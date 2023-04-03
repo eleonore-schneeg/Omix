@@ -186,7 +186,7 @@ format_res_deseq <- function(dt,
 volcano_plot_limma <- function(dt,
                                log2FoldChange = 0,
                                padj = 0.05) {
-  ggplot2::ggplot(dt, aes(x = log2FoldChange, y = -log10(padj),
+  ggplot2::ggplot(dt, ggplot2::aes(x = log2FoldChange, y = -log10(padj),
                           label = gene_name, colour = de, repel = TRUE)) +
     geom_point(aes(x = log2FoldChange, y = -log10(padj),
                    fill = de, colour = de), show.legend = T, alpha = 0.5) +

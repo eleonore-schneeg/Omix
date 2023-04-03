@@ -11,6 +11,7 @@
 #'
 #' @importFrom proBatch correct_with_ComBat_df quantile_normalize_dm
 #' matrix_to_long long_to_matrix
+#'
 #' @export
 
 combat_correction <- function(matrix,

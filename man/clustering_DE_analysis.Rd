@@ -13,7 +13,15 @@ clustering_DE_analysis(
 )
 }
 \arguments{
-\item{log2FoldChange}{}
+\item{colData}{The coldadata variable}
+
+\item{dependent}{The dependent variable}
+
+\item{levels}{Levels to compare}
+
+\item{log2FoldChange}{logFC cutoff}
+
+\item{covariates}{The covariates}
 }
 \description{
 Performs differential expression between clusters

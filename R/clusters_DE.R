@@ -1,15 +1,13 @@
 #' Performs differential expression between clusters
 #'
-#' @param colData
-#' @param dependent
-#' @param covariates
-#' @param levels
-#' @param log2FoldChange
+#' @param colData The coldadata variable
+#' @param dependent The dependent variable
+#' @param covariates The covariates
+#' @param levels Levels to compare
+#' @param log2FoldChange logFC cutoff
 #'
 #' @family Multi-omic integration downstream analysis
 #'
-#' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
-#' @importFrom SummarizedExperiment SummarizedExperiment colData
 #' @importFrom stats as.formula
 #' @importFrom limma makeContrasts lmFit contrasts.fit eBayes topTable
 #'

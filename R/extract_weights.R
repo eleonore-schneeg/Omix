@@ -16,6 +16,12 @@
 #'
 #' @family Helper
 #'
+#' @importFrom MOFA2 get_weights
+#' @importFrom dplyr %>% arrange desc filter pull
+#' @importFrom ggpubr ggscatter
+#' @importFrom viridis scale_color_viridis
+#' @import ggplot2
+#'
 #' @export
 #'
 extract_weigths <- function(model,
@@ -52,24 +58,24 @@ extract_weigths <- function(model,
   protein_1$model_feature <- rownames(protein_1)
 
   protein_positive <- protein_1 %>%
-    arrange(desc(Weights), desc(Feature)) %>%
-    filter(Weights >= threshold) %>%
-    pull(Feature)
+    dplyr::arrange(dplyr::desc(Weights), dplyr::desc(Feature)) %>%
+    dplyr::filter(Weights >= threshold) %>%
+    dplyr::pull(Feature)
 
   rna_positive <- rna_1 %>%
-    arrange(desc(Weights), desc(Feature)) %>%
-    filter(Weights >= threshold) %>%
-    pull(Feature)
+    dplyr::arrange(dplyr::desc(Weights), dplyr::desc(Feature)) %>%
+    dplyr::filter(Weights >= threshold) %>%
+    dplyr::pull(Feature)
 
   protein_negative <- protein_1 %>%
-    arrange(desc(Weights), desc(Feature)) %>%
-    filter(Weights <= -threshold) %>%
-    pull(Feature)
+    dplyr::arrange(dplyr::desc(Weights), dplyr::desc(Feature)) %>%
+    dplyr::filter(Weights <= -threshold) %>%
+    dplyr::pull(Feature)
 
   rna_negative <- rna_1 %>%
-    arrange(desc(Weights), desc(Feature)) %>%
-    filter(Weights <= -threshold) %>%
-    pull(Feature)
+    dplyr::arrange(dplyr::desc(Weights), dplyr::desc(Feature)) %>%
+    dplyr::filter(Weights <= -threshold) %>%
+    dplyr::pull(Feature)
 
   Weights_up <- list(
     rna = unique(rna_positive),
@@ -81,10 +87,10 @@ extract_weigths <- function(model,
   )
 
   rna_1 <- rna_1 %>%
-    arrange(desc(Weights), desc(Feature))
+    dplyr::arrange(dplyr::desc(Weights), dplyr::desc(Feature))
 
   protein_1 <- protein_1 %>%
-    arrange(desc(Weights), desc(Feature))
+    dplyr::arrange(dplyr::desc(Weights), dplyr::desc(Feature))
 
   ## Check distribution
   distrib_rna <- ggplot2::ggplot(rna_1, aes(x = Weights)) +

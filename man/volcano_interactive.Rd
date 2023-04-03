@@ -22,7 +22,6 @@ Builds an interactive volcano plot using plotly
 }
 \seealso{
 Other Plotting: 
-\code{\link{circular_heatmap}()},
 \code{\link{communities_network}()},
 \code{\link{community_graph}()},
 \code{\link{getMoHeatmap}},

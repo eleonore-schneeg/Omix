@@ -31,6 +31,7 @@ bioc_pkgs<-c(
   'ensembldb',
   'EnsDb.Hsapiens.v86',
   'org.Hs.eg.db',
+  'org.Mm.eg.db',
   'EWCE',
   'slingshot',
   'WGCNA',

@@ -24,6 +24,8 @@
 #' @importFrom purrr possibly
 #' @importFrom clusterProfiler enrichGO compareCluster
 #' @importFrom enrichplot pairwise_termsim
+#' @importFrom org.Hs.eg.db org.Hs.eg.db
+#' @importFrom cli cli_alert_success
 #' @export
 
 integrative_results_supervised <- function(multiassay,
@@ -98,11 +100,10 @@ integrative_results_supervised <- function(multiassay,
 
 
   if (enrichment_method == "enrichGO") {
-    library(org.Hs.eg.db)
     pathways_detrimental <- lapply(detrimental, function(x) {
       pathways <- clusterProfiler::enrichGO(
         gene = x,
-        OrgDb = org.Hs.eg.db,
+        OrgDb = org.Hs.eg.db::org.Hs.eg.db,
         universe = background,
         keyType = "SYMBOL",
         ont = "BP",
@@ -124,7 +125,7 @@ integrative_results_supervised <- function(multiassay,
     pathways_protective <- lapply(protective, function(x) {
       pathways <- clusterProfiler::enrichGO(
         gene = x,
-        OrgDb = org.Hs.eg.db,
+        OrgDb = org.Hs.eg.db:org.Hs.eg.db,
         universe = background,
         keyType = "SYMBOL",
         ont = "BP",

@@ -27,13 +27,11 @@ Suggests:
     BiocStyle
 biocViews:
 Imports: 
-      AnnotationDbi,
       basetheme,
       basilisk,
       circlize,
       ClassDiscovery,
       cli,
-      clusterProfiler,
       ComplexHeatmap,
       corrplot,
       data.table,
@@ -42,6 +40,8 @@ Imports:
       edgeR,
       enrichplot,
       enrichR,
+      EnsDb.Hsapiens.v86,
+      EWCE,
       fgsea,
       ggplot2,
       ggpubr,
@@ -52,14 +52,13 @@ Imports:
       limma,
       lme4,
       magrittr,
-      Matrix,
       matrixStats,
       mixOmics,
       msigdbr,
       SummarizedExperiment,
       MultiAssayExperiment,
-      EnsDb.Hsapiens.v86,
       org.Hs.eg.db,
+      org.Mm.eg.db,
       plotly,
       purrr,
       proBatch,
@@ -78,8 +77,9 @@ Imports:
       visNetwork,
       WGCNA,
       DESeq2,
-      EWCE,
       MOFA2,
       BiocStyle,
-      ggsignif
+      ggsignif,
+      AnnotationDbi,
+      clusterProfiler
 VignetteBuilder: knitr

@@ -84,7 +84,6 @@ Gu Z, Eils R, Schlesner M (2016). Complex heatmaps reveal patterns and correlati
 }
 \seealso{
 Other Plotting: 
-\code{\link{circular_heatmap}()},
 \code{\link{communities_network}()},
 \code{\link{community_graph}()},
 \code{\link{interactive_network}()},

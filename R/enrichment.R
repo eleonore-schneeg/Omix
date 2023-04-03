@@ -18,11 +18,9 @@
 #'
 #' @importFrom enrichR enrichr
 #' @importFrom cli cli_alert_info cli_text
-#' @importFrom ggplot2 ggplot ggsave
-#' @importFrom cowplot theme_cowplot background_grid
-#' @importFrom stringr str_wrap
 #' @importFrom dplyr %>% mutate
 #' @importFrom purrr map map_chr discard
+#' @importFrom ggplot2 ggsave
 #'
 #' @export
 pathway_analysis_enrichr <- function(interest_gene = NULL,
@@ -54,7 +52,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 
   enrichr_res <- lapply(names(res), function(x) {
     dt <- res[[x]] %>%
-      mutate(database = x)
+      dplyr::mutate(database = x)
   })
 
   names(enrichr_res) <- names(res)
@@ -74,7 +72,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
   } else {
     enrichr_res$plot <- lapply(
       enrichr_res,
-      function(dt) .dotplot_enrichr(dt, plot_n)
+      function(dt) dotplot_enrichr(dt, plot_n)
     )
 
     project_name <- project_name
@@ -125,7 +123,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 #'
 #' @param res Internal to `pathway_analysis_enrichr()`
 #' @param min_overlap Default to 3
-#' @importFrom dplyr transmute
+#' @importFrom dplyr transmute %>%
 #'
 #' @keywords internal
 
@@ -154,7 +152,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 #' @keywords internal
 
 
-.dotplot_enrichr <- function(dt, plot_n = 20) {
+dotplot_enrichr <- function(dt, plot_n = 20) {
   dt <- na.omit(dt)
   dt <- dplyr::top_n(dt, plot_n, -FDR)
   dt$description <- stringr::str_wrap(dt$description, 40)
@@ -187,6 +185,10 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
 #' @param semantics vector of biological terms
 #'
 #' @return functional enrichement plot
+#'
+#' @import ggplot2
+#' @importFrom stringr str_wrap
+#'
 #' @keywords internal
 
 dot_plot_enrichr_semantics <- function(dt,
@@ -216,8 +218,7 @@ dot_plot_enrichr_semantics <- function(dt,
     guides(size = guide_legend(
       override.aes = list(fill = "gold", color = "gold")
     )) +
-    cowplot::theme_cowplot() +
-    cowplot::background_grid()
+    theme_bw()
 
   return(plot)
 }
@@ -235,7 +236,7 @@ dot_plot_enrichr_semantics <- function(dt,
 #'
 #' @family Enrichment analysis
 #'
-#' @importFrom dplyr mutate_at mutate select everything
+#' @importFrom dplyr mutate_at mutate select everything %>%
 #' @export
 
 enrichment_custom <- function(genes,
@@ -313,8 +314,8 @@ enrichment_custom <- function(genes,
 #'
 #' @family Enrichment analysis
 #'
-#' @importFrom EWCE bootstrap_enrichment_test ewce_plot
 #' @importFrom ggplot2 ggtitle
+#' @importFrom EWCE bootstrap_enrichment_test ewce_plot
 #' @export
 #'
 

@@ -8,7 +8,8 @@
 #'
 #' @family Helper
 #'
-#' @importFrom MultiAssayExperiment metadata sampleMap
+#' @importFrom MultiAssayExperiment metadata sampleMap experiments
+#' @importFrom cli cli_alert_success
 #' @export
 #'
 processed_rna <- function(multiassay,
@@ -53,6 +54,7 @@ processed_rna <- function(multiassay,
 #' @family Helper
 #'
 #' @importFrom MultiAssayExperiment metadata sampleMap
+#' @importFrom cli cli_alert_success
 #' @export
 
 

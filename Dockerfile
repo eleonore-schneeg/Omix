@@ -154,6 +154,7 @@ pheatmap \
 plotly \
 purrr \
 ragg \
+rlang \
 RColorBrewer \
 readr \
 remotes \

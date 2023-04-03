@@ -22,7 +22,6 @@ Creates a subnetwork graph based on detected communities
 }
 \seealso{
 Other Plotting: 
-\code{\link{circular_heatmap}()},
 \code{\link{communities_network}()},
 \code{\link{getMoHeatmap}},
 \code{\link{interactive_network}()},
