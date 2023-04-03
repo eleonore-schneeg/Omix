@@ -28,7 +28,6 @@ Suggests:
 biocViews:
 Imports: 
       basetheme,
-      basilisk,
       circlize,
       ClassDiscovery,
       cli,
@@ -36,7 +35,6 @@ Imports:
       corrplot,
       data.table,
       dplyr,
-      DT,
       edgeR,
       enrichplot,
       enrichR,
@@ -50,7 +48,6 @@ Imports:
       igraph,
       jsonlite,
       limma,
-      lme4,
       magrittr,
       matrixStats,
       mixOmics,
@@ -62,13 +59,11 @@ Imports:
       plotly,
       purrr,
       proBatch,
-      RColorBrewer,
       readr,
       reshape2,
       reticulate,
       S4Vectors,
       slingshot,
-      statmod,
       stats,
       stringr,
       tibble,
@@ -78,8 +73,6 @@ Imports:
       WGCNA,
       DESeq2,
       MOFA2,
-      BiocStyle,
-      ggsignif,
       AnnotationDbi,
       clusterProfiler
 VignetteBuilder: knitr

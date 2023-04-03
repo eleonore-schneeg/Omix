@@ -153,6 +153,7 @@ paletteer \
 pheatmap \
 plotly \
 purrr \
+psych \
 ragg \
 rlang \
 RColorBrewer \
