@@ -630,10 +630,10 @@ gene_list = sort(gene_list, decreasing = TRUE)
 gene_list = gene_list[!duplicated(names(gene_list))]
 
 
-rna_enrichment=clusterProfiler::GSEA(gene_list=gene_list,
-          pval=0.05)
-
-rna_enrichment$Plot
+# rna_enrichment=clusterProfiler::GSEA(gene_list=gene_list,
+#           pval=0.05)
+# 
+# rna_enrichment$Plot
 ```
 
 ### Protein level enrichment
@@ -645,10 +645,10 @@ gene_list = sort(gene_list, decreasing = TRUE)
 gene_list = gene_list[!duplicated(names(gene_list))]
 
 
-protein_enrichment=clusterProfiler::GSEA(gene_list=gene_list,
-          pval=0.05)
-
-protein_enrichment$Plot
+# protein_enrichment=clusterProfiler::GSEA(gene_list=gene_list,
+#           pval=0.05)
+# 
+# protein_enrichment$Plot
 ```
 
 
