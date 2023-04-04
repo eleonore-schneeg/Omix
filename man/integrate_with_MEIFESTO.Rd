@@ -9,8 +9,7 @@ integrate_with_MEIFESTO(
   num_factors = 5,
   scale_views = TRUE,
   metadata,
-  time = "pseudotime",
-  ...
+  time = "pseudotime"
 )
 }
 \arguments{
@@ -35,7 +34,6 @@ Other Multi-omic integration:
 \code{\link{integrate_with_DIABLO}()},
 \code{\link{integrate_with_MBPLS}()},
 \code{\link{integrate_with_MOFA}()},
-\code{\link{integrate_with_iCluster}()},
 \code{\link{integrate_with_sMBPLS}()},
 \code{\link{vertical_integration}()}
 }

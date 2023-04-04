@@ -13,7 +13,7 @@ https://www.ebi.ac.uk/ols/ontologies}
 
 \item{size}{Default to 3000}
 
-\item{gene}{input gene vector}
+\item{genes}{input gene vector}
 }
 \value{
 ggplot showing association scores from OpenTargets
@@ -25,7 +25,6 @@ Interface to OpenTargets database
 Other Plotting: 
 \code{\link{communities_network}()},
 \code{\link{community_graph}()},
-\code{\link{getMoHeatmap}},
 \code{\link{interactive_network}()},
 \code{\link{multiomics_network_cluster}()},
 \code{\link{multiomics_network_matrix}()},

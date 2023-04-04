@@ -37,7 +37,6 @@ multi-omics clustering
 Other Plotting: 
 \code{\link{communities_network}()},
 \code{\link{community_graph}()},
-\code{\link{getMoHeatmap}},
 \code{\link{interactive_network}()},
 \code{\link{multiomics_network_matrix}()},
 \code{\link{multiomics_network}()},

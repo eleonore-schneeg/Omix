@@ -17,6 +17,11 @@ pathway_analysis_enrichr(
 )
 }
 \arguments{
+\item{interest_gene}{vector containing genes of interest
+Column names should be gene, logFC, pval and padj respectively.}
+
+\item{project_name}{The name of the project to save.}
+
 \item{enrichment_database}{Name of the database for enrichment. User can
 specify one or more database names from \code{\link[enrichR:listEnrichrDbs]{enrichR::listEnrichrDbs()}}.}
 
@@ -25,8 +30,9 @@ analysis will be saved otherwise a R list will be returned. Default FALSE}
 
 \item{output_dir}{Path for the output directory. Default is current dir.}
 
-\item{interest_genes}{vector containing genes of interest
-Column names should be gene, logFC, pval and padj respectively.}
+\item{min_overlap}{minimum overlap between genes and genesets to keep.}
+
+\item{plot_n}{number of genesets to plot}
 }
 \value{
 enrichment_result a list of data.frames containing enrichment output

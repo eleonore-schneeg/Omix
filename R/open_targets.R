@@ -4,7 +4,7 @@
 #' (Alzheimer's Disease) Different disease ontologies can be found on
 #' https://www.ebi.ac.uk/ols/ontologies
 #' @param size Default to 3000
-#' @param gene input gene vector
+#' @param genes input gene vector
 #'
 #' @return ggplot showing association scores from OpenTargets
 #'

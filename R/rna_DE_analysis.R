@@ -5,8 +5,9 @@
 #' @param dependent Dependent variable in the differential expression analysis
 #' @param levels Levels for dependent variable. Control group should be put
 #' first.
-#' @param fiter_protein_coding Logical whether to filter out non protein coding
+#' @param filter_protein_coding Logical whether to filter out non protein coding
 #' genes
+#' @param log2FoldChange log2 fold-change cutoff.
 #'
 #' @return Adds differential expression results to Multiassay object generated
 #' by Omix
@@ -22,8 +23,7 @@ rna_DE_analysis <- function(multiassay,
                             dependent = "diagnosis",
                             levels = NULL,
                             filter_protein_coding = TRUE,
-                            log2FoldChange = 0.5,
-                            ...) {
+                            log2FoldChange = 0.5) {
   if (("dds" %in% names(multiassay@metadata)) == FALSE) {
     stop(cli::cli_alert_danger(
       paste("dds object not found in metadata, please run",

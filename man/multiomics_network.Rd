@@ -25,7 +25,6 @@ Get multiomics networks from multiassay object
 Other Plotting: 
 \code{\link{communities_network}()},
 \code{\link{community_graph}()},
-\code{\link{getMoHeatmap}},
 \code{\link{interactive_network}()},
 \code{\link{multiomics_network_cluster}()},
 \code{\link{multiomics_network_matrix}()},

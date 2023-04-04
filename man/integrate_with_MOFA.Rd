@@ -8,8 +8,7 @@ integrate_with_MOFA(
   multimodal_omics,
   num_factors = 5,
   scale_views = TRUE,
-  metadata,
-  ...
+  metadata
 )
 }
 \arguments{
@@ -19,7 +18,7 @@ integrate_with_MOFA(
 
 \item{scale_views}{Logical whether to scale omics layers}
 
-\item{metadata}{}
+\item{metadata}{sample metadata}
 }
 \value{
 a list object with \code{multimodal_object} and \code{model} slots
@@ -32,7 +31,6 @@ Other Multi-omic integration:
 \code{\link{integrate_with_DIABLO}()},
 \code{\link{integrate_with_MBPLS}()},
 \code{\link{integrate_with_MEIFESTO}()},
-\code{\link{integrate_with_iCluster}()},
 \code{\link{integrate_with_sMBPLS}()},
 \code{\link{vertical_integration}()}
 }

@@ -22,7 +22,6 @@ Detects communities in multi-omics network
 \seealso{
 Other Plotting: 
 \code{\link{community_graph}()},
-\code{\link{getMoHeatmap}},
 \code{\link{interactive_network}()},
 \code{\link{multiomics_network_cluster}()},
 \code{\link{multiomics_network_matrix}()},

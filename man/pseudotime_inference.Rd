@@ -9,8 +9,7 @@ pseudotime_inference(
   clusters,
   time_factor = 8,
   second_factor = 1,
-  lineage = "Lineage1",
-  ...
+  lineage = "Lineage1"
 )
 }
 \arguments{
@@ -23,6 +22,8 @@ clustering method}
 
 \item{second_factor}{MOFA factor used as other axis of variation in
 the embedding}
+
+\item{lineage}{lineage}
 }
 \value{
 A list object with \code{model} and \code{plot} slots

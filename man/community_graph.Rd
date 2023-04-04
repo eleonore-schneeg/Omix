@@ -23,7 +23,6 @@ Creates a subnetwork graph based on detected communities
 \seealso{
 Other Plotting: 
 \code{\link{communities_network}()},
-\code{\link{getMoHeatmap}},
 \code{\link{interactive_network}()},
 \code{\link{multiomics_network_cluster}()},
 \code{\link{multiomics_network_matrix}()},

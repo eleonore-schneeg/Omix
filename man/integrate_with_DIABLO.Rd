@@ -10,8 +10,7 @@ integrate_with_DIABLO(
   ncomp,
   design,
   range = list(mRNA = seq(5, 100, by = 10), proteins = seq(5, 100, by = 10)),
-  list.keepX,
-  ...
+  list.keepX
 )
 }
 \arguments{
@@ -26,7 +25,9 @@ integration are \code{cor}(strength of correlation between PC1 of omics layers)
 or \code{full} (The strength of all relationships between dataframes is
 maximised (= 1) – a “fully connected” design)}
 
-\item{range}{}
+\item{range}{a named list specifying the number of rna and protein.}
+
+\item{list.keepX}{list to keep rows}
 }
 \value{
 a list object with \code{multimodal_object} and \code{model} slots
@@ -39,7 +40,6 @@ Other Multi-omic integration:
 \code{\link{integrate_with_MBPLS}()},
 \code{\link{integrate_with_MEIFESTO}()},
 \code{\link{integrate_with_MOFA}()},
-\code{\link{integrate_with_iCluster}()},
 \code{\link{integrate_with_sMBPLS}()},
 \code{\link{vertical_integration}()}
 }

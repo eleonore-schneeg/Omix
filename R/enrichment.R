@@ -3,13 +3,16 @@
 #'
 #' Performs impacted pathway analysis with a list of genes.
 #'
-#' @param interest_genes vector containing genes of interest
+#' @param interest_gene vector containing genes of interest
 #' Column names should be gene, logFC, pval and padj respectively.
+#' @param project_name The name of the project to save.
 #' @param enrichment_database Name of the database for enrichment. User can
 #' specify one or more database names from [enrichR::listEnrichrDbs()].
 #' @param is_output If TRUE a folder will be created and results of enrichment
 #' analysis will be saved otherwise a R list will be returned. Default FALSE
 #' @param output_dir Path for the output directory. Default is current dir.
+#' @param min_overlap minimum overlap between genes and genesets to keep.
+#' @param plot_n number of genesets to plot
 #'
 #' @return enrichment_result a list of data.frames containing enrichment output
 #' and a list of plots of top 10 significant genesets.

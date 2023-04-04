@@ -9,8 +9,7 @@ rna_DE_analysis(
   dependent = "diagnosis",
   levels = NULL,
   filter_protein_coding = TRUE,
-  log2FoldChange = 0.5,
-  ...
+  log2FoldChange = 0.5
 )
 }
 \arguments{
@@ -21,8 +20,10 @@ rna_DE_analysis(
 \item{levels}{Levels for dependent variable. Control group should be put
 first.}
 
-\item{fiter_protein_coding}{Logical whether to filter out non protein coding
+\item{filter_protein_coding}{Logical whether to filter out non protein coding
 genes}
+
+\item{log2FoldChange}{log2 fold-change cutoff.}
 }
 \value{
 Adds differential expression results to Multiassay object generated

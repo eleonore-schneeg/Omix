@@ -13,6 +13,8 @@ clustering_DE_analysis(
 )
 }
 \arguments{
+\item{normalized_data}{Normalized rna/protein data}
+
 \item{colData}{The coldadata variable}
 
 \item{dependent}{The dependent variable}
@@ -20,15 +22,12 @@ clustering_DE_analysis(
 \item{levels}{Levels to compare}
 
 \item{log2FoldChange}{logFC cutoff}
-
-\item{covariates}{The covariates}
 }
 \description{
 Performs differential expression between clusters
 }
 \seealso{
 Other Multi-omic integration downstream analysis: 
-\code{\link{integrative_results_clustering}()},
 \code{\link{integrative_results_supervised}()},
 \code{\link{integrative_results_unsupervised}()},
 \code{\link{multiomics_modules}()}

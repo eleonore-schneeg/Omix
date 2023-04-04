@@ -6,6 +6,7 @@
 #' @param time_factor MOFA factor corresponding to time
 #' @param second_factor MOFA factor used as other axis of variation in
 #' the embedding
+#' @param lineage lineage
 #'
 #' @return A list object with `model` and `plot` slots
 #'
@@ -23,8 +24,7 @@ pseudotime_inference <- function(model,
                                  clusters,
                                  time_factor = 8,
                                  second_factor = 1,
-                                 lineage = "Lineage1",
-                                 ...) {
+                                 lineage = "Lineage1") {
   gg <- MOFA2::plot_factors(model,
     factors = c(time_factor, second_factor),
     scale = FALSE
@@ -35,7 +35,7 @@ pseudotime_inference <- function(model,
   rownames(embeddings) <- gg$data[, c("sample")]
   embeddings <- embeddings[names(clusters$cluster), ]
 
-  sds <- slingshot::slingshot(embeddings, clusters$cluster, ...)
+  sds <- slingshot::slingshot(embeddings, clusters$cluster)
   df <- slingshot::as.SlingshotDataSet(sds)
 
   pseudotime <- as.data.frame(sds@assays@data@listData[["pseudotime"]])

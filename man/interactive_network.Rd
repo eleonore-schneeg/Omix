@@ -24,7 +24,6 @@ Get interactive network from igraph object
 Other Plotting: 
 \code{\link{communities_network}()},
 \code{\link{community_graph}()},
-\code{\link{getMoHeatmap}},
 \code{\link{multiomics_network_cluster}()},
 \code{\link{multiomics_network_matrix}()},
 \code{\link{multiomics_network}()},

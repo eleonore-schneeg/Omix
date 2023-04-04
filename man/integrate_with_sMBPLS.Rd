@@ -9,8 +9,7 @@ integrate_with_sMBPLS(
   Y,
   design,
   ncomp,
-  list.keepX = list(mRNA = c(50), proteins = c(50)),
-  ...
+  list.keepX = list(mRNA = c(50), proteins = c(50))
 )
 }
 \arguments{
@@ -39,7 +38,6 @@ Other Multi-omic integration:
 \code{\link{integrate_with_MBPLS}()},
 \code{\link{integrate_with_MEIFESTO}()},
 \code{\link{integrate_with_MOFA}()},
-\code{\link{integrate_with_iCluster}()},
 \code{\link{vertical_integration}()}
 }
 \concept{Multi-omic integration}

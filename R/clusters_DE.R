@@ -1,8 +1,8 @@
 #' Performs differential expression between clusters
 #'
+#' @param normalized_data Normalized rna/protein data
 #' @param colData The coldadata variable
 #' @param dependent The dependent variable
-#' @param covariates The covariates
 #' @param levels Levels to compare
 #' @param log2FoldChange logFC cutoff
 #'
