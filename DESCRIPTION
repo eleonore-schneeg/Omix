@@ -35,6 +35,7 @@ Imports:
       corrplot,
       data.table,
       dplyr,
+      DelayedMatrixStats,
       edgeR,
       enrichplot,
       enrichR,

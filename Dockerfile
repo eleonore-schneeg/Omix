@@ -171,7 +171,6 @@ statmod \
 systemfonts \
 viridis \
 visNetwork \
-psych \
 && rm -rf /tmp/downloaded_packages
 
 ## Install Bioconductor packages
@@ -181,7 +180,7 @@ COPY ./misc/requirements-bioc.R .
 RUN Rscript -e 'requireNamespace("BiocManager"); BiocManager::install(ask=F);' \
 && Rscript requirements-bioc.R \
 && rm -rf /tmp/downloaded_packages \
-&& install2.r -e ClassDiscovery 
+&& install2.r -e ClassDiscovery
 
 # RUN Rscript -e  'reticulate::py_config()'
 
