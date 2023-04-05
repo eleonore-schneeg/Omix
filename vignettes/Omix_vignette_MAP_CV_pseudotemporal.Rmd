@@ -1,0 +1,810 @@
+---
+title: "Omix - Pseudotemporal multi-omics integration"
+author: "This vignette was created by Eléonore Schneegans and Nurun Fancy"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    self_contained: yes
+    theme: "flatly"
+    toc: true
+    toc_float: true
+    fig_caption: true
+    toc_depth: 3
+    code_folding: show
+    df_print: paged
+vignette: >
+  %\VignetteIndexEntry{Omix - Pseudotemporal multi-omics integration}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+editor_options: 
+  markdown: 
+  wrap: 72
+---
+
+```{r style, echo=FALSE, results='asis', message=TRUE, warning=FALSE}
+BiocStyle::markdown()
+knitr::opts_chunk$set(tidy = FALSE,
+                      message = TRUE,
+                      warning = FALSE)
+options(knitr.duplicate.label = "allow")
+```
+
+# Overview
+
+The goal of Omix is to provide tools in R to build a complete analysis workflow 
+for integrative analysis of data generated from multi-omics platform.
+
+-   Generate a multi-omics object using `MultiAssayExperiment`.
+
+-   Quality control of single-omics data.
+
+-   Formatting, normalisation, denoising of single-omics data.
+
+-   Separate single-omics analyses.
+
+-   Integration of multi-omics data for combined analysis. 
+
+-   Publication quality plots and interactive analysis reports based of shinyApp.
+
+Currently, Omix supports the integration of bulk transcriptomics and bulk proteomics.
+
+## Running *Omix*
+
+The `Omix` pipeline requires the following input:
+
+-   `rawdata_rna`: A data-frame containing raw RNA count with rownames as gene and colnames as samples.
+
+-   `rawdata_protein`:  A data-frame containing protein abundance with rownames as proteins and colnames as samples.
+
+-   `map_rna`: A data-frame of two columns named `primary` and `colname` where primary should contain unique sample name with a link to sample metadata and colname is the column names of the `rawdata_rna` data-frame.
+
+-   `map_protein`: A data-frame of two columns named `primary` and `colname` where primary should contain unique sample name with a link to sample metadata and colname is the column names of the `rawdata_protein` data-frame. 
+
+-   `metadata_rna`: A data-frame containing `rna` assay specific metadata where rownames are same as the colnames of `rawdata_rna` data.frame.
+
+-   `metadata_protein`: A data-frame containing `protein` assay specific metadata where rownames are same as the colnames of `rawdata_protein` data.frame.
+
+-   `individual_metadata`: A data-frame containing individual level metadata for both omics assays.
+
+
+Call required packages for vignette:
+
+```{r}
+library(Omix)
+library(purrr)
+library(ggplot2)
+```
+
+First we must load the data from Omix for the vignette:
+
+```{r}
+outputDir <- tempdir()
+rawdata_rna_fp <- file.path(outputDir, "raw_counts_MTG_SSC_CV.rds")
+rawdata_protein_fp <- file.path(outputDir, "raw_proteomics_MTG_SSC_CV.rds")
+map_rna_fp <- file.path(outputDir, "map_RNA_MTG_SSC_CV.rds")
+map_prot_fp <- file.path(outputDir, "map_prot_MTG_SSC_CV.rds")
+metadata_rna_fp <- file.path(outputDir, "metadata_rna_MTG_SSC_CV.rds")
+metadata_prot_fp <-  file.path(outputDir, "metadata_prot_MTG_SSC_CV.rds")
+individual_metadata_fp <-file.path(outputDir, "metadata_map_MTG_SSC_CV_new.rds")
+ctd_fp <-file.path(outputDir, "ctd.rds")
+ensembl_fp  <-file.path(outputDir, "ensembl.rds")
+clusters_fp  <-file.path(outputDir, "clusters.rds")
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/raw_counts_MTG_SSC_CV.rds",destfile=rawdata_rna_fp,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/raw_proteomics_MTG_SSC_CV.rds",destfile=rawdata_protein_fp,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/map_RNA_MTG_SSC_CV.rds",destfile=map_rna_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/map_prot_MTG_SSC_CV.rds",destfile=map_prot_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/metadata_rna_MTG_SSC_CV.rds",destfile=metadata_rna_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/metadata_prot_MTG_SSC_CV.rds",destfile=metadata_prot_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/metadata_map_MTG_SSC_CV_new.rds",destfile=individual_metadata_fp ,headers = c(Authorization = paste("token", "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")))
+
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/clusters.rds",destfile=clusters_fp ,headers = c(Authorization = paste("token", "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")))
+
+
+
+rawdata_rna <- as.data.frame(readRDS(paste0(outputDir,'/raw_counts_MTG_SSC_CV.rds')))
+rawdata_protein <- as.data.frame(readRDS(paste0(outputDir,'/raw_proteomics_MTG_SSC_CV.rds')))
+map_rna <- as.data.frame(readRDS(paste0(outputDir,'/map_RNA_MTG_SSC_CV.rds')))
+map_prot <- as.data.frame(readRDS(paste0(outputDir,'/map_prot_MTG_SSC_CV.rds')))
+metadata_rna<- as.data.frame(readRDS(paste0(outputDir,'/metadata_rna_MTG_SSC_CV.rds')))
+metadata_prot <-  as.data.frame(readRDS(paste0(outputDir,'/metadata_prot_MTG_SSC_CV.rds')))
+individual_metadata <- as.data.frame(readRDS(paste0(outputDir,'/metadata_map_MTG_SSC_CV_new.rds')))
+ctd <-  readRDS(paste0(outputDir,'/ctd.rds'))
+ensembl <-read.delim(file=paste0(outputDir,'/ensembl.rds'), sep = '\t', header = TRUE)
+rna_qc_data_matrix <- NULL
+```
+
+Sanity check 
+
+```{r}
+
+all(rownames(metadata_rna) == colnames(rawdata_rna))
+all(rownames(metadata_prot) == colnames(rawdata_protein))
+
+```
+
+
+### Raw rna counts
+
+`rawdata_rna` is a data-frame of raw counts, with features as rows and samples as columns
+
+```{r}
+print(rawdata_rna[1:5,1:5])
+```
+
+
+### Raw protein abundance
+
+`rawdata_protein` is a data-frame of raw protein abundances, with features as rows and samples as columns
+
+```{r}
+print(rawdata_protein[10:15,10:15])
+```
+
+### Maps
+
+Maps are data frame containing two columns: `primary` and `colname`. 
+The `primary` column should be the individual ID the individual metadata, and the 
+`colname` the matched sample names from the raw matrices columns. If sample and
+individual ids are the same, maps aren't needed (primary and colnames are the same).
+
+```{r}
+print(head(map_prot))
+print(head(map_rna))
+```
+
+### Technical metadata
+
+Technical metadata are data-frames contain the column `colname` that should match
+the sample names in the raw matrices, and any additional columns related to technical artefacts like batches 
+
+```{r}
+print(head(metadata_rna))
+print(head(metadata_prot))
+```
+
+
+### Individual metadata
+
+`individual_metadata` should contain individual level metadata, where one column matches the `primary` column in maps.
+
+```{r}
+print(head(individual_metadata))
+```
+
+### Optional inputs
+
+Optional inputs contain additional data frame used for QC visualisation purposes 
+
+```{r}
+print(head(rna_qc_data_matrix))
+```
+
+
+#  Step one - Generate a MultiAssayExperiment object
+
+To run Omix, we first need to generate a multi-omics object
+The package currently supports transcriptomics and proteomics bulk data only.
+
+
+```{r}
+
+individual_metadata$diagnosis <- factor(individual_metadata$diagnosis,
+                                        levels = c("Control", "AD"))
+individual_metadata$sex <- factor(individual_metadata$sex)
+
+multiomics_object=generate_multiassay(rawdata_rna =rawdata_rna,
+                                   rawdata_protein = rawdata_protein,
+                                   individual_to_sample=FALSE,
+                                   map_rna = map_rna,
+                                   map_protein = map_prot,
+                                   metadata_rna = metadata_rna,
+                                   metadata_protein = metadata_prot,
+                                   individual_metadata = individual_metadata,
+                                   map_by_column = 'sample_id',
+                                   rna_qc_data=FALSE,
+                                   rna_qc_data_matrix=NULL,
+                                   organism='human')
+```
+
+
+The MultiAssayExperiment object was succesfully created. 
+The following steps will process and perform QC on each omic layers of the 
+`multiomics_object` object.
+
+# Step two - Process transcriptomics data
+
+```{r}
+multiomics_object=process_rna(multiassay=multiomics_object,
+            transformation='vst',
+            protein_coding=TRUE,
+            min_count = 10,
+            min_sample = 0.5,
+            dependent =  "diagnosis",
+            levels = c("Control","AD"),
+            covariates=c('age','sex','PMD'),
+            filter=TRUE,
+            batch_correction=TRUE,
+            batch=NULL,
+            remove_sample_outliers= FALSE)
+```
+
+# Step three - Process proteomics data
+
+```{r}
+multiomics_object=process_protein(
+    multiassay=multiomics_object,
+    filter=TRUE,
+    min_sample = 0.5,
+    dependent =  "diagnosis",
+    levels = c("Control","AD"),
+    imputation = 'minimum_value',
+    remove_feature_outliers= FALSE,
+    batch_correction= FALSE,
+    batch="batch",
+    correction_method="median_centering",
+    remove_sample_outliers=FALSE,
+    denoise=TRUE,
+    covariates=c('PMD','sex','age'))
+```
+
+# Step four - Vertical integration
+
+**Omix** supports a range of vertical integration models:
+
+-   Possible integration methods are `MOFA`,`DIABLO`,`sMBPLS`,`iCluster`,`MEIFESTO`
+
+-   The choice of the integration models depends on the research use case of interest.
+
+-   Here we display the use of **Omix** on a popular integration method, MOFA or Multi-Omics Factor analysis (Argelaguet et al. 2018).
+
+-   The `Meifesto`model is an extension of `MOFA`to enable time as a covariate.
+
+> In this vignette, we proceed with a pseudotemporal multi-omics integration of 40 brain Alzheimer's disease (AD) and Control samples coming from two brain regions
+
+> -   The somatosensory cortext (SSC)
+
+> -   The middle frontal gyrus (MTG)
+
+ The MTG is known to be affected earlier during AD progression, while SSC at later stages. Using these two regions as pseudotemporal proxi in the integrative process, we are able to gain a deeper understanding of biological mechanisms that occur during AD progression.
+
+## Pseudotemporal multi-omics integration using MOFA (MEIFESTO)
+
+
+We need to create a new pseudo-temporal variable based on brain regions, 1 for MTG as it comes earlier in the disease trajectory, and 2 for SSC.
+
+```{r , message = FALSE}
+MultiAssayExperiment::colData(multiomics_object)$pseudotime=
+  ifelse(MultiAssayExperiment::colData(multiomics_object)$brain_region=='MTG',1,2)
+```
+
+
+```{r}
+multiomics_object=vertical_integration(multiassay=multiomics_object,
+                                slots = c(
+                                   "rna_processed",
+                                   "protein_processed"
+                                 ),
+                                integration='MEIFESTO',
+                                ID_type = "gene_name",
+                                dependent='diagnosis',
+                                intersect_genes = FALSE,
+                                num_factors = 15,
+                                scale_views = FALSE,
+                                time="pseudotime",
+                                most_variable_feature=TRUE)
+```
+
+The integration process is successful and all integration related object are stored in the `integration` slot of the multi-omics object.
+
+```{r}
+print(multiomics_object@metadata$integration$MEIFESTO)
+```
+
+
+### Optional: load a pretrained model 
+
+```{r}
+#model=readRDS('assets/model2.rds')
+#multiomics_object@metadata$integration$MEIFESTO=model
+```
+
+# Step five - Post integration downstream analyses 
+
+**Omix** provides a range of built-in downstream analyses functions and visualisations.
+All downstream analyses will be performed on the integrated object stored in the `integrated` slot.
+
+```{r, message=FALSE}
+integrated_object=multiomics_object@metadata$integration$MEIFESTO
+```
+
+
+## Factor explorations 
+
+### Variance explained 
+
+```{r}
+MOFA2::plot_variance_explained(integrated_object, max_r2=10)
+```
+
+### Correlation of factors with covariates 
+
+```{r}
+
+suppressWarnings({MOFA2::correlate_factors_with_covariates(integrated_object, 
+                                  covariates = c("AD","Braak",'pseudotime','MTG',
+                                                 'SSC','amyloid','pTau','PHF1'), 
+                                  plot="r")
+
+})
+suppressWarnings({MOFA2::correlate_factors_with_covariates(integrated_object, 
+                                  covariates = c("AD","Braak",'pseudotime','MTG',
+                                                 'SSC','amyloid','pTau','PHF1'), 
+                                  plot="log_pval")
+})
+
+```
+
+Factors 6 and 1 will be chosen for downstream analysis:
+
+-   Factor 6: Is strongly correlated with neuropathological variables including PHF1 and amyloid.
+
+-   Factor 8: Is strongly correlated with pseudotemporal covariates, MTG and SSC
+
+-   Both share some level of variance explained by the transcriptomics and proteomics layers
+
+> Consequentially, If we project samples on these two axis of variation, we can infer on the pseudotemporal trajectory of neuropathology at the RNA and protein level.
+
+## Integrated latent space
+
+### Chosen integrated axes of variation
+
+```{r}
+
+MOFA2::plot_factors(integrated_object,
+             factors=c(8,6),
+             color_by='PHF1', shape_by = 'brain_region', scale = T)+
+              xlab('Factor 6 ~ Pseudotime' )+
+              ylab('Factor 1 ~ Neuropathology' )  
+
+```
+
+###  Pseudotime inference with Slingshot 
+
+The goal of `slingshot` (Street et al. 2017), is to use clusters of cells to uncover global structure and convert this structure into smooth lineages represented by one-dimensional variables, called “pseudotime.”
+
+> Here, we extend the use of `slingshot` to infer on individual level pseudotime to infer on Alzheimer's disease trajectory.
+
+`slingshot` takes a matrix of embeddings in reduced dimension as input, which here are Factors 8 and 1 from the `MEIFESTO` multi-omics integration.
+We can optionally specify the cluster to start or end the trajectory based on biological knowledge. Here, the starting cluster should be `3` as it coincides with lowest neuropathology levels and most "recent" affected region in terms of AD trajectory. 
+
+
+```{r}
+set.seed(42)
+#clusters=MOFA2::cluster_samples(integrated_object, 
+#                         k=3,
+#                         factors = c(8,6))
+
+#load clusters for reproducibility
+clusters <- readRDS(paste0(outputDir,'/clusters.rds'))
+
+MOFA2::plot_factors(integrated_object,
+             factors=c(8,6),
+             color_by=clusters$cluster, scale = F)
+
+```
+
+```{r}
+pseudotime=pseudotime_inference(integrated_object,
+                                 clusters,
+                                 time_factor=8,
+                                 second_factor=6,
+                                 lineage = 'Lineage1')
+
+pseudotime$plot
+
+```
+
+#### Update the `integrated_object` with the pseudotime
+ 
+```{r}
+multiomics_object@metadata$integration$MEIFESTO=pseudotime$model
+integrated_object=multiomics_object@metadata$integration$MEIFESTO
+MOFA2::samples_metadata(integrated_object)$pseudotime
+```
+
+## Extract features that are driving Factor 6 based on feature weights 
+
+Weights vary from -1 to +1, and provide a score for how strong each feature relates to each factor, hence allowing a biological interpretation of the latent factors. 
+Features with no association with the factor have values close to zero, while genes with strong association with the factor have large absolute values. 
+
+The sign of the weight indicates the direction of the effect: 
+
+-   A positive weight indicates that the feature has higher levels in the samples with positive factor values.
+
+-   A negative weight indicate higher levels in samples with negative factor values.
+
+
+The `extract_weigths`function enable to extract the weights on the desired factor at a defined absolute threshold, and return an object with positive and negative weights above and below this threshold respectively.
+It also returns QC plots
+
+-   A distribution of the feature weights for each omic layer at the designated factor
+
+-   The relationship between the feature/`sense_check_variable` correlation and weights. High weights should coincide with stronger correlation if the `sense_check_variable` is an important driver of variation in the designated factor.
+
+
+```{r}
+weights=extract_weigths(integrated_object,
+                           factor=6,
+                           threshold=0.3,
+                           sense_check_variable='PHF1')
+```
+
+### Weights distribution in Factor 6
+
+```{r}
+weights$distribution_plot$rna  
+weights$distribution_plot$protein
+
+```
+
+### Correlation to PHF1 and weights in Factor 6
+
+```{r}
+weights$weights_cor_plot$rna
+weights$weights_cor_plot$protein
+```
+
+## Negative weights in factor 6: Up-regulated in later stage AD
+
+A negative weight indicates that the feature has higher levels in the samples with negative factor values, which in this analysis coincides with 
+later Braak stages.
+
+```{r}
+MOFA2::plot_factor(integrated_object, 
+            factors = 6, 
+            color_by = "Braak",
+            add_violin = TRUE,
+            dodge = TRUE
+)
+```
+
+### Selected features based on defined threshold
+
+
+-   `r `length(weights$weights$ranked_weights_negative$rna)` RNAs have weights below -0.3 in factor 6
+
+-   `r length(weights$weights$ranked_weights_negative$protein)` proteins have weights below -0.3 in factor 6
+
+Some driving features may overlap between transcriptomics and proteomics
+
+```{r}
+intersect(weights$weights$ranked_weights_positive$rna,weights$weights$ranked_weights_positive$protein)
+
+```
+
+-   `r length(intersect(weights$weights$ranked_weights_positive$rna,weights$weights$ranked_weights_positive$protein))` features overlap between omic layers
+
+
+## Multi-omics network 
+
+
+-   Here we choose a moderate correlation threshold to draw edges between omic features (0.4)
+
+-   The same analysis can be repeated with an increased correlation threshold, which will yield more modules of strongly co-expressed features.
+
+```{r}
+
+Weights_down_n=multiomics_network(multiassay=multiomics_object,
+                           list=weights$weights$ranked_weights_negative,
+                           correlation_threshold =0.4)
+
+```
+
+### Community detection within multi-omic network
+
+
+The next step of the analysis is to find densily co-expressed communities of proteins and RNAs within the multi-omics network.
+ 
+This function tries to find densely connected subgraphs in a graph by calculating the leading non-negative eigenvector of the modularity matrix of the graph.
+
+```{r}
+communities <- communities_network(igraph=Weights_down_n$graph,
+                                    community_detection='leading_eigen')
+
+```
+```{r}
+df <- purrr::map_dfr(
+    .x = communities$communities,
+    .f = ~ tibble::enframe(
+      x = .x,
+      name = NULL,
+      value = "feature"
+    ),
+    .id = "community"
+  )
+
+DT::datatable(
+    df,
+    rownames = FALSE,
+    extensions = 'Buttons',
+    options = list(
+        dom = 'Blfrtip',
+         buttons = list('colvis', list(extend = 'copy', exportOptions = list(columns=':visible')),
+                                            list(extend = 'csv', exportOptions = list(columns=':visible')),
+                                            list(extend = 'excel', exportOptions = list(columns=':visible')))))
+```
+
+
+-    `r length(communities$communities)` communities are detected in the multi-omics network.
+-    Most communities are omic dependent, since generally there is more intra omic correlation than inter omic correlation
+
+
+
+
+### Community detection within multi-omic network
+
+
+We can look at each communities:
+
+-   Community 1 is a mix of proteins and RNAs
+-   Community 2 is a RNA only community
+
+
+#### Community 1 
+
+```{r}
+
+community_1=community_graph(igraph=Weights_down_n$graph,
+                            community_object=communities$community_object,
+                            community=1)
+interactive_network(igraph=community_1$graph,communities=FALSE)
+```
+
+#### Community 2
+
+```{r}
+
+community_2=community_graph(igraph=Weights_down_n$graph,
+                            community_object=communities$community_object,
+                            community=2)
+interactive_network(igraph=community_2$graph,communities=FALSE)
+```
+
+#### Community hubs 
+
+
+-   Features are more or less connected in the network, represented by their hub score: 
+
+```{r}
+print(sort(community_2$hubs, decreasing = TRUE))
+```
+
+
+- Top gene in module 2 is `r names(sort(community_2$hubs, decreasing = TRUE)[1])`
+- TREM2 is present here 
+- From prior knowledge, many of the genes in module 2 are related to microglial activation
+
+
+## Cell type enrichment of modules
+
+Here we proceed with a `EWCE` analysis to check if modules are enriched in specific cell types.
+
+```{r, message=FALSE}
+cell_type <- cell_type_enrichment(
+    multiassay =multiomics_object,
+    communities = lapply(communities$communities,function(x){sub("\\_.*", "",x )})
+  )
+
+cell_type$plots
+```
+
+- We find one neuronal, one microglial and two undefined glial enriched modules.
+
+## Pathway enrichment analysis
+
+- Gene set enrichment analysis is a method to infer biological pathway activity from gene expression data.
+- Here we use “pre-ranked GSEA” which takes as input a gene list sorted by their weight in the Factor of interest post integration, here factor 6.
+- Down-regulated pathways are up-regulated in samples with negative factor values, here late Braak stages samples
+- Up-regulated pathways are strong in samples with positive factor values, here control and early braak stages 
+
+### RNA level enrichment
+
+```{r}
+gene_list = weights$weights_df$rna$Weights
+names(gene_list) =  weights$weights_df$rna$Feature
+gene_list = sort(gene_list, decreasing = TRUE)
+gene_list = gene_list[!duplicated(names(gene_list))]
+
+
+# rna_enrichment=clusterProfiler::GSEA(gene_list=gene_list,
+#           pval=0.05)
+# 
+# rna_enrichment$Plot
+```
+
+### Protein level enrichment
+
+```{r}
+gene_list = weights$weights_df$protein$Weights
+names(gene_list) =  weights$weights_df$protein$Feature
+gene_list = sort(gene_list, decreasing = TRUE)
+gene_list = gene_list[!duplicated(names(gene_list))]
+
+
+# protein_enrichment=clusterProfiler::GSEA(gene_list=gene_list,
+#           pval=0.05)
+# 
+# protein_enrichment$Plot
+```
+
+
+## Modules correlation to neuropathology 
+
+
+`multiomics_modules` compute the module eigen value (PC1 of scaled transcriptomics/proteomics expression) and correlates it to chosen covariates
+
+```{r, message= FALSE, warning=FALSE}
+modules=multiomics_modules(multiassay=multiomics_object,
+                              metadata=MOFA2::samples_metadata(integrated_object),
+                              covariates=c('pseudotime','PHF1','amyloid','pTau'),
+                              communities=communities$communities)
+```
+
+## Pseudotime ordering of multi-omics modules 
+
+- Here we related each module eigen value to the pseudotime inferred from MOFA integration emmbeddigns (Factors 6/8)
+
+```{r, message= FALSE}
+
+pseudotime_ordering_modules=pseudotime_ordering_modules(metadata=modules$metadata_modules,
+                                       modules=colnames(modules$modules_eigen_value),
+                                       variable='PHF1',
+                                       pseudotime_var='pseudotime')
+
+pseudotime_ordering_modules
+```
+
+### Pseudotime vs Braak
+
+> We find a stronge correlation between inferred pseudotime and PHF1, indicating that the pseudotemporal multiomics integration provides an accurate assessment of AD progression, encompassing all neuropathological measures 
+
+#### PHF1
+```{r, message= FALSE}
+modules$metadata_modules$Braak=factor(modules$metadata_modules$Braak, levels = c("0","1","2","3","4","5","6"))
+modules$metadata_modules$Braak_num=as.numeric(modules$metadata_modules$Braak)
+gg=ggpubr::ggscatter(modules$metadata_modules, y = "PHF1", x = "Braak_num", palette = "jco",
+                     add = "reg.line", conf.int = TRUE,  label.x = 4,  add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+                     cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
+                     cor.coeff.args = list(method = "pearson", label.sep = "\n"))
+gb=ggpubr::ggscatter(modules$metadata_modules, y = "PHF1", x = "pseudotime", palette = "jco",
+                     add = "reg.line", conf.int = TRUE,   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+                     cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
+                     cor.coeff.args = list(method = "pearson", label.x = 4, label.sep = "\n"))
+plot(gg)
+plot(gb)
+```
+
+#### Amyloid 
+
+```{r, message= FALSE}
+modules$metadata_modules$Braak=factor(modules$metadata_modules$Braak, 
+                                      levels = c("0","1","2","3","4","5","6"))
+modules$metadata_modules$Braak_num=as.numeric(modules$metadata_modules$Braak)
+gg=ggpubr::ggscatter(modules$metadata_modules, y = "amyloid", x = "Braak_num", palette = "jco",
+                     add = "reg.line", conf.int = TRUE,  label.x = 4,  add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+                     cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
+                     cor.coeff.args = list(method = "pearson", label.sep = "\n"))
+gb=ggpubr::ggscatter(modules$metadata_modules, y = "amyloid", x = "pseudotime", palette = "jco",
+                     add = "reg.line", conf.int = TRUE,   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+                     cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
+                     cor.coeff.args = list(method = "pearson", label.x = 4, label.sep = "\n"))
+plot(gg)
+plot(gb)
+```
+
+## Relationship with diagnosis
+
+```{r, message= FALSE}
+for(i in colnames(modules$modules_eigen_value)){
+gg=ggpubr::ggscatter(modules$metadata_modules, 
+                     x = "pseudotime", 
+                     y = paste(i),
+          color = "diagnosis",
+          palette = "jco",
+          add = "reg.line", 
+          conf.int = TRUE)+
+  ggpubr::stat_cor(aes(color = diagnosis), label.x = 1)
+plot(gg)
+}
+```
+
+## Relationship with PHF1
+
+```{r, message= FALSE}
+
+for(i in colnames(modules$modules_eigen_value)){
+gg=ggpubr::ggscatter(modules$metadata_modules,
+                     x = "PHF1", 
+                     y = paste(i),
+                     palette = "jco",
+                     add = "reg.line", 
+                     conf.int = TRUE, 
+                     add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+                     cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
+                     cor.coeff.args = list(method = "pearson", label.x = 2, label.sep = "\n"))
+
+
+plot(gg)
+}
+```
+
+There is a stronger relationhsip between module eigen values and infered multi-omics pseudotime 
+
+
+## Module Eigenvalue by group boxplots 
+
+```{r, message= FALSE}
+
+for(i in colnames(modules$modules_eigen_value)){
+gg=ggpubr::ggboxplot(modules$metadata_modules,
+                     x = "diagnosis", 
+                     y = paste(i),
+                     add='jitter', 
+                     color="diagnosis")+
+  xlab('Diagnosis')+
+  ylab(paste('Eigen value in',i))+
+  theme_classic()+
+  ggsignif::geom_signif(comparisons = list(c('AD', 'Control')))+
+  scale_color_manual(values = c("#2E9FDF","#E7B800"))+
+  facet_wrap(~brain_region)
+plot(gg)
+}
+```
+
+```{r}
+
+for(i in colnames(modules$modules_eigen_value)){
+gg=ggpubr::ggboxplot(modules$metadata_modules, 
+                     x = "Braak", 
+                     y = paste(i),
+                     add='jitter', 
+                     color="Braak")+
+  xlab('Diagnosis')+
+  ylab(paste('Eigen value in',i))+
+  theme_classic()+
+  facet_wrap(~brain_region)
+plot(gg)
+}
+```
+
+
+```{r}
+
+for(i in colnames(modules$modules_eigen_value)){
+gg=ggpubr::ggboxplot(modules$metadata_modules, 
+                     x = "brain_region", 
+                     y = paste(i),
+                     add='jitter',
+                     color='brain_region')+
+  xlab('Diagnosis')+
+  ylab(paste('Eigen value in',i))+
+  theme_classic()+
+  ggsignif::geom_signif(comparisons = list(c('MTG', 'SSC')))+
+  scale_color_manual(values = c("#DC0000FF","forestgreen"))
+plot(gg)
+}
+```
+
+

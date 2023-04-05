@@ -1,31 +1,81 @@
 Package: Omix
 Title: A Multi-Omics Integration Toolkit
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: 
     c(
-    person(given = "Eléonore",
+    person(given = "Eleonore",
            family = "Schneegans",
            role = c("aut", "cre"),
-           email = "your@email",
-           comment = c(ORCID = "YOUR-ORCID-ID")),
+           email = "eleonore.schneegans17@imperial.ac.uk",
+           comment = c(ORCID = "0000-0002-6754-6249")),
     person(given = "Nurun",
            family = "Fancy",
            role = c("aut"),
            email = "n.fancy@imperial.ac.uk",
            comment = c(ORCID = "0000-0002-6481-6266"))
     )
-Maintainer: Eléonore Schneegans <your@email>
-Description: A complete workflow to perform single-omics analysis prior to integrating multi-omics data for an integrated analysis. 
+Maintainer: Eleonore Schneegans <eleonore.schneegans17@imperial.ac.uk>
+Description: Generalisable framework that can effectively process, integrate and analyse patient-specific multi-omic data in an end-to-end manner. 
 License: GPL (>= 3)
 Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
-Imports: 
-    cli,
-    magrittr,
-    MultiAssayExperiment,
-    SummarizedExperiment
+RoxygenNote: 7.2.3
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    BiocStyle
+biocViews:
+Imports: 
+      basetheme,
+      circlize,
+      ClassDiscovery,
+      cli,
+      ComplexHeatmap,
+      corrplot,
+      data.table,
+      dplyr,
+      DelayedMatrixStats,
+      edgeR,
+      enrichplot,
+      enrichR,
+      EnsDb.Hsapiens.v86,
+      EWCE,
+      fgsea,
+      ggplot2,
+      ggpubr,
+      ggrepel,
+      httr,
+      igraph,
+      jsonlite,
+      limma,
+      magrittr,
+      matrixStats,
+      mixOmics,
+      msigdbr,
+      SummarizedExperiment,
+      MultiAssayExperiment,
+      org.Hs.eg.db,
+      org.Mm.eg.db,
+      plotly,
+      psych,
+      purrr,
+      proBatch,
+      readr,
+      reshape2,
+      reticulate,
+      S4Vectors,
+      slingshot,
+      stats,
+      statmod,
+      stringr,
+      tibble,
+      tidyr,
+      viridis,
+      visNetwork,
+      WGCNA,
+      DESeq2,
+      MOFA2,
+      AnnotationDbi,
+      clusterProfiler
 VignetteBuilder: knitr

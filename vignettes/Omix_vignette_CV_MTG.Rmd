@@ -1,0 +1,467 @@
+---
+title: "Omix - Get started"
+author: "This vignette was created by Eléonore Schneegans and Nurun Fancy"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    self_contained: yes
+    theme: "flatly"
+    toc: true
+    toc_float: true
+    fig_caption: true
+    toc_depth: 3
+    code_folding: show
+    df_print: paged
+vignette: >
+  %\VignetteIndexEntry{Omix - Get started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+editor_options: 
+  markdown: 
+  wrap: 72
+---
+
+```{r style, echo=FALSE, results='asis', message=TRUE, warning=FALSE}
+BiocStyle::markdown()
+knitr::opts_chunk$set(tidy = FALSE,
+                      message = TRUE,
+                      warning = FALSE)
+options(knitr.duplicate.label = "allow")
+```
+
+
+# Overview
+
+The goal of Omix is to provide tools in R to build a complete analysis workflow 
+for integrative analysis of data generated from multi-omics platform.
+
+-   Generate a multi-omics object using `MultiAssayExperiment`.
+
+-   Quality control of single-omics data.
+
+-   Formatting, normalisation, denoising of single-omics data.
+
+-   Separate single-omics analyses.
+
+-   Integration of multi-omics data for combined analysis. 
+
+-   Publication quality plots and interactive analysis reports based of shinyApp.
+
+Currently, Omix supports the integration of bulk transcriptomics and bulk proteomics.
+
+## Running *Omix*
+
+The `Omix` pipeline requires the following input:
+
+-   `rawdata_rna`: A data-frame containing raw RNA count with rownames as gene and colnames as samples.
+
+-   `rawdata_protein`:  A data-frame containing protein abundance with rownames as proteins and colnames as samples.
+
+-   `map_rna`: A data-frame of two columns named `primary` and `colname` where primary should contain unique sample name with a link to sample metadata and colname is the column names of the `rawdata_rna` data-frame.
+
+-   `map_protein`: A data-frame of two columns named `primary` and `colname` where primary should contain unique sample name with a link to sample metadata and colname is the column names of the `rawdata_protein` data-frame. 
+
+-   `metadata_rna`: A data-frame containing `rna` assay specific metadata where rownames are same as the colnames of `rawdata_rna` data.frame.
+
+-   `metadata_protein`: A data-frame containing `protein` assay specific metadata where rownames are same as the colnames of `rawdata_protein` data.frame.
+
+-   `individual_metadata`: A data-frame containing individual level metadata for both omics assays.
+
+
+Call required packages for vignette:
+
+```{r}
+library(Omix)
+library(purrr)
+library(ggplot2)
+```
+
+First we must load the data from Omix for the vignette:
+
+```{r}
+outputDir <- tempdir()
+rawdata_rna_fp <- file.path(outputDir, "raw_counts_MTG_CV.rds")
+rawdata_protein_fp <- file.path(outputDir, "raw_proteomics_MTG_CV.rds")
+map_rna_fp <- file.path(outputDir, "map_RNA_MTG_CV.rds")
+map_prot_fp <- file.path(outputDir, "map_prot_MTG_CV.rds")
+metadata_rna_fp <- file.path(outputDir, "metadata_rna_MTG_CV.rds")
+metadata_prot_fp <-  file.path(outputDir, "metadata_prot_MTG_CV.rds")
+individual_metadata_fp <-file.path(outputDir, "metadata_map_MTG_CV_new.rds")
+ctd_fp <-file.path(outputDir, "ctd.rds")
+ensembl_fp  <- file.path(outputDir, "ensembl.rds")
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/raw_counts_MTG_CV.rds",destfile=rawdata_rna_fp,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/raw_proteomics_MTG_CV.rds",destfile=rawdata_protein_fp,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/map_RNA_MTG_CV.rds",destfile=map_rna_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/map_prot_MTG_CV.rds",destfile=map_prot_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_rna_MTG_CV.rds",destfile=metadata_rna_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_prot_MTG_CV.rds",destfile=metadata_prot_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_map_MTG_CV_new.rds",destfile=individual_metadata_fp ,headers = c(Authorization = paste("token", "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")))
+
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", "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")))
+
+rawdata_rna <- as.data.frame(readRDS(paste0(outputDir,'/raw_counts_MTG_CV.rds')))
+rawdata_protein <- as.data.frame(readRDS(paste0(outputDir,'/raw_proteomics_MTG_CV.rds')))
+map_rna <- as.data.frame(readRDS(paste0(outputDir,'/map_RNA_MTG_CV.rds')))
+map_prot <- as.data.frame(readRDS(paste0(outputDir,'/map_prot_MTG_CV.rds')))
+metadata_rna<- as.data.frame(readRDS(paste0(outputDir,'/metadata_rna_MTG_CV.rds')))
+metadata_prot <-  as.data.frame(readRDS(paste0(outputDir,'/metadata_prot_MTG_CV.rds')))
+individual_metadata <- as.data.frame(readRDS(paste0(outputDir,'/metadata_map_MTG_CV_new.rds')))
+ctd <-  readRDS(paste0(outputDir,'/ctd.rds'))
+ensembl <-read.delim(file=paste0(outputDir,'/ensembl.rds'), sep = '\t', header = TRUE)
+rna_qc_data_matrix <- NULL
+```
+
+Sanity check 
+
+```{r}
+
+all(rownames(metadata_rna) == colnames(rawdata_rna))
+all(rownames(metadata_prot) == colnames(rawdata_protein))
+
+```
+
+
+### Raw rna counts
+
+`rawdata_rna` is a data-frame of raw counts, with features as rows and samples as columns
+
+```{r}
+print(rawdata_rna[1:5,1:5])
+```
+
+
+### Raw protein abundance
+
+`rawdata_protein` is a data-frame of raw protein abundances, with features as rows and samples as columns
+
+```{r}
+print(rawdata_protein[15:20,15:20])
+```
+
+### Maps
+
+Maps are data frame containing two columns: `primary` and `colname`. 
+The `primary` column should be the individual ID the individual metadata, and the 
+`colname` the matched sample names from the raw matrices columns. If sample and
+individual ids are the same, maps aren't needed (primary and colnames are the same).
+
+```{r}
+print(head(map_prot))
+print(head(map_rna))
+```
+
+### Technical metadata
+
+Technical metadata are data-frames contain the column `colname` that should match
+the sample names in the raw matrices, and any additional columns related to technical artefacts like batches 
+
+```{r}
+print(head(metadata_rna))
+print(head(metadata_prot))
+```
+
+
+### Individual metadata
+
+`individual_metadata` should contain individual level metadata, where one column matches the `primary` column in maps.
+
+```{r}
+print(head(individual_metadata))
+```
+
+### Optional inputs
+
+Optional inputs contain additional data frame used for QC visualisation purposes 
+
+```{r}
+print(head(rna_qc_data_matrix))
+```
+
+
+#  Step one - Generate a MultiAssayExperiment object
+
+To run Omix, we first need to generate a multi-omics object
+The package currently supports transcriptomics and proteomics bulk data only.
+
+
+
+```{r}
+# Convert metadata type from character to factor
+
+individual_metadata$diagnosis <- factor(individual_metadata$diagnosis,
+                                        levels = c("Control", "AD"))
+individual_metadata$sex <- factor(individual_metadata$sex)
+
+#Generate multiassay object
+multiomics_object_MTG=generate_multiassay(rawdata_rna =rawdata_rna,
+                                   rawdata_protein = rawdata_protein,
+                                   individual_to_sample=FALSE,
+                                   map_rna = map_rna,
+                                   map_protein = map_prot,
+                                   metadata_rna = metadata_rna,
+                                   metadata_protein = metadata_prot,
+                                   individual_metadata = individual_metadata,
+                                   map_by_column = 'sample_id',
+                                   rna_qc_data=FALSE,
+                                   rna_qc_data_matrix=NULL,
+                                   organism='human')
+```
+
+The MultiAssayExperiment object was succesfully created. 
+The following steps will process and perform QC on each omic layers of the 
+`multiassay` object.
+
+
+# Step two - Process transcriptomics data
+
+```{r}
+multiomics_object_MTG=process_rna(multiassay=multiomics_object_MTG,
+            transformation='vst',
+            protein_coding=TRUE,
+            min_count = 10,
+            min_sample = 0.5,
+            dependent =  "diagnosis",
+            levels = c("Control","AD"),
+            covariates=c('age','sex','PMD'),
+            filter=TRUE,
+            batch_correction=TRUE,
+            batch=NULL,
+            remove_sample_outliers= FALSE)
+```
+
+
+# Step three - Process proteomics data
+
+```{r}
+multiomics_object_MTG=process_protein(
+    multiassay=multiomics_object_MTG,
+    filter=TRUE,
+    min_sample = 0.5,
+    dependent =  "diagnosis",
+    levels = c("Control","AD"),
+    imputation = 'minimum_value',
+    remove_feature_outliers= FALSE,
+    batch_correction= FALSE,
+    batch="batch",
+    correction_method="median_centering",
+    remove_sample_outliers=FALSE,
+    denoise=TRUE,
+    covariates=c('PMD','sex','age'))
+```
+
+The processing parameter are stored in the object
+
+
+# Step Four - Single omic analyses 
+
+## Transcriptomics differential expression using DEseq2
+
+Now we run a differential expression analysis between groups of interest, where 
+the first level, here control is the reference. The function requires to run `process_rna`
+first, with covariates of interest. These are adjusted for in the DE. 
+
+```{r}
+multiomics_object_MTG=rna_DE_analysis(multiassay=multiomics_object_MTG,
+                    dependent='diagnosis',
+                    levels=c('Control','AD'),
+                    filter_protein_coding = TRUE,
+                    log2FoldChange = 0.2)
+
+```
+
+Differential expression results for transcripts are saved in the `multiomics_object_MTG@metadata$DEG` slot 
+
+```{r}
+
+DT::datatable(multiomics_object_MTG@metadata$DEG$ADvsControl,
+              rownames = FALSE, 
+              escape = FALSE,
+              options = list(pageLength = 20, 
+                             scrollX=T, 
+                             autoWidth = TRUE,
+                             columnDefs = list(list(width = '500px', targets = 1)),
+                             dom = 'Blfrtip'))
+
+```
+
+
+Volcano plot of differentially expressed genes is saved in the `multiomics_object_MTG@metadata$DEG$plot` slot
+
+```{r, message=FALSE}
+volcano_interactive(multiomics_object_MTG@metadata[["DEG"]]$ADvsControl, padj=0.05)
+```
+
+## Proteomics differential expression using limma
+
+
+Now we run a differential expression analysis between groups of interest, where 
+the first level, here control is the reference. If the data is already denoised for covariates of interest `process_rna`, set covariates as `NULL``
+
+```{r, message=FALSE}
+multiomics_object_MTG=protein_DE_analysis(multiomics_object_MTG,
+                         slot="protein_processed",
+                         dependent='diagnosis',
+                         covariates=NULL,
+                         levels=c('Control','AD'),
+                         log2FoldChange = 0.2)
+```
+
+Differential expression results for proteins are saved in the `multiomics_object_MTG@metadata$DEP` slot 
+
+```{r}
+
+DT::datatable(multiomics_object_MTG@metadata$DEP$ADvsControl,
+              rownames = FALSE, 
+              escape = FALSE,
+              options = list(pageLength = 20, 
+                             scrollX=T, 
+                             autoWidth = TRUE,
+                             columnDefs = list(list(width = '500px', targets = 1)),
+                             dom = 'Blfrtip'))
+
+```
+
+Volcano plot of differentially abundant proteins is saved in the `multiomics_object_MTG@metadata$DEP$plot` slot
+
+```{r}
+volcano_interactive(multiomics_object_MTG@metadata[["DEP"]]$ADvsControl, padj=0.05)
+```
+
+
+-   The differential analysis of transcriptomics data yielded `r sum(multiomics_object_MTG@metadata[["DEG"]]$ADvsControl$de=='Up',na.rm=T)` and `r sum(multiomics_object_MTG@metadata[["DEG"]]$ADvsControl$de=='Down',na.rm=T)` up and downregulated genes respectively (absolute Log2FoldChange >0.1 and adjusted p-value < 0.05) (Figure 3A). 
+-   For proteomics data, `r sum(multiomics_object_MTG@metadata[["DEP"]]$ADvsControl$de=='Up',na.rm=T)` in the positive direction against  `r sum(multiomics_object_MTG@metadata[["DEP"]]$ADvsControl$de=='Down',na.rm=T)` in the negative direction (Figure 3B). 
+
+
+## Comparing differentially expressed genes and protein 
+
+Since the magnitude of changes are not directly comparable between platforms, but their directionality are, we assessed whether significant differential features overlapped between the two platforms and whether their direction of effects were concordant or discordant.
+
+
+```{r}
+DE_comparison=single_omic_comparisons(multiassay=multiomics_object_MTG,
+                                       slot='ADvsControl',
+                                       threshold = 0.05,
+                                       pvalue = 'pval',
+                                       filtering_options=NULL)
+
+```
+
+### Differential analyses reveal partial concordance between transcriptomics and proteomics
+
+```{r}
+volcano_interactive_comparison(DE_comparison$dataframe)
+
+```
+
+```{r}
+corr= cor(DE_comparison$dataframe$log2FoldChange.x,DE_comparison$dataframe$log2FoldChange.y)
+
+```
+
+We found a r=`r corr` correlation between pairwise log2FoldChanges (p-value <0.05) indicating a moderate positive correlation between the mRNA and protein level changes, which is reinforced by the existence of discordant pairs.
+
+```{r}
+
+DT::datatable(DE_comparison$dataframe,
+              rownames = FALSE, 
+              escape = FALSE,
+              options = list(pageLength = 20, 
+                             scrollX=T, 
+                             autoWidth = TRUE,
+                             columnDefs = list(list(width = '500px', targets = 1)),
+                             dom = 'Blfrtip'))
+
+```
+Overall, these single platform analyses highlighted obvious differences between transcriptomics and proteomics and should be further studied to differentiate technical versus biological effects. Overall, results highlight that:
+
+-   different platforms do not cover the same exact set of features
+-   of the features that intersect, most see a significant change in one platform only
+-   of the features that significantly change in both platforms, some may see discordant directionality of effects
+
+#### Protein accumulation
+
+Protein with a positive Log2FC but negative mRNA regulation may point to those accumulating in the brain as AD progresses 
+
+```{r}
+
+DE_comparison$dataframe$gene_name[which(DE_comparison$dataframe$direction=='Discordant'&DE_comparison$dataframe$log2FoldChange.y>0.2)]
+
+```
+
+
+# Step Five - Multi-omics integration using DIABLO
+
+By default, the vertical integration is performed on processed slots.
+
+`DIABLO` is a supervised multi-omics integration model that requires the input of a dependent variable.
+The function will perform tuning on the defined range, and number of components chosen.
+
+
+```{r}
+multiomics_object_MTG=vertical_integration(multiomics_object_MTG,
+                                  slots = c(
+                                   "rna_processed",
+                                   "protein_processed"
+                                 ),
+                                integration='DIABLO',
+                                intersect_genes=FALSE,
+                                ID_type='gene_name',
+                                dependent='diagnosis',
+                                levels= c("Control", "AD"),
+                                design="cor",
+                                ncomp=2,
+                                range=list(mRNA=seq(10,100,by=10),
+                                              proteins=seq(10,100,by=10)))
+```
+
+
+# Step Six - Multi-omics analyses (Supervised Example using DIABLO)
+
+The user may want to perform the integrative downstream analyses step-by-step, 
+or to run `integrative_results_supervised`, which will create a results object 
+containing, multi-omics signatures, network visualisation, cell type and functional 
+enrichment, as well as comparison of signatures against the OpenTargets knowledge base.
+
+```{r, message=FALSE}
+integrative_results_MTG=integrative_results_supervised(multiomics_object_MTG,
+                                integration = "DIABLO",
+                                component = 1,
+                                correlation_threshold=0.4,
+                                enrichment_method='enrichr',
+                                disease_id='MONDO_0004975',
+                                simplify=FALSE,
+                                compare_communities=FALSE)
+```
+
+
+# Step seven - Exploring the integrative results object 
+
+## Detrimental signature - equivalent of up-regulated in AD
+
+```{r}
+integrative_results_MTG$detrimental$multiomics_signature
+```
+
+
+## Multi-omics network of detrimental features 
+
+```{r}
+interactive_network(integrative_results_MTG$detrimental$network$graph, communities = FALSE)
+```
+
+
+## Open targets 
+
+```{r}
+integrative_results_MTG$detrimental$open_targets
+```
