@@ -4,6 +4,7 @@
 #' @param api_key Personal API key
 #'
 #' @return ChatGPT answer
+#' @family Helper
 #' @export
 #' @importFrom httr add_headers
 #' @importFrom stringr str_trim

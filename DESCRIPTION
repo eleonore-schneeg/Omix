@@ -78,7 +78,7 @@ Imports:
       MOFA2,
       AnnotationDbi,
       clusterProfiler,
-      intNMF,
+      IntNMF,
       ActivePathways,
       iClusterPlus,
       mogsa

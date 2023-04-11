@@ -36,6 +36,7 @@ defined absolute threshold
 }
 \seealso{
 Other Helper: 
+\code{\link{ask_chatgpt}()},
 \code{\link{counts_rna}()},
 \code{\link{extract_multiomic_signature}()},
 \code{\link{format_res_deseq}()},

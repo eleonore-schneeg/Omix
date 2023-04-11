@@ -171,7 +171,7 @@ statmod \
 systemfonts \
 viridis \
 visNetwork \
-intNMF \
+IntNMF \
 ActivePathways \
 && rm -rf /tmp/downloaded_packages
 
