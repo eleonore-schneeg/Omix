@@ -46,6 +46,6 @@ jobs:
 
       - name: push service
         run: |
-          docker push eleonoreschneeg/omix:${{ env.packageVersion }}
-          docker push eleonoreschneeg/omix:latest
-          docker push eleonoreschneeg/omix:dev
+          docker push eleonore-schneeg/omix:${{ env.packageVersion }}
+          docker push eleonore-schneeg/omix:latest
+          docker push eleonore-schneeg/omix:dev

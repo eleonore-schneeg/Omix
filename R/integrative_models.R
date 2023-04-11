@@ -117,9 +117,10 @@ integrate_with_sMBPLS <- function(multimodal_omics,
                                   Y,
                                   design,
                                   ncomp,
-                                  list.keepX = list(mRNA = c(50),
-                                                    proteins = c(50))
-                                  ) {
+                                  list.keepX = list(
+                                    mRNA = c(50),
+                                    proteins = c(50)
+                                  )) {
   multimodal_omics <- lapply(multimodal_omics, t)
   X <- list(
     mRNA = multimodal_omics[[1]],
@@ -324,8 +325,7 @@ integrate_with_MEIFESTO <- function(multimodal_omics,
                                     num_factors = 5,
                                     scale_views = TRUE,
                                     metadata,
-                                    time = "pseudotime"
-                                    ) {
+                                    time = "pseudotime") {
   # python_path <- Sys.which("python")
   # reticulate::use_python(python_path, required = NULL)
 
@@ -373,3 +373,178 @@ integrate_with_MEIFESTO <- function(multimodal_omics,
     model = model
   ))
 }
+
+#' @name getClustNum
+#' @title Get estimation of optimal clustering number
+#' @description This function provides two measurements (i.e., clustering prediction index [CPI] and Gap-statistics) and aims to search the optimal number for multi-omics integrative clustering. In short, the peaks reach by the red (CPI) and blue (Gap-statistics) lines should be referred to determine `N.clust`.
+#' @param data List of matrices.
+#' @param is.binary A logicial vector to indicate if the subdata is binary matrix of 0 and 1 such as mutation.
+#' @param try.N.clust A integer vector to indicate possible choices of number of clusters.
+#' @param center A logical value to indicate if the variables should be centered. TRUE by default.
+#' @param scale A logical value to indicate if the variables should be scaled. FALSE by default.
+#' @export
+#' @return A figure that helps to choose the optimal clustering number (argument of `N.clust`) for `get%algorithm_name%()` or `getMOIC()`, and a list contains the following components:
+#'
+#'         \code{CPI}   possible cluster number identified by clustering prediction index
+#'
+#'         \code{Gapk}  possible cluster number identified by Gap-statistics
+#'         
+#' @family Multi-omic integration
+#' @importFrom IntNMF nmf.opt.k
+#' @importFrom  mogsa mbpca moGap
+#' @import SNFtool
+#' @importFrom ggplot2 alpha
+#' @importFrom dplyr %>%
+#' @examples # There is no example and please refer to vignette.
+#' @references Chalise P, Fridley BL (2017). Integrative clustering of multi-level omic data based on non-negative matrix factorization algorithm. PLoS One, 12(5):e0176278.
+#'
+#' Tibshirani, R., Walther, G., Hastie, T. (2001). Estimating the number of data clusters via the Gap statistic. J R Stat Soc Series B Stat Methodol, 63(2):411-423.
+#' 
+getClustNum <- function(data = NULL,
+                        is.binary = rep(FALSE, length(data)),
+                        try.N.clust = 2:8,
+                        center = TRUE,
+                        scale = TRUE) {
+  # check data
+  n_dat <- length(data)
+  if (n_dat > 2) {
+    stop("current version of Omix can support up to 2 datasets.")
+  }
+  if (n_dat < 2) {
+    stop("current version of Omix  needs at least 2 omics data.")
+  }
+
+  data.backup <- data # save a backup
+
+  #--------------------------------------------#
+  # Cluster Prediction Index (CPI) from IntNMF #
+  # remove features that made of categories not equal to 2 otherwise Error in svd(X) : a dimension is zero
+  if (!all(!is.binary)) {
+    bindex <- which(is.binary == TRUE)
+    for (i in bindex) {
+      a <- which(rowSums(data[[i]]) == 0)
+      b <- which(rowSums(data[[i]]) == ncol(data[[i]]))
+      if (length(a) > 0) {
+        data[[i]] <- data[[i]][which(rowSums(data[[i]]) != 0), ] # remove all zero
+      }
+
+      if (length(b) > 0) {
+        data[[i]] <- data[[i]][which(rowSums(data[[i]]) != ncol(data[[i]])), ] # remove all one
+      }
+
+      if (length(a) + length(b) > 0) {
+        message(paste0("--", names(data)[i], ": a total of ", length(a) + length(b), " features were removed due to the categories were not equal to 2!"))
+      }
+    }
+  }
+
+  # In order to make the input data fit non-negativity constraint of intNMF,
+  # the values of the data were shifted to positive direction by adding absolute value of the smallest negative number.
+  # Further, each data was rescaled by dividing by maximum value of the data to make the magnitudes comparable (between 0 and 1) across the several datasets.
+  dat <- lapply(data, function(dd) {
+    if (!all(dd >= 0)) dd <- pmax(dd + abs(min(dd)), 0) + .Machine$double.eps # .Machine$double.eps as The smallest positive floating-point number x
+    dd <- dd / max(dd)
+    return(dd %>% as.matrix())
+  })
+
+  # dat <- lapply(dat, t)
+  dat <- lapply(dat, function(x) t(x) + .Machine$double.eps)
+
+  message("calculating Cluster Prediction Index...")
+  optk1 <- IntNMF::nmf.opt.k(
+    dat = dat,
+    n.runs = 5,
+    n.fold = 5,
+    k.range = try.N.clust,
+    st.count = 10,
+    maxiter = 100,
+    make.plot = FALSE
+  )
+  optk1 <- as.data.frame(optk1)
+
+  #-------------------------------#
+  # Gap-statistics from MoCluster #
+  message("calculating Gap-statistics...")
+  moas <- data.backup %>% mogsa::mbpca(
+    ncomp = 2,
+    k = "all",
+    method = "globalScore",
+    center = center,
+    scale = scale,
+    moa = TRUE,
+    svd.solver = "fast",
+    maxiter = 1000,
+    verbose = FALSE
+  )
+  gap <- mogsa::moGap(moas, K.max = max(try.N.clust), cluster = "hclust", plot = FALSE)
+  optk2 <- as.data.frame(gap$Tab)[-1, ] # remove k=1
+
+
+  N.clust <- as.numeric(which.max(apply(optk1, 1, mean) + optk2$gap)) + 1
+  if (length(N.clust) == 0) {
+    message("--fail to define the optimal cluster number!")
+    N.clust <- "null"
+  }
+
+
+  if (N.clust > 1) {
+    message(paste0("--the imputed optimal cluster number is ", N.clust, " arbitrarily, but it would be better referring to other priori knowledge."))
+  }
+  # return(list(N.clust = N.clust, CPI = optk1, Gapk = optk2, Eigen = optk3))
+  return(list(N.clust = N.clust, CPI = optk1, Gapk = optk2))
+}
+
+#'  Vertical integration with iCluster
+#'
+#' @param multimodal_omics multimodal_object generated by `.get_multimodal_object`
+#' @param try.N.clust Range of number of potential clusters in the optimisation step
+#' @export
+#' 
+#' @return a list object with `multimodal_object` and `model` slots
+#' 
+#' @family Multi-omic integration
+#' @importFrom iClusterPlus iClusterBayes
+
+integrate_with_iCluster <- function(multimodal_omics,
+                                    try.N.clust = 2:6) {
+  cli::cli_alert_success("Optimising the number of cluster (this make take a while")
+
+  args <- list(
+    data = multimodal_omics,
+    is.binary = c(F, F),
+    try.N.clust = try.N.clust,
+    center = TRUE,
+    scale = TRUE)
+  
+  optk.i <- do.call(getClustNum, args)
+
+  optimal_n <- optk.i$N.clust
+
+  m1 <- t(multimodal_omics[[1]])
+  m2 <- t(multimodal_omics[[2]])
+
+  cli::cli_alert_success("Integration in progress (this make take a while)")
+  model <- iClusterPlus::iClusterBayes(
+    dt1 = m1,
+    dt2 = m2,
+    dt3 = NULL, dt4 = NULL, dt5 = NULL, dt6 = NULL,
+    type = c("gaussian", "gaussian"),
+    K = optimal_n - 1,
+    n.burnin = 1000,
+    n.draw = 1200,
+    prior.gamma = rep(0.1, 6),
+    sdev = 0.5,
+    beta.var.scale = 1,
+    thin = 1,
+    pp.cutoff = 0.5
+  )
+  return(list(
+    multimodal_object = multimodal_omics,
+    model = model,
+    tuning = list(
+      optk.i = optk.i,
+      try.N.clust = try.N.clust
+    )
+  ))
+}
+

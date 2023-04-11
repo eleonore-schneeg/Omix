@@ -36,7 +36,9 @@ bioc_pkgs<-c(
   'slingshot',
   'WGCNA',
   'DESeq2',
-  'MOFA2'
+  'MOFA2',
+  'iClusterPlus',
+  'mogsa'
 )
 
 

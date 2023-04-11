@@ -171,6 +171,8 @@ statmod \
 systemfonts \
 viridis \
 visNetwork \
+intNMF \
+ActivePathways \
 && rm -rf /tmp/downloaded_packages
 
 ## Install Bioconductor packages

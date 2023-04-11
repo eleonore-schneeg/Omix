@@ -29,6 +29,7 @@ Other Plotting:
 \code{\link{multiomics_network_matrix}()},
 \code{\link{multiomics_network}()},
 \code{\link{plot_OpenTarget}()},
+\code{\link{plot_optimal_cluster}()},
 \code{\link{volcano_interactive_comparison}()},
 \code{\link{volcano_plot_deseq}()},
 \code{\link{volcano_plot_limma}()}
