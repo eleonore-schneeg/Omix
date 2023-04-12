@@ -25,6 +25,8 @@ Other Helper:
 \code{\link{extract_weigths}()},
 \code{\link{format_res_deseq}()},
 \code{\link{format_res_limma}()},
+\code{\link{get_background}()},
+\code{\link{get_metadata}()},
 \code{\link{processed_proteomics}()},
 \code{\link{processed_rna}()}
 }

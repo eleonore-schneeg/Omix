@@ -445,6 +445,7 @@ community_graph <- function(igraph,
 #'
 #' @param optk1 Cluster Prediction Index
 #' @param optk2 Gap statistics
+#' @param try.N.clust A integer vector to indicate possible choices of number of clusters.
 #'
 #' @return plot
 #' @export

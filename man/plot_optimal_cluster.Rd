@@ -10,6 +10,8 @@ plot_optimal_cluster(optk1, optk2, try.N.clust)
 \item{optk1}{Cluster Prediction Index}
 
 \item{optk2}{Gap statistics}
+
+\item{try.N.clust}{A integer vector to indicate possible choices of number of clusters.}
 }
 \value{
 plot

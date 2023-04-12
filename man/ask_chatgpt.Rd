@@ -4,10 +4,7 @@
 \alias{ask_chatgpt}
 \title{Calls chatGPT with a specific prompt}
 \usage{
-ask_chatgpt(
-  prompt,
-  api_key = "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"
-)
+ask_chatgpt(prompt = "What is multi-omics", api_key = NULL)
 }
 \arguments{
 \item{prompt}{Character vector}
@@ -27,6 +24,8 @@ Other Helper:
 \code{\link{extract_weigths}()},
 \code{\link{format_res_deseq}()},
 \code{\link{format_res_limma}()},
+\code{\link{get_background}()},
+\code{\link{get_metadata}()},
 \code{\link{processed_proteomics}()},
 \code{\link{processed_rna}()}
 }

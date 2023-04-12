@@ -8,21 +8,32 @@
 #' @export
 #' @importFrom httr add_headers
 #' @importFrom stringr str_trim
-
-ask_chatgpt <- function(prompt,
-                        api_key="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") {
+ask_chatgpt <- function(prompt='What is multi-omics',
+                        api_key=NULL) {
+  if(api_key==NULL){
+    "No OpenAI API key provided, please fill api_key parameter to proceed"
+  }
+  
+  if(!is.null(api_key)){
   response <- POST(
-    url = "https://api.openai.com/v1/chat/completions",
-    httr::add_headers(Authorization = paste("Bearer", api_key)),
+    url = "https://api.openai.com/v1/chat/completions", 
+    add_headers(Authorization = paste("Bearer", api_key)),
     content_type_json(),
     encode = "json",
     body = list(
       model = "gpt-3.5-turbo",
       messages = list(list(
-        role = "user",
+        role = "user", 
         content = prompt
       ))
     )
   )
-  stringr::str_trim(content(response)$choices[[1]]$message$content)
+  ret <- content(response)
+  if ("error" %in% names(ret)) warning(ret$error$message)
+  if ("message" %in% names(ret$choices[[1]]))
+    cat(stringr::str_trim(ret$choices[[1]]$message$content))
+  return(invisible(ret))
+  }
+  
 }
+

@@ -24,15 +24,10 @@ getClustNum(
 \item{scale}{A logical value to indicate if the variables should be scaled. FALSE by default.}
 }
 \value{
-A figure that helps to choose the optimal clustering number (argument of \code{N.clust}) for \verb{get\%algorithm_name\%()} or \code{getMOIC()}, and a list contains the following components:
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{    \code{CPI}   possible cluster number identified by clustering prediction index
-
-    \code{Gapk}  possible cluster number identified by Gap-statistics
-}\if{html}{\out{</div>}}
+A figure that helps to choose the optimal clustering number (argument of \code{N.clust}), and a list containing the cluster number of  identified by clustering prediction index (CPI) and Gap statistics
 }
 \description{
-This function provides two measurements (i.e., clustering prediction index \link{CPI} and Gap-statistics) and aims to search the optimal number for multi-omics integrative clustering. In short, the peaks reach by the red (CPI) and blue (Gap-statistics) lines should be referred to determine \code{N.clust}.
+This function provides two measurements (i.e., clustering prediction index and Gap-statistics) and aims to search the optimal number for multi-omics integrative clustering. In short, the peaks reach by the red (CPI) and blue (Gap-statistics) lines should be referred to determine \code{N.clust}.
 }
 \examples{
 # There is no example and please refer to vignette.

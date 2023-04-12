@@ -376,19 +376,14 @@ integrate_with_MEIFESTO <- function(multimodal_omics,
 
 #' @name getClustNum
 #' @title Get estimation of optimal clustering number
-#' @description This function provides two measurements (i.e., clustering prediction index [CPI] and Gap-statistics) and aims to search the optimal number for multi-omics integrative clustering. In short, the peaks reach by the red (CPI) and blue (Gap-statistics) lines should be referred to determine `N.clust`.
+#' @description This function provides two measurements (i.e., clustering prediction index and Gap-statistics) and aims to search the optimal number for multi-omics integrative clustering. In short, the peaks reach by the red (CPI) and blue (Gap-statistics) lines should be referred to determine `N.clust`.
 #' @param data List of matrices.
 #' @param is.binary A logicial vector to indicate if the subdata is binary matrix of 0 and 1 such as mutation.
 #' @param try.N.clust A integer vector to indicate possible choices of number of clusters.
 #' @param center A logical value to indicate if the variables should be centered. TRUE by default.
 #' @param scale A logical value to indicate if the variables should be scaled. FALSE by default.
 #' @export
-#' @return A figure that helps to choose the optimal clustering number (argument of `N.clust`) for `get%algorithm_name%()` or `getMOIC()`, and a list contains the following components:
-#'
-#'         \code{CPI}   possible cluster number identified by clustering prediction index
-#'
-#'         \code{Gapk}  possible cluster number identified by Gap-statistics
-#'         
+#' @return A figure that helps to choose the optimal clustering number (argument of `N.clust`), and a list containing the cluster number of  identified by clustering prediction index (CPI) and Gap statistics
 #' @family Multi-omic integration
 #' @importFrom IntNMF nmf.opt.k
 #' @importFrom  mogsa mbpca moGap
