@@ -35,9 +35,9 @@ jobs:
           load: true
           file: ./Dockerfile
           tags: |
-            eleonore-schneeg/omix:${{ env.packageVersion }}
-            eleonore-schneeg/omix:latest
-            eleonore-schneeg/omix:dev
+            eleonoreschneeg/omix:${{ env.packageVersion }}
+            eleonoreschneeg/omix:latest
+            eleonoreschneeg/omix:dev
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
@@ -46,6 +46,6 @@ jobs:
 
       - name: push service
         run: |
-          docker push eleonore-schneeg/omix:${{ env.packageVersion }}
-          docker push eleonore-schneeg/omix:latest
-          docker push eleonore-schneeg/omix:dev
+          docker push eleonoreschneeg/omix:${{ env.packageVersion }}
+          docker push eleonoreschneeg/omix:latest
+          docker push eleonoreschneeg/omix:dev
