@@ -81,5 +81,6 @@ Imports:
       IntNMF,
       ActivePathways,
       iClusterPlus,
-      mogsa
+      mogsa,
+      SNFtool
 VignetteBuilder: knitr
