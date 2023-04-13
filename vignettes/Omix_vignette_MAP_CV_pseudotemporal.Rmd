@@ -73,6 +73,7 @@ Call required packages for vignette:
 library(Omix)
 library(purrr)
 library(ggplot2)
+library(dplyr)
 ```
 
 First we must load the data from Omix for the vignette:
@@ -90,26 +91,26 @@ ctd_fp <-file.path(outputDir, "ctd.rds")
 ensembl_fp  <-file.path(outputDir, "ensembl.rds")
 clusters_fp  <-file.path(outputDir, "clusters.rds")
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/raw_counts_MTG_SSC_CV.rds",destfile=rawdata_rna_fp,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/raw_counts_MTG_SSC_CV.rds",destfile=rawdata_rna_fp,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/raw_proteomics_MTG_SSC_CV.rds",destfile=rawdata_protein_fp,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/raw_proteomics_MTG_SSC_CV.rds",destfile=rawdata_protein_fp,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/map_RNA_MTG_SSC_CV.rds",destfile=map_rna_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/map_RNA_MTG_SSC_CV.rds",destfile=map_rna_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/map_prot_MTG_SSC_CV.rds",destfile=map_prot_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/map_prot_MTG_SSC_CV.rds",destfile=map_prot_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/metadata_rna_MTG_SSC_CV.rds",destfile=metadata_rna_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/metadata_rna_MTG_SSC_CV.rds",destfile=metadata_rna_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/metadata_prot_MTG_SSC_CV.rds",destfile=metadata_prot_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/metadata_prot_MTG_SSC_CV.rds",destfile=metadata_prot_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/metadata_map_MTG_SSC_CV_new.rds",destfile=individual_metadata_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/metadata_map_MTG_SSC_CV_new.rds",destfile=individual_metadata_fp ,headers = c(Authorization = paste("token", "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")))
 
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/clusters.rds",destfile=clusters_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/clusters.rds",destfile=clusters_fp ,headers = c(Authorization = paste("token", "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")))
 
 
 
@@ -227,7 +228,7 @@ The following steps will process and perform QC on each omic layers of the
 
 ```{r}
 multiomics_object=process_rna(multiassay=multiomics_object,
-            transformation='vst',
+            transformation='rlog',
             protein_coding=TRUE,
             min_count = 10,
             min_sample = 0.5,
@@ -356,7 +357,7 @@ suppressWarnings({MOFA2::correlate_factors_with_covariates(integrated_object,
 
 ```
 
-Factors 6 and 1 will be chosen for downstream analysis:
+Factors 6 and 8 will be chosen for downstream analysis:
 
 -   Factor 6: Is strongly correlated with neuropathological variables including PHF1 and amyloid.
 
@@ -375,8 +376,8 @@ Factors 6 and 1 will be chosen for downstream analysis:
 MOFA2::plot_factors(integrated_object,
              factors=c(8,6),
              color_by='PHF1', shape_by = 'brain_region', scale = T)+
-              xlab('Factor 6 ~ Pseudotime' )+
-              ylab('Factor 1 ~ Neuropathology' )  
+              xlab('Factor 8 ~ Pseudotime' )+
+              ylab('Factor 6 ~ Neuropathology' )  
 
 ```
 
@@ -394,11 +395,10 @@ We can optionally specify the cluster to start or end the trajectory based on bi
 set.seed(42)
 #clusters=MOFA2::cluster_samples(integrated_object, 
 #                         k=3,
-#                         factors = c(8,6))
+#                         factors = c(4,6))
 
 #load clusters for reproducibility
 clusters <- readRDS(paste0(outputDir,'/clusters.rds'))
-
 MOFA2::plot_factors(integrated_object,
              factors=c(8,6),
              color_by=clusters$cluster, scale = F)
@@ -410,6 +410,8 @@ pseudotime=pseudotime_inference(integrated_object,
                                  clusters,
                                  time_factor=8,
                                  second_factor=6,
+                                 start.clus = 1,
+                                 end.clus=3,
                                  lineage = 'Lineage1')
 
 pseudotime$plot
@@ -468,8 +470,7 @@ weights$weights_cor_plot$protein
 
 ## Negative weights in factor 6: Up-regulated in later stage AD
 
-A negative weight indicates that the feature has higher levels in the samples with negative factor values, which in this analysis coincides with 
-later Braak stages.
+A negative weight indicates that the feature has higher levels in the samples with negative factor values, which in this analysis coincides with later Braak stages.
 
 ```{r}
 MOFA2::plot_factor(integrated_object, 
@@ -490,8 +491,7 @@ MOFA2::plot_factor(integrated_object,
 Some driving features may overlap between transcriptomics and proteomics
 
 ```{r}
-intersect(weights$weights$ranked_weights_positive$rna,weights$weights$ranked_weights_positive$protein)
-
+intersect(weights$weights$ranked_weights_negative$rna,weights$weights$ranked_weights_negative$protein)
 ```
 
 -   `r length(intersect(weights$weights$ranked_weights_positive$rna,weights$weights$ranked_weights_positive$protein))` features overlap between omic layers
@@ -524,6 +524,7 @@ communities <- communities_network(igraph=Weights_down_n$graph,
                                     community_detection='leading_eigen')
 
 ```
+
 ```{r}
 df <- purrr::map_dfr(
     .x = communities$communities,
@@ -619,35 +620,66 @@ cell_type$plots
 - Down-regulated pathways are up-regulated in samples with negative factor values, here late Braak stages samples
 - Up-regulated pathways are strong in samples with positive factor values, here control and early braak stages 
 
+Since negative weights coincide wiht negative factor values in this case, all down-regulated pathways are those in fact up-regulated in AD. 
+
 ### RNA level enrichment
 
 ```{r}
-gene_list = weights$weights_df$rna$Weights
+gene_list = weights$weights_df$rna$Weights 
 names(gene_list) =  weights$weights_df$rna$Feature
 gene_list = sort(gene_list, decreasing = TRUE)
 gene_list = gene_list[!duplicated(names(gene_list))]
 
 
-# rna_enrichment=clusterProfiler::GSEA(gene_list=gene_list,
-#           pval=0.05)
-# 
-# rna_enrichment$Plot
+ rna_enrichment=GSEA(gene_list=gene_list,
+           pval=0.05)
+ 
+ rna_enrichment$Plot
 ```
 
 ### Protein level enrichment
 
 ```{r}
-gene_list = weights$weights_df$protein$Weights
+gene_list = weights$weights_df$protein$Weights 
 names(gene_list) =  weights$weights_df$protein$Feature
 gene_list = sort(gene_list, decreasing = TRUE)
 gene_list = gene_list[!duplicated(names(gene_list))]
 
 
-# protein_enrichment=clusterProfiler::GSEA(gene_list=gene_list,
-#           pval=0.05)
-# 
-# protein_enrichment$Plot
+ protein_enrichment=GSEA(gene_list=gene_list,
+           pval=0.05)
+ 
+ protein_enrichment$Plot
 ```
+
+Complement activation is up-regulated both at the RNA and protein level.
+
+```{r}
+complement_rna=rna_enrichment[["Results"]]$leadingEdge[which(rna_enrichment[["Results"]]$pathway=='complement activation')]
+protein_enrichment[["Results"]]$leadingEdge[which( protein_enrichment[["Results"]]$pathway=='complement activation')]
+
+```
+
+
+If users have a chatGPT personal access token, it is possible to query chatGPT with prompts like the following:
+
+```{r}
+
+ans=ask_chatgpt(prompt="Briefly explain what 'complement acitvation' corresponds to in terms of biological pathways, and how it has been related to Alzheimer's",
+                  api_key="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")
+cat(ans)
+
+```
+
+```{r}
+for (i in unlist(complement_rna)){
+  ans=ask_chatgpt(prompt=paste("Explain in 3 lines maximum the function of the following protein:",i),
+                  api_key="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")
+  cat("\nProtein",paste(i),':',ans)
+}
+
+```
+
 
 
 ## Modules correlation to neuropathology 

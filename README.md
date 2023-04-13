@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<img src="assets/Omix_logo.png" width=200 style="align:left;" />
+<img src="man/figures/Omix_logo.png" width=200 style="align:left;" />
 
 # Omix
 
@@ -16,7 +16,7 @@ effectively process, visualise and analyse patient-specific multi-omic
 data in an end-to-end manner. Omix is built on four consecutive blocks,
 summarised in the figure below.
 
-![Omix](assets/Omix_workflow.png)
+![Omix](man/figures/Omix_workflow.png)
 
 This bioinformatics pipeline aims to address important gaps related to
 the integration of multi-omics data, namely by enabling the

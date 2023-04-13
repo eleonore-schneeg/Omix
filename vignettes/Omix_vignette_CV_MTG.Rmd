@@ -91,26 +91,26 @@ ctd_fp <-file.path(outputDir, "ctd.rds")
 ensembl_fp  <- file.path(outputDir, "ensembl.rds")
 GO_fp <- file.path(outputDir, "GO_Biological_Process_2021.txt")
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/raw_counts_MTG_CV.rds",destfile=rawdata_rna_fp,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/raw_counts_MTG_CV.rds",destfile=rawdata_rna_fp,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/raw_proteomics_MTG_CV.rds",destfile=rawdata_protein_fp,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/raw_proteomics_MTG_CV.rds",destfile=rawdata_protein_fp,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/map_RNA_MTG_CV.rds",destfile=map_rna_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/map_RNA_MTG_CV.rds",destfile=map_rna_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/map_prot_MTG_CV.rds",destfile=map_prot_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/map_prot_MTG_CV.rds",destfile=map_prot_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_rna_MTG_CV.rds",destfile=metadata_rna_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_rna_MTG_CV.rds",destfile=metadata_rna_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_prot_MTG_CV.rds",destfile=metadata_prot_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_prot_MTG_CV.rds",destfile=metadata_prot_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_map_MTG_CV_new.rds",destfile=individual_metadata_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_map_MTG_CV_new.rds",destfile=individual_metadata_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/GO_Biological_Process_2021.txt",destfile=GO_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/GO_Biological_Process_2021.txt",destfile=GO_fp ,headers = c(Authorization = paste("token", "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")))
 
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", "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")))
 
 rawdata_rna <- as.data.frame(readRDS(paste0(outputDir,'/raw_counts_MTG_CV.rds')))
 rawdata_protein <- as.data.frame(readRDS(paste0(outputDir,'/raw_proteomics_MTG_CV.rds')))

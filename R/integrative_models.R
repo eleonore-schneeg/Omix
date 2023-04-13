@@ -264,8 +264,8 @@ integrate_with_MOFA <- function(multimodal_omics,
                                 num_factors = 5,
                                 scale_views = TRUE,
                                 metadata) {
-  python_path <- Sys.which("python")
-  reticulate::use_python(python_path, required = NULL)
+  #python_path <- Sys.which("python")
+  #reticulate::use_python(python_path, required = NULL)
 
   X <- list(
     mRNA = multimodal_omics[[1]],

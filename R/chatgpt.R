@@ -6,12 +6,12 @@
 #' @return ChatGPT answer
 #' @family Helper
 #' @export
-#' @importFrom httr add_headers
+#' @import httr
 #' @importFrom stringr str_trim
 ask_chatgpt <- function(prompt='What is multi-omics',
                         api_key=NULL) {
-  if(api_key==NULL){
-    "No OpenAI API key provided, please fill api_key parameter to proceed"
+  if(is.null(api_key)){
+    print("No OpenAI API key provided, please fill api_key parameter to proceed")
   }
   
   if(!is.null(api_key)){
@@ -31,7 +31,7 @@ ask_chatgpt <- function(prompt='What is multi-omics',
   ret <- content(response)
   if ("error" %in% names(ret)) warning(ret$error$message)
   if ("message" %in% names(ret$choices[[1]]))
-    cat(stringr::str_trim(ret$choices[[1]]$message$content))
+    ret=stringr::str_trim(ret$choices[[1]]$message$content)
   return(invisible(ret))
   }
   
