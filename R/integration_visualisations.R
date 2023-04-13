@@ -63,7 +63,7 @@ multiomics_network_matrix <- function(multimodal_object,
   list <- list(
     graph = mygraph,
     matrix = matrix,
-    hubs = hub_score(mygraph)$vector
+    hubs = igraph::hub_score(mygraph)$vector
   )
   return(list)
 }
@@ -86,7 +86,6 @@ multiomics_network_matrix <- function(multimodal_object,
 #'
 #' @export
 #'
-
 multiomics_network <- function(multiassay,
                                 list,
                                 correlation_threshold = 0.5) {
@@ -97,12 +96,13 @@ multiomics_network <- function(multiassay,
 
 
   matrix1 <- t(multimodal_object[[1]])
+  colnames(matrix1)=substr(colnames(matrix1),1,50)
   matrix1 <- matrix1[, list[[1]]]
 
 
   matrix2 <- t(multimodal_object[[2]])
+  colnames(matrix2)=substr(colnames(matrix2),1,50)
   matrix2 <- matrix2[, list[[2]]]
-
 
   matrix <- scale(cbind(matrix1, matrix2))
   colnames(matrix) <- features_interest
@@ -140,7 +140,7 @@ multiomics_network <- function(multiassay,
   list <- list(
     graph = mygraph,
     matrix = matrix,
-    hubs = hub_score(mygraph)$vector
+    hubs = igraph::hub_score(mygraph)$vector
   )
   return(list)
 }
@@ -223,7 +223,7 @@ interactive_network <- function(igraph,
   data1$nodes$font.color <- "black"
   nodes1 <- data1$nodes
   edges1 <- data1$edges
-  nodes1$size <- (hub_score(igraph)$vector * 30) + 1
+  nodes1$size <- (igraph::hub_score(igraph)$vector * 30) + 1
 
   # Create group column
   if (communities == TRUE) {
@@ -434,7 +434,7 @@ community_graph <- function(igraph,
 
   res <- list(
     graph = igraph_sub,
-    hubs = hub_score(igraph_sub)$vector
+    hubs = igraph::hub_score(igraph_sub)$vector
   )
 
   return(res)

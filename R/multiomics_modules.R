@@ -36,6 +36,9 @@ multiomics_modules <- function(multiassay,
     .id = "community"
   )
   ## eigenvalue
+  rownames(multimodal_omics$mRNA)=substr(rownames(multimodal_omics$mRNA),1,50)
+  rownames(multimodal_omics$proteins)=substr(rownames(multimodal_omics$proteins),1,50)
+  
   rownames(multimodal_omics$mRNA) <- paste0(
     rownames(multimodal_omics$mRNA), "_rna")
   rownames(multimodal_omics$proteins) <- paste0(
