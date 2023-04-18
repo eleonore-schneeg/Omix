@@ -10,7 +10,8 @@
 
 #' @importFrom MultiAssayExperiment MultiAssayExperiment listToMap colData
 #' @importFrom MultiAssayExperiment getWithColData sampleMap
-#' @keywords internal
+#' @family Helper
+#' @export
 #'
 #'
 get_metadata <- function(multiassay,
@@ -98,7 +99,8 @@ get_ID_names <- function(multiassay,
 #' default to `full`.
 #'
 #' @return Background genes character vector
-#' @keywords internal
+#' @family Helper
+#' @export
 #'
 get_background <- function(multiassay,
                             of = "full") {

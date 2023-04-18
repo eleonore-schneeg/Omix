@@ -9,7 +9,9 @@ pseudotime_inference(
   clusters,
   time_factor = 8,
   second_factor = 1,
-  lineage = "Lineage1"
+  lineage = "Lineage1",
+  start.clus = 1,
+  end.clus = 2
 )
 }
 \arguments{
@@ -24,6 +26,10 @@ clustering method}
 the embedding}
 
 \item{lineage}{lineage}
+
+\item{start.clus}{Starting cluser}
+
+\item{end.clus}{Ending cluser}
 }
 \value{
 A list object with \code{model} and \code{plot} slots

@@ -63,7 +63,7 @@ multiomics_network_matrix <- function(multimodal_object,
   list <- list(
     graph = mygraph,
     matrix = matrix,
-    hubs = hub_score(mygraph)$vector
+    hubs = igraph::hub_score(mygraph)$vector
   )
   return(list)
 }
@@ -86,7 +86,6 @@ multiomics_network_matrix <- function(multimodal_object,
 #'
 #' @export
 #'
-
 multiomics_network <- function(multiassay,
                                 list,
                                 correlation_threshold = 0.5) {
@@ -97,12 +96,13 @@ multiomics_network <- function(multiassay,
 
 
   matrix1 <- t(multimodal_object[[1]])
+  colnames(matrix1)=substr(colnames(matrix1),1,50)
   matrix1 <- matrix1[, list[[1]]]
 
 
   matrix2 <- t(multimodal_object[[2]])
+  colnames(matrix2)=substr(colnames(matrix2),1,50)
   matrix2 <- matrix2[, list[[2]]]
-
 
   matrix <- scale(cbind(matrix1, matrix2))
   colnames(matrix) <- features_interest
@@ -140,7 +140,7 @@ multiomics_network <- function(multiassay,
   list <- list(
     graph = mygraph,
     matrix = matrix,
-    hubs = hub_score(mygraph)$vector
+    hubs = igraph::hub_score(mygraph)$vector
   )
   return(list)
 }
@@ -223,7 +223,7 @@ interactive_network <- function(igraph,
   data1$nodes$font.color <- "black"
   nodes1 <- data1$nodes
   edges1 <- data1$edges
-  nodes1$size <- (hub_score(igraph)$vector * 30) + 1
+  nodes1$size <- (igraph::hub_score(igraph)$vector * 30) + 1
 
   # Create group column
   if (communities == TRUE) {
@@ -434,8 +434,48 @@ community_graph <- function(igraph,
 
   res <- list(
     graph = igraph_sub,
-    hubs = hub_score(igraph_sub)$vector
+    hubs = igraph::hub_score(igraph_sub)$vector
   )
 
   return(res)
 }
+
+
+#' Plot optimal number of clusters from `getClustNum()`
+#'
+#' @param optk1 Cluster Prediction Index
+#' @param optk2 Gap statistics
+#' @param try.N.clust A integer vector to indicate possible choices of number of clusters.
+#'
+#' @return plot
+#' @export
+#' @family Plotting
+#' @importFrom ggplot2 alpha
+
+plot_optimal_cluster <- function(optk1,
+                                 optk2,
+                                 try.N.clust) {
+  par(bty = "o", mgp = c(1.9, .33, 0), mar = c(3.1, 3.1, 2.1, 3.1) + .1, las = 1, tcl = -.25)
+  plot(NULL, NULL,
+       xlim = c(min(try.N.clust), max(try.N.clust)),
+       ylim = c(0, 1),
+       xlab = "Number of Multi-Omics Clusters", ylab = ""
+  )
+  rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col = "#EAE9E9", border = FALSE)
+  grid(col = "white", lty = 1, lwd = 1.5)
+  points(try.N.clust, apply(optk1, 1, mean), pch = 19, col = ggplot2::alpha("#224A8D"), cex = 1.5)
+  lines(try.N.clust, apply(optk1, 1, mean), col = "#224A8D", lwd = 2, lty = 4)
+  mtext("Cluster Prediction Index", side = 2, line = 2, cex = 1.5, col = "#224A8D", las = 3)
+  
+  par(new = TRUE, xpd = FALSE)
+  plot(NULL, NULL,
+       xlim = c(min(try.N.clust), max(try.N.clust)),
+       ylim = c(0, 1),
+       xlab = "", ylab = "", xaxt = "n", yaxt = "n"
+  )
+  points(try.N.clust, optk2$gap, pch = 19, col = ggplot2::alpha("#E51718", 0.8), cex = 1.5)
+  lines(try.N.clust, optk2$gap, col = "#E51718", lwd = 2, lty = 4)
+  axis(side = 4, at = seq(0, 1, 0.2), labels = c("0.0", "0.2", "0.4", "0.6", "0.8", "1.0"))
+  mtext("Gap-statistics", side = 4, line = 2, las = 3, cex = 1.5, col = "#E51718")
+}
+

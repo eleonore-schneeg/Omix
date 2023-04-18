@@ -77,5 +77,10 @@ Imports:
       DESeq2,
       MOFA2,
       AnnotationDbi,
-      clusterProfiler
+      clusterProfiler,
+      IntNMF,
+      ActivePathways,
+      iClusterPlus,
+      mogsa,
+      SNFtool
 VignetteBuilder: knitr

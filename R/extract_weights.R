@@ -142,7 +142,7 @@ extract_weigths <- function(model,
 
   #### Check weight/correlation to sense check variable
   if (!is.null(sense_check_variable)) {
-    metadata <- samples_metadata(model)
+    metadata <- MOFA2::samples_metadata(model)
 
     t_p <- t(data.frame(model@data$proteins))
     cor_p <- stats::cor(metadata[, sense_check_variable], t_p,

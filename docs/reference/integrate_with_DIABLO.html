@@ -63,8 +63,7 @@
 <span>  <span class="va">ncomp</span>,</span>
 <span>  <span class="va">design</span>,</span>
 <span>  range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mRNA <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">100</span>, by <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, proteins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">100</span>, by <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  <span class="va">list.keepX</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">list.keepX</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -90,7 +89,11 @@ maximised (= 1) – a “fully connected” design)</p></dd>
 
 
 <dt>range</dt>
-<dd></dd>
+<dd><p>a named list specifying the number of rna and protein.</p></dd>
+
+
+<dt>list.keepX</dt>
+<dd><p>list to keep rows</p></dd>
 
 </dl></div>
     <div id="value">
@@ -102,6 +105,7 @@ maximised (= 1) – a “fully connected” design)</p></dd>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other Multi-omic integration: 
+<code><a href="getClustNum.html">getClustNum</a>()</code>,
 <code><a href="integrate_with_MBPLS.html">integrate_with_MBPLS</a>()</code>,
 <code><a href="integrate_with_MEIFESTO.html">integrate_with_MEIFESTO</a>()</code>,
 <code><a href="integrate_with_MOFA.html">integrate_with_MOFA</a>()</code>,

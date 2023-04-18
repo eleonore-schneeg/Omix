@@ -89,25 +89,28 @@ metadata_prot_fp <-  file.path(outputDir, "metadata_prot_MTG_CV.rds")
 individual_metadata_fp <-file.path(outputDir, "metadata_map_MTG_CV_new.rds")
 ctd_fp <-file.path(outputDir, "ctd.rds")
 ensembl_fp  <- file.path(outputDir, "ensembl.rds")
+GO_fp <- file.path(outputDir, "GO_Biological_Process_2021.txt")
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/raw_counts_MTG_CV.rds",destfile=rawdata_rna_fp,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/raw_counts_MTG_CV.rds",destfile=rawdata_rna_fp,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/raw_proteomics_MTG_CV.rds",destfile=rawdata_protein_fp,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/raw_proteomics_MTG_CV.rds",destfile=rawdata_protein_fp,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/map_RNA_MTG_CV.rds",destfile=map_rna_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/map_RNA_MTG_CV.rds",destfile=map_rna_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/map_prot_MTG_CV.rds",destfile=map_prot_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/map_prot_MTG_CV.rds",destfile=map_prot_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_rna_MTG_CV.rds",destfile=metadata_rna_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_rna_MTG_CV.rds",destfile=metadata_rna_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_prot_MTG_CV.rds",destfile=metadata_prot_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_prot_MTG_CV.rds",destfile=metadata_prot_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_map_MTG_CV_new.rds",destfile=individual_metadata_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_CV/metadata_map_MTG_CV_new.rds",destfile=individual_metadata_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/GO_Biological_Process_2021.txt",destfile=GO_fp ,headers = c(Authorization = paste("token", "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")))
 
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", "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")))
 
 rawdata_rna <- as.data.frame(readRDS(paste0(outputDir,'/raw_counts_MTG_CV.rds')))
 rawdata_protein <- as.data.frame(readRDS(paste0(outputDir,'/raw_proteomics_MTG_CV.rds')))
@@ -382,6 +385,7 @@ DT::datatable(DE_comparison$dataframe,
                              dom = 'Blfrtip'))
 
 ```
+
 Overall, these single platform analyses highlighted obvious differences between transcriptomics and proteomics and should be further studied to differentiate technical versus biological effects. Overall, results highlight that:
 
 -   different platforms do not cover the same exact set of features
@@ -395,6 +399,32 @@ Protein with a positive Log2FC but negative mRNA regulation may point to those a
 ```{r}
 
 DE_comparison$dataframe$gene_name[which(DE_comparison$dataframe$direction=='Discordant'&DE_comparison$dataframe$log2FoldChange.y>0.2)]
+
+```
+
+## Integrative pathway enrichment 
+
+```{r}
+background=get_background(multiomics_object_MTG)
+scores_group=DE_comparison$dataframe[,c('gene_name','padj.x','padj.y')]
+scores_group=scores_group[!duplicated(scores_group$gene_name), ]
+rownames(scores_group)=scores_group$gene_name
+scores_group=scores_group[,2:3]
+colnames(scores_group)=c('Transcriptomics','Proteomics')
+scores_group=as.matrix(scores_group)
+ActivePathways=ActivePathways::ActivePathways(scores_group,
+                                              gmt=GO_fp,
+                                              background = background,
+                                              cutoff=0.5)
+
+DT::datatable(ActivePathways,
+              rownames = FALSE, 
+              escape = FALSE,
+              options = list(pageLength = 20, 
+                             scrollX=T, 
+                             autoWidth = TRUE,
+                             columnDefs = list(list(width = '500px', targets = 1)),
+                             dom = 'Blfrtip'))
 
 ```
 

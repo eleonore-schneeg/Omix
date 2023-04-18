@@ -28,9 +28,11 @@ Vertical integration with MOFA
 }
 \seealso{
 Other Multi-omic integration: 
+\code{\link{getClustNum}()},
 \code{\link{integrate_with_DIABLO}()},
 \code{\link{integrate_with_MBPLS}()},
 \code{\link{integrate_with_MEIFESTO}()},
+\code{\link{integrate_with_iCluster}()},
 \code{\link{integrate_with_sMBPLS}()},
 \code{\link{vertical_integration}()}
 }

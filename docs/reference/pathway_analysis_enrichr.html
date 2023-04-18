@@ -72,7 +72,16 @@
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>enrichment_database</dt>
+    <dl><dt>interest_gene</dt>
+<dd><p>vector containing genes of interest
+Column names should be gene, logFC, pval and padj respectively.</p></dd>
+
+
+<dt>project_name</dt>
+<dd><p>The name of the project to save.</p></dd>
+
+
+<dt>enrichment_database</dt>
 <dd><p>Name of the database for enrichment. User can
 specify one or more database names from <code><a href="https://rdrr.io/pkg/enrichR/man/listEnrichrDbs.html" class="external-link">enrichR::listEnrichrDbs()</a></code>.</p></dd>
 
@@ -86,9 +95,12 @@ analysis will be saved otherwise a R list will be returned. Default FALSE</p></d
 <dd><p>Path for the output directory. Default is current dir.</p></dd>
 
 
-<dt>interest_genes</dt>
-<dd><p>vector containing genes of interest
-Column names should be gene, logFC, pval and padj respectively.</p></dd>
+<dt>min_overlap</dt>
+<dd><p>minimum overlap between genes and genesets to keep.</p></dd>
+
+
+<dt>plot_n</dt>
+<dd><p>number of genesets to plot</p></dd>
 
 </dl></div>
     <div id="value">

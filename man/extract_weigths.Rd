@@ -36,10 +36,13 @@ defined absolute threshold
 }
 \seealso{
 Other Helper: 
+\code{\link{ask_chatgpt}()},
 \code{\link{counts_rna}()},
 \code{\link{extract_multiomic_signature}()},
 \code{\link{format_res_deseq}()},
 \code{\link{format_res_limma}()},
+\code{\link{get_background}()},
+\code{\link{get_metadata}()},
 \code{\link{processed_proteomics}()},
 \code{\link{processed_rna}()}
 }

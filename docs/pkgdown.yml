@@ -1,8 +1,8 @@
-pandoc: '2.18'
+pandoc: 2.17.1.1
 pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   Omix_vignette_CV_MTG: Omix_vignette_CV_MTG.html
   Omix_vignette_MAP_CV_pseudotemporal: Omix_vignette_MAP_CV_pseudotemporal.html
-last_built: 2023-03-31T03:51Z
+last_built: 2023-04-13T14:40Z
 
