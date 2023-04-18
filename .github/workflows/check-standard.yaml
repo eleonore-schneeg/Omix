@@ -38,9 +38,9 @@ jobs:
         with:
           load: true
           tags: |
-            eleonore-schneeg/omix:${{ env.packageVersion }}
-            eleonore-schneeg/omix:latest
-            eleonore-schneeg/omix:dev
+            eleonoreschneeg/omix:${{ env.packageVersion }}
+            eleonoreschneeg/omix:latest
+            eleonoreschneeg/omix:dev
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
