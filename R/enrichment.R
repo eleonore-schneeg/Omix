@@ -41,7 +41,7 @@ pathway_analysis_enrichr <- function(interest_gene = NULL,
                                      is_output = FALSE,
                                      output_dir = ".",
                                      min_overlap = 3,
-                                     plot_n = 20) {
+                                     plot_n = 10) {
   eval(parse(text = "enrichR:::.onAttach()")) # R CMD check workaround
 
   res <- enrichR::enrichr(
@@ -187,7 +187,7 @@ dotplot_enrichr <- function(dt, plot_n = 20) {
 #' @param dt functional enrichment results
 #' @param semantics vector of biological terms
 #'
-#' @return functional enrichement plot
+#' @return functional enrichment plot
 #'
 #' @import ggplot2
 #' @importFrom stringr str_wrap
@@ -321,7 +321,6 @@ enrichment_custom <- function(genes,
 #' @importFrom EWCE bootstrap_enrichment_test ewce_plot
 #' @export
 #'
-
 cell_type_enrichment <- function(multiassay,
                                  communities) {
   background_genes <- get_background(multiassay)
@@ -330,6 +329,8 @@ cell_type_enrichment <- function(multiassay,
   hits <- lapply(hits, function(x) {
     x[x %in% background_genes]
   })
+
+  hits_keep <- lapply(hits, function(x) length(x) >= 4)
   hits <- lapply(hits, function(x) x[length(x) >= 4])
   hits <- hits[lapply(hits, length) > 0]
 
@@ -363,13 +364,14 @@ cell_type_enrichment <- function(multiassay,
 
   plot_cell_enrichment <- list()
   plot_cell_enrichment <- lapply(plots, function(x) x[["plain"]])
+  names(plot_cell_enrichment)=names(hits_keep)[hits_keep == TRUE]
   plot_cell_enrichment <- lapply(names(plot_cell_enrichment), function(x) {
     plot_cell_enrichment[[x]] +
       ggplot2::ggtitle(paste("Cell type enrichment in community #", x))
   })
 
-  names(resultsPlots) <- names(hits)
-  names(plot_cell_enrichment) <- names(hits)
+  names(resultsPlots) <- names(hits_keep)[hits_keep == TRUE]
+  names(plot_cell_enrichment) <- names(hits_keep)[hits_keep == TRUE]
   cell_type_enrichment <- list(results = resultsPlots,
                                plots = plot_cell_enrichment)
 

@@ -28,7 +28,7 @@ Vertical integration with MBPLS
 Other Multi-omic integration: 
 \code{\link{getClustNum}()},
 \code{\link{integrate_with_DIABLO}()},
-\code{\link{integrate_with_MEIFESTO}()},
+\code{\link{integrate_with_MEFISTO}()},
 \code{\link{integrate_with_MOFA}()},
 \code{\link{integrate_with_iCluster}()},
 \code{\link{integrate_with_sMBPLS}()},

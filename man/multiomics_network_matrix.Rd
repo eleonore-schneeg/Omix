@@ -21,17 +21,23 @@ List containing \code{graph} and \code{matrix} slots
 Get multiomics networks from multimodal object
 }
 \seealso{
-Other Plotting: 
-\code{\link{communities_network}()},
-\code{\link{community_graph}()},
-\code{\link{interactive_network}()},
-\code{\link{multiomics_network_cluster}()},
+Other Multi-omic integration downstream analysis: 
+\code{\link{OpenTarget_dataframe}()},
+\code{\link{Transcription_Factor_enrichment_supervised}()},
+\code{\link{Transcription_Factor_enrichment}()},
+\code{\link{clustering_DE_analysis}()},
+\code{\link{extract_loadings}()},
+\code{\link{extract_multiomic_signature}()},
+\code{\link{extract_weigths}()},
+\code{\link{integrative_results_clustering}()},
+\code{\link{integrative_results_sparse_supervised}()},
+\code{\link{integrative_results_supervised}()},
+\code{\link{integrative_results_unsupervised}()},
+\code{\link{multiomics_modules}()},
 \code{\link{multiomics_network}()},
-\code{\link{plot_OpenTarget}()},
-\code{\link{plot_optimal_cluster}()},
-\code{\link{volcano_interactive_comparison}()},
-\code{\link{volcano_interactive}()},
-\code{\link{volcano_plot_deseq}()},
-\code{\link{volcano_plot_limma}()}
+\code{\link{plot_module_trajectory}()},
+\code{\link{posterior_probability}()},
+\code{\link{pseudotime_inference}()},
+\code{\link{sign_signature}()}
 }
-\concept{Plotting}
+\concept{Multi-omic integration downstream analysis}

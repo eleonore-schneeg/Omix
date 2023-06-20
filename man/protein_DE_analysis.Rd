@@ -11,7 +11,7 @@ protein_DE_analysis(
   covariates = NULL,
   levels = c("Control", "AD"),
   log2FoldChange = 0.5,
-  padj = 0.5
+  padj = 0.05
 )
 }
 \arguments{

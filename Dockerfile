@@ -137,6 +137,7 @@ ggplot2 \
 ggpubr \
 ggrastr \
 ggrepel \
+ggridges \
 ggsignif \
 GGally \
 ggbeeswarm \
@@ -162,15 +163,18 @@ remotes \
 reshape2 \
 reticulate \
 rmarkdown \
+table1 \
 tibble \
 tidyr \
 stringr \
 scales \
 SNFtool \
+synapser \
 statmod \
 systemfonts \
 viridis \
 visNetwork \
+PCAtools \
 && rm -rf /tmp/downloaded_packages
 
 ## Install Bioconductor packages
@@ -184,7 +188,8 @@ RUN Rscript -e 'requireNamespace("BiocManager"); BiocManager::install(ask=F);' \
 NMF \
 IntNMF \
 MASS \
-ActivePathways 
+ActivePathways \
+multiGSEA
 
 # RUN Rscript -e  'reticulate::py_config()'
 

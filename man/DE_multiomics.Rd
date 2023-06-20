@@ -2,7 +2,7 @@
 % Please edit documentation in R/DE_multiomics.R
 \name{DE_multiomics}
 \alias{DE_multiomics}
-\title{Performs DE on multiomics object from the processed slots}
+\title{Performs DE on the multimodal object from the processed slots}
 \usage{
 DE_multiomics(
   multiassay,
@@ -30,7 +30,7 @@ is denoised.}
 List of differential expression results
 }
 \description{
-Performs DE on multiomics object from the processed slots
+Performs DE on the multimodal object from the processed slots
 }
 \seealso{
 Other Single-omic: 

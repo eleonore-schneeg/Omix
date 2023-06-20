@@ -7,6 +7,7 @@
 clustering_DE_analysis(
   normalized_data = multimodal$rna_processed,
   colData,
+  omic,
   dependent = "Cluster",
   levels = c("CS2", "CS1"),
   log2FoldChange = 0.5
@@ -16,6 +17,8 @@ clustering_DE_analysis(
 \item{normalized_data}{Normalized rna/protein data}
 
 \item{colData}{The coldadata variable}
+
+\item{omic}{\code{protein} or \code{mRNA}}
 
 \item{dependent}{The dependent variable}
 
@@ -28,8 +31,22 @@ Performs differential expression between clusters
 }
 \seealso{
 Other Multi-omic integration downstream analysis: 
+\code{\link{OpenTarget_dataframe}()},
+\code{\link{Transcription_Factor_enrichment_supervised}()},
+\code{\link{Transcription_Factor_enrichment}()},
+\code{\link{extract_loadings}()},
+\code{\link{extract_multiomic_signature}()},
+\code{\link{extract_weigths}()},
+\code{\link{integrative_results_clustering}()},
+\code{\link{integrative_results_sparse_supervised}()},
 \code{\link{integrative_results_supervised}()},
 \code{\link{integrative_results_unsupervised}()},
-\code{\link{multiomics_modules}()}
+\code{\link{multiomics_modules}()},
+\code{\link{multiomics_network_matrix}()},
+\code{\link{multiomics_network}()},
+\code{\link{plot_module_trajectory}()},
+\code{\link{posterior_probability}()},
+\code{\link{pseudotime_inference}()},
+\code{\link{sign_signature}()}
 }
 \concept{Multi-omic integration downstream analysis}

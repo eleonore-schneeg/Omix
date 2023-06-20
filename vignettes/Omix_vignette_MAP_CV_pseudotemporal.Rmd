@@ -74,53 +74,40 @@ library(Omix)
 library(purrr)
 library(ggplot2)
 library(dplyr)
+library(synapser)
+library(tibble)
 ```
 
 First we must load the data from Omix for the vignette:
 
 ```{r}
 outputDir <- tempdir()
-rawdata_rna_fp <- file.path(outputDir, "raw_counts_MTG_SSC_CV.rds")
-rawdata_protein_fp <- file.path(outputDir, "raw_proteomics_MTG_SSC_CV.rds")
-map_rna_fp <- file.path(outputDir, "map_RNA_MTG_SSC_CV.rds")
-map_prot_fp <- file.path(outputDir, "map_prot_MTG_SSC_CV.rds")
-metadata_rna_fp <- file.path(outputDir, "metadata_rna_MTG_SSC_CV.rds")
-metadata_prot_fp <-  file.path(outputDir, "metadata_prot_MTG_SSC_CV.rds")
-individual_metadata_fp <-file.path(outputDir, "metadata_map_MTG_SSC_CV_new.rds")
 ctd_fp <-file.path(outputDir, "ctd.rds")
 ensembl_fp  <-file.path(outputDir, "ensembl.rds")
-clusters_fp  <-file.path(outputDir, "clusters.rds")
-
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/raw_counts_MTG_SSC_CV.rds",destfile=rawdata_rna_fp,headers = c(Authorization = paste("token", "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")))
-
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/raw_proteomics_MTG_SSC_CV.rds",destfile=rawdata_protein_fp,headers = c(Authorization = paste("token", "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")))
-
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/map_RNA_MTG_SSC_CV.rds",destfile=map_rna_fp ,headers = c(Authorization = paste("token", "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")))
-
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/map_prot_MTG_SSC_CV.rds",destfile=map_prot_fp ,headers = c(Authorization = paste("token", "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")))
-
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/metadata_rna_MTG_SSC_CV.rds",destfile=metadata_rna_fp ,headers = c(Authorization = paste("token", "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")))
-
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/metadata_prot_MTG_SSC_CV.rds",destfile=metadata_prot_fp ,headers = c(Authorization = paste("token", "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")))
-
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/metadata_map_MTG_SSC_CV_new.rds",destfile=individual_metadata_fp ,headers = c(Authorization = paste("token", "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")))
+TF_fp <- file.path(outputDir, "Enrichr_Queries.gmt.txt")
+GO_fp <- file.path(outputDir, "GO_Biological_Process_2021.txt")
 
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", "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")))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/data_MTG_SSC_CV/clusters.rds",destfile=clusters_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/Enrichr_Queries.gmt.txt",destfile=TF_fp ,headers = c(Authorization = paste("token", "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")))
+
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/GO_Biological_Process_2021.txt",destfile=GO_fp ,headers = c(Authorization = paste("token", "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")))
 
 
+synapser::synLogin(email=Sys.getenv('synapse_id'), password=Sys.getenv('synapse_password'))
+rawdata_rna <- read.csv(synapser::synGet('syn51516100')$path, header=T, stringsAsFactors = F, row.names=1)
+rawdata_protein <- read.csv(synapser::synGet('syn51516105')$path, header=T, stringsAsFactors = F, row.names=1)
+map_rna <-read.csv(synapser::synGet('syn51516102')$path, header=T, stringsAsFactors = F, row.names=1)
+map_prot <- read.csv(synapser::synGet('syn51516104')$path, header=T, stringsAsFactors = F, row.names=1)
+metadata_rna<-read.csv(synapser::synGet('syn51516103')$path, header=T, stringsAsFactors = F, row.names=1)
+metadata_prot <- read.csv(synapser::synGet('syn51516106')$path, header=T, stringsAsFactors = F, row.names=1)
+individual_metadata <-read.csv(synapser::synGet('syn51516101')$path, header=T, stringsAsFactors = F, row.names=1)
+clusters<-readRDS(synapser::synGet('syn51516107')$path)
+integrative_model<-readRDS(synapser::synGet('syn51520491')$path)
 
-rawdata_rna <- as.data.frame(readRDS(paste0(outputDir,'/raw_counts_MTG_SSC_CV.rds')))
-rawdata_protein <- as.data.frame(readRDS(paste0(outputDir,'/raw_proteomics_MTG_SSC_CV.rds')))
-map_rna <- as.data.frame(readRDS(paste0(outputDir,'/map_RNA_MTG_SSC_CV.rds')))
-map_prot <- as.data.frame(readRDS(paste0(outputDir,'/map_prot_MTG_SSC_CV.rds')))
-metadata_rna<- as.data.frame(readRDS(paste0(outputDir,'/metadata_rna_MTG_SSC_CV.rds')))
-metadata_prot <-  as.data.frame(readRDS(paste0(outputDir,'/metadata_prot_MTG_SSC_CV.rds')))
-individual_metadata <- as.data.frame(readRDS(paste0(outputDir,'/metadata_map_MTG_SSC_CV_new.rds')))
 ctd <-  readRDS(paste0(outputDir,'/ctd.rds'))
 ensembl <-read.delim(file=paste0(outputDir,'/ensembl.rds'), sep = '\t', header = TRUE)
 rna_qc_data_matrix <- NULL
@@ -279,46 +266,37 @@ multiomics_object=process_protein(
 > -   The middle frontal gyrus (MTG)
 
  The MTG is known to be affected earlier during AD progression, while SSC at later stages. Using these two regions as pseudotemporal proxi in the integrative process, we are able to gain a deeper understanding of biological mechanisms that occur during AD progression.
+ 
+<img src="man/figures/cohort.png" width=200 style="align:left;" />
 
-## Pseudotemporal multi-omics integration using MOFA (MEIFESTO)
+## Pseudotemporal multi-omics integration using MOFA 
 
-
-We need to create a new pseudo-temporal variable based on brain regions, 1 for MTG as it comes earlier in the disease trajectory, and 2 for SSC.
-
-```{r , message = FALSE}
-MultiAssayExperiment::colData(multiomics_object)$pseudotime=
-  ifelse(MultiAssayExperiment::colData(multiomics_object)$brain_region=='MTG',1,2)
-```
-
-
-```{r}
+```{r eval=F}
 multiomics_object=vertical_integration(multiassay=multiomics_object,
                                 slots = c(
                                    "rna_processed",
                                    "protein_processed"
                                  ),
-                                integration='MEIFESTO',
+                                integration='MOFA',
                                 ID_type = "gene_name",
                                 dependent='diagnosis',
                                 intersect_genes = FALSE,
                                 num_factors = 15,
                                 scale_views = FALSE,
-                                time="pseudotime",
                                 most_variable_feature=TRUE)
 ```
 
 The integration process is successful and all integration related object are stored in the `integration` slot of the multi-omics object.
 
 ```{r}
-print(multiomics_object@metadata$integration$MEIFESTO)
+print(multiomics_object@metadata$integration$MOFA)
 ```
 
 
 ### Optional: load a pretrained model 
 
 ```{r}
-#model=readRDS('assets/model2.rds')
-#multiomics_object@metadata$integration$MEIFESTO=model
+#multiomics_object@metadata$integration$MOFA=integrative_model
 ```
 
 # Step five - Post integration downstream analyses 
@@ -327,7 +305,8 @@ print(multiomics_object@metadata$integration$MEIFESTO)
 All downstream analyses will be performed on the integrated object stored in the `integrated` slot.
 
 ```{r, message=FALSE}
-integrated_object=multiomics_object@metadata$integration$MEIFESTO
+integrated_object=multiomics_object@metadata$integration$MOFA
+metadata=integrated_object@samples_metadata
 ```
 
 
@@ -342,18 +321,11 @@ MOFA2::plot_variance_explained(integrated_object, max_r2=10)
 ### Correlation of factors with covariates 
 
 ```{r}
+integrated_object@samples_metadata$SOM=ifelse(integrated_object@samples_metadata$brain_region=='SOM',1,0)
+correlation_heatmap(integrated_object,
+                   covariates=c("AD","Braak",'MTG','SOM',
+                               'amyloid','pTau','PHF1'))
 
-suppressWarnings({MOFA2::correlate_factors_with_covariates(integrated_object, 
-                                  covariates = c("AD","Braak",'pseudotime','MTG',
-                                                 'SSC','amyloid','pTau','PHF1'), 
-                                  plot="r")
-
-})
-suppressWarnings({MOFA2::correlate_factors_with_covariates(integrated_object, 
-                                  covariates = c("AD","Braak",'pseudotime','MTG',
-                                                 'SSC','amyloid','pTau','PHF1'), 
-                                  plot="log_pval")
-})
 
 ```
 
@@ -398,7 +370,6 @@ set.seed(42)
 #                         factors = c(4,6))
 
 #load clusters for reproducibility
-clusters <- readRDS(paste0(outputDir,'/clusters.rds'))
 MOFA2::plot_factors(integrated_object,
              factors=c(8,6),
              color_by=clusters$cluster, scale = F)
@@ -421,9 +392,9 @@ pseudotime$plot
 #### Update the `integrated_object` with the pseudotime
  
 ```{r}
-multiomics_object@metadata$integration$MEIFESTO=pseudotime$model
-integrated_object=multiomics_object@metadata$integration$MEIFESTO
-MOFA2::samples_metadata(integrated_object)$pseudotime
+multiomics_object@metadata$integration$MOFA=pseudotime$model
+integrated_object=multiomics_object@metadata$integration$MOFA
+MOFA2::samples_metadata(integrated_object)$inferred_pseudotime
 ```
 
 ## Extract features that are driving Factor 6 based on feature weights 
@@ -449,7 +420,7 @@ It also returns QC plots
 ```{r}
 weights=extract_weigths(integrated_object,
                            factor=6,
-                           threshold=0.3,
+                           threshold=0.2,
                            sense_check_variable='PHF1')
 ```
 
@@ -473,6 +444,7 @@ weights$weights_cor_plot$protein
 A negative weight indicates that the feature has higher levels in the samples with negative factor values, which in this analysis coincides with later Braak stages.
 
 ```{r}
+integrated_object@samples_metadata$Braak=as.factor(integrated_object@samples_metadata$Braak)
 MOFA2::plot_factor(integrated_object, 
             factors = 6, 
             color_by = "Braak",
@@ -508,7 +480,8 @@ intersect(weights$weights$ranked_weights_negative$rna,weights$weights$ranked_wei
 
 Weights_down_n=multiomics_network(multiassay=multiomics_object,
                            list=weights$weights$ranked_weights_negative,
-                           correlation_threshold =0.4)
+                           correlation_threshold =0.4,
+                           filter_string_50= TRUE)
 
 ```
 
@@ -520,6 +493,7 @@ The next step of the analysis is to find densily co-expressed communities of pro
 This function tries to find densely connected subgraphs in a graph by calculating the leading non-negative eigenvector of the modularity matrix of the graph.
 
 ```{r}
+
 communities <- communities_network(igraph=Weights_down_n$graph,
                                     community_detection='leading_eigen')
 
@@ -558,10 +532,6 @@ DT::datatable(
 
 
 We can look at each communities:
-
--   Community 1 is a mix of proteins and RNAs
--   Community 2 is a RNA only community
-
 
 #### Community 1 
 
@@ -613,73 +583,40 @@ cell_type$plots
 
 - We find one neuronal, one microglial and two undefined glial enriched modules.
 
-## Pathway enrichment analysis
+## Pathway enrichment analysis 
 
-- Gene set enrichment analysis is a method to infer biological pathway activity from gene expression data.
-- Here we use “pre-ranked GSEA” which takes as input a gene list sorted by their weight in the Factor of interest post integration, here factor 6.
-- Down-regulated pathways are up-regulated in samples with negative factor values, here late Braak stages samples
-- Up-regulated pathways are strong in samples with positive factor values, here control and early braak stages 
-
-Since negative weights coincide wiht negative factor values in this case, all down-regulated pathways are those in fact up-regulated in AD. 
-
-### RNA level enrichment
 
 ```{r}
-gene_list = weights$weights_df$rna$Weights 
-names(gene_list) =  weights$weights_df$rna$Feature
-gene_list = sort(gene_list, decreasing = TRUE)
-gene_list = gene_list[!duplicated(names(gene_list))]
+communities_l = lapply(communities$communities,function(x){sub("\\_.*", "",x )})
 
+enrichment1=pathway_analysis_enrichr(communities_l$`1`,plot=5)
+enrichment2=pathway_analysis_enrichr(communities_l$`2`,plot=5)
+enrichment3=pathway_analysis_enrichr(communities_l$`3`,plot=5)
+enrichment4=pathway_analysis_enrichr(communities_l$`4`,plot=5)
+enrichment5=pathway_analysis_enrichr(communities_l$`5`,plot=5)
 
- rna_enrichment=GSEA(gene_list=gene_list,
-           pval=0.05)
- 
- rna_enrichment$Plot
-```
-
-### Protein level enrichment
-
-```{r}
-gene_list = weights$weights_df$protein$Weights 
-names(gene_list) =  weights$weights_df$protein$Feature
-gene_list = sort(gene_list, decreasing = TRUE)
-gene_list = gene_list[!duplicated(names(gene_list))]
-
-
- protein_enrichment=GSEA(gene_list=gene_list,
-           pval=0.05)
- 
- protein_enrichment$Plot
-```
-
-Complement activation is up-regulated both at the RNA and protein level.
-
-```{r}
-complement_rna=rna_enrichment[["Results"]]$leadingEdge[which(rna_enrichment[["Results"]]$pathway=='complement activation')]
-protein_enrichment[["Results"]]$leadingEdge[which( protein_enrichment[["Results"]]$pathway=='complement activation')]
+enrichment1$plot$Reactome_2016+theme(axis.text=element_text(size=12),
+                                     axis.title=element_text(size=12),
+                                     strip.text = element_text(size = 0, margin = margin()),
+                                     legend.title = element_text(size=9))
+enrichment2$plot$Reactome_2016+theme(axis.text=element_text(size=12),
+                                     axis.title=element_text(size=12),
+                                     strip.text = element_text(size = 0, margin = margin()),
+                                     legend.title = element_text(size=9))
+enrichment3$plot$Reactome_2016+theme(axis.text=element_text(size=12),
+                                     axis.title=element_text(size=12),
+                                     strip.text = element_text(size = 0, margin = margin()),
+                                     legend.title = element_text(size=9))
+enrichment4$plot$Reactome_2016+theme(axis.text=element_text(size=12),
+                                     axis.title=element_text(size=12),
+                                     strip.text = element_text(size = 0, margin = margin()),
+                                     legend.title = element_text(size=9))
+enrichment5$plot$Reactome_2016+theme(axis.text=element_text(size=12),
+                                     axis.title=element_text(size=12),
+                                     strip.text = element_text(size = 0, margin = margin()),
+                                     legend.title = element_text(size=9))
 
 ```
-
-
-If users have a chatGPT personal access token, it is possible to query chatGPT with prompts like the following:
-
-```{r}
-
-ans=ask_chatgpt(prompt="Briefly explain what 'complement acitvation' corresponds to in terms of biological pathways, and how it has been related to Alzheimer's",
-                  api_key="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")
-cat(ans)
-
-```
-
-```{r}
-for (i in unlist(complement_rna)){
-  ans=ask_chatgpt(prompt=paste("Explain in 3 lines maximum the function of the following protein:",i),
-                  api_key="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")
-  cat("\nProtein",paste(i),':',ans)
-}
-
-```
-
 
 
 ## Modules correlation to neuropathology 
@@ -690,29 +627,42 @@ for (i in unlist(complement_rna)){
 ```{r, message= FALSE, warning=FALSE}
 modules=multiomics_modules(multiassay=multiomics_object,
                               metadata=MOFA2::samples_metadata(integrated_object),
-                              covariates=c('pseudotime','PHF1','amyloid','pTau'),
-                              communities=communities$communities)
+                              covariates=c('inferred_pseudotime','PHF1','amyloid','pTau'),
+                              communities=communities$communities,
+                              filter_string_50=TRUE)
+```
+## Transcription Factor - target gene enrichment 
+
+```{r}
+TF=Transcription_Factor_enrichment(communities=communities$communities,
+                                   weights=weights,
+                                   TF_gmt=TF_fp,
+                                   threshold = 0.2,
+                                   direction = "negative") 
+
+GeneOverlap::drawHeatmap(TF,what = c("odds.ratio"), log.scale = T, adj.p = F, cutoff = .05,
+                          ncolused = 7, grid.col = c("Blues"), note.col = "red")
 ```
 
 ## Pseudotime ordering of multi-omics modules 
 
-- Here we related each module eigen value to the pseudotime inferred from MOFA integration emmbeddigns (Factors 6/8)
+- Here we related each module eigen value to the pseudotime inferred from MOFA integration emmbeddings (Factors 6/8)
 
-```{r, message= FALSE}
+```{r}
 
-pseudotime_ordering_modules=pseudotime_ordering_modules(metadata=modules$metadata_modules,
-                                       modules=colnames(modules$modules_eigen_value),
-                                       variable='PHF1',
-                                       pseudotime_var='pseudotime')
+plot_module_trajectory(modules=modules,
+                                   covariates=c('amyloid','pTau','PHF1'),
+                                   plot_modules=c("ME1","ME2","ME3","ME4"))
 
-pseudotime_ordering_modules
 ```
+
 
 ### Pseudotime vs Braak
 
 > We find a stronge correlation between inferred pseudotime and PHF1, indicating that the pseudotemporal multiomics integration provides an accurate assessment of AD progression, encompassing all neuropathological measures 
 
 #### PHF1
+
 ```{r, message= FALSE}
 modules$metadata_modules$Braak=factor(modules$metadata_modules$Braak, levels = c("0","1","2","3","4","5","6"))
 modules$metadata_modules$Braak_num=as.numeric(modules$metadata_modules$Braak)
@@ -720,7 +670,7 @@ gg=ggpubr::ggscatter(modules$metadata_modules, y = "PHF1", x = "Braak_num", pale
                      add = "reg.line", conf.int = TRUE,  label.x = 4,  add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
                      cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
                      cor.coeff.args = list(method = "pearson", label.sep = "\n"))
-gb=ggpubr::ggscatter(modules$metadata_modules, y = "PHF1", x = "pseudotime", palette = "jco",
+gb=ggpubr::ggscatter(modules$metadata_modules, y = "PHF1", x = "inferred_pseudotime", palette = "jco",
                      add = "reg.line", conf.int = TRUE,   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
                      cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
                      cor.coeff.args = list(method = "pearson", label.x = 4, label.sep = "\n"))
@@ -738,7 +688,7 @@ gg=ggpubr::ggscatter(modules$metadata_modules, y = "amyloid", x = "Braak_num", p
                      add = "reg.line", conf.int = TRUE,  label.x = 4,  add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
                      cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
                      cor.coeff.args = list(method = "pearson", label.sep = "\n"))
-gb=ggpubr::ggscatter(modules$metadata_modules, y = "amyloid", x = "pseudotime", palette = "jco",
+gb=ggpubr::ggscatter(modules$metadata_modules, y = "amyloid", x = "inferred_pseudotime", palette = "jco",
                      add = "reg.line", conf.int = TRUE,   add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
                      cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
                      cor.coeff.args = list(method = "pearson", label.x = 4, label.sep = "\n"))
@@ -751,7 +701,7 @@ plot(gb)
 ```{r, message= FALSE}
 for(i in colnames(modules$modules_eigen_value)){
 gg=ggpubr::ggscatter(modules$metadata_modules, 
-                     x = "pseudotime", 
+                     x = "inferred_pseudotime", 
                      y = paste(i),
           color = "diagnosis",
           palette = "jco",
@@ -839,4 +789,42 @@ plot(gg)
 }
 ```
 
+```{r}
+metadata=integrated_object@samples_metadata
+ggplot(metadata, aes(x = brain_region, y = inferred_pseudotime,color=Braak)) +
+  geom_point(size = 5, col = "firebrick", alpha = 0.5,aes(color=Braak)) +
+  geom_line(aes(group = BBN_ID)) +
+  labs(x = "Brain region", y = "Inferred_pseudotime") +
+  theme_classic()+facet_wrap(~Braak)
+
+ggplot(metadata, aes(x = brain_region, y = inferred_pseudotime,color=diagnosis)) +
+  geom_point(size = 5, col = "firebrick", alpha = 0.5,aes(color=Braak)) +
+  geom_line(aes(group = BBN_ID)) +
+  labs(x = "Brain region", y = "Inferred_pseudotime") +
+  theme_classic()+facet_wrap(~diagnosis)
+```
+
+```{r}
+library(ggridges)
+ggplot(metadata, aes(x = inferred_pseudotime, y = Braak,fill = brain_region)) +
+  geom_density_ridges(aes(point_color =diagnosis, point_fill = brain_region),
+                      jittered_points = TRUE, position = "raincloud",
+                      alpha = 0.7, scale = 0.9, panel_scaling=FALSE
+  )+
+  xlab('Inferred pseudotime')+
+  ylab(paste('Braak'))+
+  theme_classic()+
+  labs(fill=NULL)
+
+ggplot(metadata, aes(x = inferred_pseudotime, y =brain_region,fill = diagnosis)) +
+  geom_density_ridges(aes(point_shape =diagnosis, point_fill = diagnosis),
+                      jittered_points = TRUE, position = "raincloud",
+                      alpha = 0.7, scale = 0.9, panel_scaling=FALSE
+  )+
+  xlab('Inferred pseudotime')+
+  ylab(paste('Braak'))+
+  theme_classic()+
+  labs(fill=NULL)
+
+```
 

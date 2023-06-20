@@ -41,7 +41,7 @@ Tibshirani, R., Walther, G., Hastie, T. (2001). Estimating the number of data cl
 Other Multi-omic integration: 
 \code{\link{integrate_with_DIABLO}()},
 \code{\link{integrate_with_MBPLS}()},
-\code{\link{integrate_with_MEIFESTO}()},
+\code{\link{integrate_with_MEFISTO}()},
 \code{\link{integrate_with_MOFA}()},
 \code{\link{integrate_with_iCluster}()},
 \code{\link{integrate_with_sMBPLS}()},

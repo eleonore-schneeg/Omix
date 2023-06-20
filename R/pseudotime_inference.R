@@ -12,7 +12,7 @@
 #'
 #' @return A list object with `model` and `plot` slots
 #'
-#' @family Pseudotime inference
+#' @family Multi-omic integration downstream analysis
 #'
 #' @importFrom slingshot slingshot as.SlingshotDataSet
 #' @importFrom viridis scale_color_viridis
@@ -46,19 +46,19 @@ pseudotime_inference <- function(model,
 
   pseudotime <- as.data.frame(sds@assays@data@listData[["pseudotime"]])
 
-  MOFA2::samples_metadata(model)$pseudotime <- pseudotime[paste(lineage)][match(
+  MOFA2::samples_metadata(model)$inferred_pseudotime <- pseudotime[paste(lineage)][match(
     names(clusters$cluster),
     rownames(pseudotime)
   ), ]
 
   embeddings <- data.frame(embeddings)
-  embeddings$pseudotime <- pseudotime[, paste(lineage)]
+  embeddings$inferred_pseudotime <- pseudotime[, paste(lineage)]
 
   df2 <- data.frame(df@curves[[paste(lineage)]]$s)
 
   plot <- ggpubr::ggscatter(embeddings,
     x = "x", y = "y",
-    color = "pseudotime"
+    color = "inferred_pseudotime"
   ) +
     viridis::scale_color_viridis() +
     ggplot2::geom_point(data = df2, ggplot2::aes(x = x, y = y)) +

@@ -14,7 +14,7 @@
 #' specified threshold, distirbution plots of the weights, and dataframes
 #' of the weights for each omic layer.
 #'
-#' @family Helper
+#' @family Multi-omic integration downstream analysis
 #'
 #' @importFrom MOFA2 get_weights
 #' @importFrom dplyr %>% arrange desc filter pull
@@ -120,22 +120,6 @@ extract_weigths <- function(model,
     geom_vline(
       xintercept = -threshold, linetype = "dotted",
       color = "blue", size = 0.8
-    ) +
-    ylab("Density of Proteins weights")
-
-
-  ggplot2::ggplot(protein_1, aes(x = correlation)) +
-    geom_density() +
-    theme_classic() +
-    geom_vline(
-      xintercept = threshold,
-      linetype = "dotted",
-      color = "blue",
-      linewidth = 0.8
-    ) +
-    geom_vline(
-      xintercept = -threshold, linetype = "dotted",
-      color = "blue", linewidth = 0.8
     ) +
     ylab("Density of Proteins weights")
 

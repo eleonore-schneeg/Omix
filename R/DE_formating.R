@@ -66,6 +66,10 @@ format_res_limma <- function(dt,
     "label"
   )]
 
+  dt$log2FoldChange=signif(dt$log2FoldChange,3)
+  dt$pvalue=signif(dt$pvalue,3)
+  dt$padj=signif(dt$padj,3)
+
   return(dt)
 }
 
@@ -160,6 +164,10 @@ format_res_deseq <- function(dt,
     "ensembl_name", "gene_name", "log2FoldChange", "pvalue", "padj", "de",
     "label", "gene_type"
   )]
+
+  dt$log2FoldChange=signif(dt$log2FoldChange,3)
+  dt$pvalue=signif(dt$pvalue,3)
+  dt$padj=signif(dt$padj,3)
 
   attr(dt, "summary") <- res_summary
   return(dt)
@@ -285,8 +293,8 @@ volcano_interactive <- function(data,
   volcano <- ggplot2::ggplot(data, aes(x = log2FoldChange, y = -log10(padj),
                                        label = gene_name, colour = de,
                                        text = paste("Gene:", gene_name, "<br>",
-    "Log2FC:", round(log2FoldChange, 3), "<br>",
-    "Adjust pval;", round(padj, 3)
+    "Log2FC:", signif(log2FoldChange, 3), "<br>",
+    "Adjust pval;", signif(padj, 3)
   ))) +
     geom_point() +
     geom_text(
@@ -329,25 +337,25 @@ volcano_interactive <- function(data,
 #'
 
 volcano_interactive_comparison <- function(data) {
-  volcano <- ggplot2::ggplot(data, aes(x = log2FoldChange.x,
-                                       y = log2FoldChange.y,
+  volcano <- ggplot2::ggplot(data, aes(x = log2FoldChange_transcriptomics,
+                                       y = log2FoldChange_proteomics,
                                        label = gene_name,
                                        colour = direction,
                                        text = paste(
     "Gene:", gene_name, "<br>",
-    "Log2FC transcriptomics:", round(log2FoldChange.x, 3), "<br>",
-    "Log2FC proteomics;", round(log2FoldChange.y, 3), "<br>",
-    "pval transcriptomics:", round(pvalue.x, 3), "<br>",
-    "pval proteomics:", round(pvalue.y, 3), "<br>",
-    "padj transcriptomics:", round(padj.x, 3), "<br>",
-    "padj proteomics:", round(padj.y, 3), "<br>"
+    "Log2FC transcriptomics:", signif(log2FoldChange_transcriptomics, 3), "<br>",
+    "Log2FC proteomics;", signif(log2FoldChange_proteomics, 3), "<br>",
+    "pval transcriptomics:", signif(pvalue_transcriptomics, 3), "<br>",
+    "pval proteomics:", signif(pvalue_proteomics, 3), "<br>",
+    "padj transcriptomics:", signif(padj_transcriptomics, 3), "<br>",
+    "padj proteomics:", signif(padj_proteomics, 3), "<br>"
   ))) +
     xlab("log2FoldChange Transcriptome") +
     ylab("log2FoldChange Proteome") +
     geom_point(size = 0.4) +
     geom_text(
       data = data,
-      aes(log2FoldChange.x - 0.05, y = log2FoldChange.y + 0.1,
+      aes(log2FoldChange_transcriptomics - 0.05, y = log2FoldChange_proteomics + 0.1,
           label = ifelse(pvalue_category == "double_platform", gene_name, ""))
     ) +
     geom_vline(

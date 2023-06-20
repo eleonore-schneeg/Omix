@@ -40,16 +40,16 @@
 
 process_rna <- function(multiassay,
                         transformation = c("vst", "rlog", "log2"),
-                        protein_coding,
-                        filter,
+                        protein_coding=TRUE,
+                        filter=TRUE,
                         min_count = 10,
-                        min_sample = 1,
-                        dependent,
+                        min_sample = 0.5,
+                        dependent='diagnosis',
                         levels = NULL,
                         covariates,
-                        batch_correction,
-                        batch,
-                        remove_sample_outliers) {
+                        batch_correction=TRUE,
+                        batch='batch',
+                        remove_sample_outliers=FALSE) {
   "%!in%" <- function(x, y) !("%in%"(x, y))
   suppressWarnings({
     rna_raw <- MultiAssayExperiment::getWithColData(
@@ -102,7 +102,20 @@ process_rna <- function(multiassay,
   dds <- DESeq2::estimateSizeFactors(dds)
   dim1 <- as.numeric(dim(dds)[1])
 
+  processing_outputs=list()
+
   cli::cli_alert_success("NORMALISATION & TRANSFORMATION")
+
+  mean_values_feature_df=data.frame(count=rowMeans(counts(dds))) %>% tibble::rownames_to_column(var='ensembl')%>% as.data.frame()
+  mean_values_feature_df$gene_id=make.unique(get_ID_names(multiassay,
+                                                          id=mean_values_feature_df$ensembl,
+                                                          omic = "rna",
+                                                          from = "ensembl_gene_id",
+                                                          to = "gene_name"))
+
+
+  processing_outputs[["raw"]]=list(mean_values_feature_df= mean_values_feature_df,
+                                   mean_values_sample=  colMeans(counts(dds)))
 
   if (transformation == "log2") {
     matrix <- data.frame(log2(DESeq2::counts(dds, normalized = TRUE) + 1))
@@ -122,35 +135,61 @@ process_rna <- function(multiassay,
     cli::cli_alert_success("GENE FILTERING")
     if (protein_coding == TRUE) {
       cli::cli_alert_success("Keeping only protein coding genes")
-      protein_coding <- SummarizedExperiment::rowData(
+      protein_coding_keep <- SummarizedExperiment::rowData(
         rna_raw)$gene_biotype == "protein_coding" &
         !is.na(SummarizedExperiment::rowData(rna_raw)$gene_biotype)
-      dds <- dds[protein_coding, ]
+      dds <- dds[protein_coding_keep, ]
       cli::cli_alert_success(paste(
-        dim1 - sum(protein_coding),
+        dim1 - sum(protein_coding_keep),
         "/", dim1, "non protein coding genes were dropped"
       ))
       cli::cli_alert_success(paste(
-        sum(protein_coding),
+        sum(protein_coding_keep),
         "protein coding genes kept for analysis"
       ))
-      dim1 <- as.numeric(dim(dds)[1])
+      dim2 <- as.numeric(dim(dds)[1])
+
+      processing_outputs[["protein_coding_filtering"]]=list(non_protein_coding=(dim1 - dim2),
+                                                  percentage_protein_coding= dim2/dim1,
+                                                  protein_coding_kept= dim2)
+      dim1=dim2
     }
     cli::cli_alert_success(paste(
       "QC parameters selected require genes to have at least",
       (min_sample * 100), "% of samples with counts of", min_count, "or more"
     ))
     idx <- rowSums(DESeq2::counts(dds,
-      normalized = TRUE
-    ) >=
+      normalized = TRUE) >=
       min_count) >= dim(dds)[2] * min_sample
 
     keep <- as.numeric(sum(idx == TRUE))
+    rnas_raw=rownames(counts(dds))
     dds <- dds[idx, ]
     cli::cli_alert_success(paste(
       dim1 - keep,
       "/", dim1, "genes were dropped"
     ))
+    rnas_filtered=rownames(counts(dds))
+
+    processing_outputs[["filtering"]]=list(gene_filtered=  dim1 - keep,
+                                           percentage_filtered= (dim1 - keep)/dim1,
+                                           genes_kept=keep)
+
+    mean_values_feature_df=data.frame(count=rowMeans(counts(dds))) %>% tibble::rownames_to_column(var='ensembl')%>% as.data.frame()
+    mean_values_feature_df$gene_id=make.unique(get_ID_names(multiassay,
+                                                            id=mean_values_feature_df$ensembl,
+                                                            omic = "rna",
+                                                            from = "ensembl_gene_id",
+                                                            to = "gene_name"))
+
+    processing_outputs[["post_filtering"]]=list(mean_values_feature_df= mean_values_feature_df,
+                                                mean_values_sample=  colMeans(counts(dds)),
+                                                genes_filtered_out=setdiff(rnas_raw,rnas_filtered),
+                                                genes_filtered_out_id= make.unique(get_ID_names(multiassay,
+                                                                         id=setdiff(rnas_raw,rnas_filtered),
+                                                                         omic = "rna",
+                                                                         from = "ensembl_gene_id",
+                                                                         to = "gene_name")))
 
     cli::cli_alert_success(paste(keep, "genes kept for analysis"))
 
@@ -166,9 +205,9 @@ process_rna <- function(multiassay,
     }
 
     if (transformation == "rlog") {
-      cli::cli_alert_success("RLOG TRANSFORMATION")
-      rlog <- DESeq2::rlog(dds, blind = FALSE)
-      matrix <- as.data.frame(SummarizedExperiment::assay(rlog))
+       cli::cli_alert_success("RLOG TRANSFORMATION")
+       rlog <- DESeq2::rlog(dds, blind = FALSE)
+       matrix <- as.data.frame(SummarizedExperiment::assay(rlog))
     }
   }
 
@@ -221,6 +260,30 @@ process_rna <- function(multiassay,
       )
     }
   }
+
+  # if (remove_feature_outliers == TRUE) {
+  #   cli::cli_alert_success(“REMOVING FEATURE OUTLIERS”)
+  #   cli::cli_h1(“Remove genes with average gene log2(count)
+  #                across samples in bottom and upper 5 percentile”)
+  #   dim3 <- dim(matrix)[1]
+  #   q <- quantile(matrix, probs = c(0.05), na.rm = TRUE)
+  #   q2 <- quantile(matrix, probs = c(0.95), na.rm = TRUE)
+  #   idx <- ((rowSums(matrix, 2) / ncol(matrix) > q) &
+  #             (rowSums(matrix, 2) / ncol(matrix) < q2))
+  #   detected_feature_outliers=names(idx)[idx ==FALSE]
+  #   matrix <- matrix[idx, ]
+  #   dim4 <- dim(matrix)[1]
+  #   cli::cli_alert_success(paste(
+  #     dim3 - dim4, “feature outliers out of”,
+  #     dim3, “features detected and dropped”
+  #   ))
+  #   processing_outputs[[“remove_feature_outliers”]]=list(feature_outliers= dim3 - dim4,
+  #                                                        percentage_outliers= (dim3 - dim4)/dim3,
+  #                                                        detected_feature_outliers= detected_feature_outliers)
+  # }
+  #
+
+
   if (remove_sample_outliers == TRUE) {
     dim2 <- dim(matrix)[2]
     cli::cli_alert_success("SAMPLE OUTLIERS REMOVAL")
@@ -238,6 +301,10 @@ process_rna <- function(multiassay,
       length(outliers), "sample outliers out of",
       dim2, " samples detected and dropped"
     ))
+
+    processing_outputs[["remove_sample_outliers"]]=list(sample_outliers= length(outliers),
+                                                         percentage_outliers= length(outliers)/dim2,
+                                                         detected_sample_outliers= outliers)
   }
 
   matrix <- as.data.frame(matrix)
@@ -260,18 +327,22 @@ process_rna <- function(multiassay,
   if (remove_sample_outliers) {
     MultiAssayExperiment::metadata(multiassay)$OutliersFlags$rna <- outliers
   }
-
-  MultiAssayExperiment::metadata(multiassay)$parameters_processing_rna <- list(
+  MultiAssayExperiment::metadata(multiassay)$parameters$processing$rna <- list(
+    transformation=transformation,
     min_count = min_count,
     min_sample = min_sample,
     dependent = dependent,
     levels = levels,
     covariates = covariates,
+    protein_coding=protein_coding,
     filter = filter,
     batch_correction = batch_correction,
     batch = batch,
     remove_sample_outliers = remove_sample_outliers
   )
+
+  MultiAssayExperiment::metadata(multiassay)$parameters$processing_outputs$rna <- processing_outputs
+
   cli::cli_alert_success("Transcriptomics data processed!")
   cli::cli_alert_success("Processing parameters saved in metadata")
 

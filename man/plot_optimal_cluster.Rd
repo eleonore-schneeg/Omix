@@ -2,7 +2,8 @@
 % Please edit documentation in R/integration_visualisations.R
 \name{plot_optimal_cluster}
 \alias{plot_optimal_cluster}
-\title{Plot optimal number of clusters from \code{getClustNum()}}
+\title{Plot optimal number of clusters from \code{getClustNum()}
+Function adapted from package \code{MOVICS}}
 \usage{
 plot_optimal_cluster(optk1, optk2, try.N.clust)
 }
@@ -18,16 +19,23 @@ plot
 }
 \description{
 Plot optimal number of clusters from \code{getClustNum()}
+Function adapted from package \code{MOVICS}
 }
 \seealso{
 Other Plotting: 
+\code{\link{circular_corrplot}()},
 \code{\link{communities_network}()},
 \code{\link{community_graph}()},
+\code{\link{correlation_heatmap_clusters}()},
+\code{\link{correlation_heatmap_supervised}()},
+\code{\link{correlation_heatmap}()},
+\code{\link{getStdiz}()},
 \code{\link{interactive_network}()},
-\code{\link{multiomics_network_cluster}()},
-\code{\link{multiomics_network_matrix}()},
-\code{\link{multiomics_network}()},
+\code{\link{multiomics_heatmap}()},
 \code{\link{plot_OpenTarget}()},
+\code{\link{plot_communities}()},
+\code{\link{plot_components}()},
+\code{\link{plot_loadings}()},
 \code{\link{volcano_interactive_comparison}()},
 \code{\link{volcano_interactive}()},
 \code{\link{volcano_plot_deseq}()},

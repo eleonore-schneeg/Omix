@@ -27,10 +27,10 @@ protein_DE_analysis <- function(multiassay,
                                 covariates = NULL,
                                 levels = c("Control", "AD"),
                                 log2FoldChange = 0.5,
-                                padj = 0.5) {
+                                padj = 0.05) {
   abundance <- multiassay@ExperimentList@listData[[paste(slot)]]
 
-  if (("parameters_processing_protein" %in% names(multiassay@metadata)) == FALSE) {
+  if (("protein" %in% names(multiassay@metadata$parameters$processing)) == FALSE) {
     stop(cli::cli_alert_danger(
       paste("parameters_processing_protein not found in metadata, please run",
         cli::style_bold("process_protein"),
@@ -38,8 +38,8 @@ protein_DE_analysis <- function(multiassay,
       )
     ))
   }
-  denoised <- multiassay@metadata$parameters_processing_protein$denoise
-  cov <- multiassay@metadata$parameters_processing_protein$covariates
+  denoised <- multiassay@metadata$parameters$processing$protein$denoise
+  cov <- multiassay@metadata$parameters$processing$protein$covariates
 
 
   if (isTRUE(denoised & isTRUE(cov == covariates))) {
@@ -204,8 +204,8 @@ protein_DE_analysis <- function(multiassay,
 
   list_DEP_limma <- list()
   list_DEP_limma <- lapply(res, function(x) {
-    up <- x$gene_name[which(x$padj <= 0.05 & x$de == "Up")]
-    down <- x$gene_name[which(x$padj <= 0.05 & x$de == "Down")]
+    up <- x$gene_name[which(x$padj <= padj & x$de == "Up")]
+    down <- x$gene_name[which(x$padj <= padj & x$de == "Down")]
     return(list(
       up = up,
       down = down
@@ -228,7 +228,17 @@ protein_DE_analysis <- function(multiassay,
     x = names(res$plot), fixed = TRUE
   )
 
+  functional_list=list()
+  for(j in names(res$sig_protein)){
+    functional_list[[j]]=lapply(res$sig_protein[[j]] ,pathway_analysis_enrichr)
+  }
+  res$functional_enrichment <- functional_list
   MultiAssayExperiment::metadata(multiassay)$DEP <- res
+  MultiAssayExperiment::metadata(multiassay)$parameters$single_omic$de$protein <- list(dependent = dependent,
+                                                                                    design =  model_formula,
+                                                                                    levels = levels,
+                                                                                    log2FoldChange = log2FoldChange,
+                                                                                    padj =  padj)
 
   return(multiassay)
 }

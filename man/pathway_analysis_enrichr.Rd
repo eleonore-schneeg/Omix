@@ -13,7 +13,7 @@ pathway_analysis_enrichr(
   is_output = FALSE,
   output_dir = ".",
   min_overlap = 3,
-  plot_n = 20
+  plot_n = 10
 )
 }
 \arguments{
@@ -45,6 +45,7 @@ Performs impacted pathway analysis with a list of genes.
 Other Enrichment analysis: 
 \code{\link{GSEA}()},
 \code{\link{cell_type_enrichment}()},
-\code{\link{enrichment_custom}()}
+\code{\link{enrichment_custom}()},
+\code{\link{integrated_enrichment_mutliGSEA}()}
 }
 \concept{Enrichment analysis}

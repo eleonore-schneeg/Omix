@@ -21,6 +21,7 @@ Cell type enrichment of communities
 Other Enrichment analysis: 
 \code{\link{GSEA}()},
 \code{\link{enrichment_custom}()},
+\code{\link{integrated_enrichment_mutliGSEA}()},
 \code{\link{pathway_analysis_enrichr}()}
 }
 \concept{Enrichment analysis}

@@ -1,0 +1,48 @@
+---
+title: "Omix - Sample reports"
+author: "This vignette was created by Eléonore Schneegans and Nurun Fancy"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    self_contained: yes
+    theme: "flatly"
+    toc: true
+    toc_float: true
+    fig_caption: true
+    toc_depth: 3
+    code_folding: show
+    df_print: paged
+vignette: >
+  %\VignetteIndexEntry{Omix - Sample reports}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+editor_options: 
+  markdown: 
+  wrap: 72
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "docs/",
+  out.width = "100%"
+)
+```
+
+## QC report demo
+
+[QC demo](../demo/QC_report_Omix.html)
+
+## Single omic report demo
+
+[Single omic report](../demo/single_omic_report_Omix.html)
+
+## Multi-omics report demo (clustering)
+
+[Multi-omics report 1](../demo/multi_omic_report_Omix_iCluster.html)
+
+
+## Multi-omics report demo (unsupervised integration)
+
+[Multi-omics report 2](../demo/multi_omic_report_MOFA.html)

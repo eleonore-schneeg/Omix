@@ -7,7 +7,7 @@
 #'
 #' @return List object
 #'
-#' @family Helper
+#' @family Multi-omic integration downstream analysis
 #'
 #' @importFrom mixOmics selectVar
 #' @export
@@ -41,59 +41,60 @@ extract_multiomic_signature <- function(multiassay,
     data_loadings_negative$Omic.layer == "protein"
   ]
 
-  if (integration == "sMBPLS") {
-    if (model[["loadings"]][["Y"]][1] == 1) {
-      detrimental <- list(
-        rna = rna_positive,
-        protein = protein_positive
-      )
+  # if (integration == "sMBPLS") {
+  #   if (model[["loadings"]][["Y"]][1] == 1) {
+  #     detrimental <- list(
+  #       rna = rna_positive,
+  #       protein = protein_positive
+  #     )
+  #
+  #     protective <- list(
+  #       rna = rna_negative,
+  #       protein = protein_negative
+  #     )
+  #   }
+  #   if (model[["loadings"]][["Y"]][1] != 1) {
+  #     detrimental <- list(
+  #       rna = rna_negative,
+  #       protein = protein_negative
+  #     )
+  #
+  #     protective <- list(
+  #       rna = rna_positive,
+  #       protein = protein_positive
+  #     )
+  #   }
+  # }
+  # if (integration == "DIABLO") {
+  #   if (model[["loadings"]][["Y"]][1] > 0) {
+  #     detrimental <- list(
+  #       rna = rna_negative,
+  #       protein = protein_negative
+  #     )
+  #
+  #     protective <- list(
+  #       rna = rna_positive,
+  #       protein = protein_positive
+  #     )
+  #   }
+  #   if (model[["loadings"]][["Y"]][1] < 0) {
+  #     detrimental <- list(
+  #       rna = rna_negative,
+  #       protein = protein_negative
+  #     )
+  #
+  #     protective <- list(
+  #       rna = rna_positive,
+  #       protein = protein_positive
+  #     )
+  #   }
+  # }
 
-      protective <- list(
-        rna = rna_negative,
-        protein = protein_negative
-      )
-    }
-    if (model[["loadings"]][["Y"]][1] != 1) {
-      detrimental <- list(
-        rna = rna_negative,
-        protein = protein_negative
-      )
-
-      protective <- list(
-        rna = rna_positive,
-        protein = protein_positive
-      )
-    }
-  }
-  if (integration == "DIABLO") {
-    if (model[["loadings"]][["Y"]][1] > 0) {
-      detrimental <- list(
-        rna = rna_negative,
-        protein = protein_negative
-      )
-
-      protective <- list(
-        rna = rna_positive,
-        protein = protein_positive
-      )
-    }
-    if (model[["loadings"]][["Y"]][1] < 0) {
-      detrimental <- list(
-        rna = rna_negative,
-        protein = protein_negative
-      )
-
-      protective <- list(
-        rna = rna_positive,
-        protein = protein_positive
-      )
-    }
-  }
-
-  list <- list(
-    protective = protective,
-    detrimental = detrimental
-  )
+  list <- list()
+  list$positive$rna <- rna_positive
+  list$positive$protein <- protein_positive
+  list$negative$rna <- rna_negative
+  list$negative$protein <- protein_negative
 
 
   return(list)

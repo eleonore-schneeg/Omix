@@ -33,7 +33,6 @@ impute_distribution <- function(df, width = 0.3, downshift = 1.8) {
 #'
 #' @importFrom matrixStats rowMins
 #' @keywords internal
-#'
 
 impute_minimum_value <- function(df) {
   for (i in colnames(df)) {
@@ -43,6 +42,7 @@ impute_minimum_value <- function(df) {
     )
     missing <- is.na(df[[i]])
     df[[i]][missing] <- protein_minimum_imputation[missing]
+
   }
   return(df)
 }

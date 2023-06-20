@@ -8,6 +8,36 @@
 #'
 #' @return ggplot showing association scores from OpenTargets
 #'
+#' @family Multi-omic integration downstream analysis
+#' @export
+#' 
+OpenTarget_dataframe <- function(disease_id = "MONDO_0004975",
+                            size = 1000,
+                            genes) {
+  opentarget_results <- get_diseaseAssociations_df(
+    disease_id = disease_id,
+    size = size
+  )
+
+  final <- opentarget_results[
+    which(opentarget_results$targetSymbol %in% genes),
+  ]
+
+  return(final)
+}
+
+
+
+#' Plot Interface to OpenTargets database
+#'
+#' @param disease_id OpenTargets disease id. Default to "MONDO_0004975"
+#' (Alzheimer's Disease) Different disease ontologies can be found on
+#' https://www.ebi.ac.uk/ols/ontologies
+#' @param size Default to 3000
+#' @param genes input gene vector
+#'
+#' @return ggplot showing association scores from OpenTargets
+#'
 #' @family Plotting
 #' @import ggplot2
 #' @export
@@ -20,6 +50,8 @@ plot_OpenTarget <- function(disease_id = "MONDO_0004975",
     disease_id = disease_id,
     size = size
   )
+  suppressMessages( opentarget_results <- reshape2::melt( opentarget_results))
+
 
   final <- opentarget_results[
     which(opentarget_results$targetSymbol %in% genes),
@@ -34,8 +66,7 @@ plot_OpenTarget <- function(disease_id = "MONDO_0004975",
     ) +
     scale_fill_gradient(low = "white", high = "darkblue") +
     guides(fill = guide_colorbar("Score (%)")) +
-    theme(
-      axis.text.x = element_text(size = rel(1.0), color = "black"),
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
       axis.text.y = element_text(size = rel(1.1), color = "black"),
       axis.line = element_blank(),
       axis.ticks = element_blank(),
@@ -56,13 +87,16 @@ plot_OpenTarget <- function(disease_id = "MONDO_0004975",
 
 get_diseaseAssociations_df <- function(disease_id = "MONDO_0004975",
                                        size = 1000) {
-  data <- OpenTargets(disease_id, size = size)
+  args <- list(
+    disease_id = disease_id,
+    size=size
+  )
+  data <- do.call( OpenTargets, args)
   data <- data %>%
     as.data.frame() %>%
     dplyr::rename(overallScore = score) %>%
     tidyr::unnest(datatypeScores) %>%
     tidyr::pivot_wider(names_from = "id", values_from = "score")
-  suppressMessages(data <- reshape2::melt(data))
   return(data)
 }
 

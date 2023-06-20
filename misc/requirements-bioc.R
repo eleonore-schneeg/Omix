@@ -38,7 +38,8 @@ bioc_pkgs<-c(
   'DESeq2',
   'MOFA2',
   'iClusterPlus',
-  'mogsa'
+  'multiGSEA',
+  'GeneOverlap'
 )
 
 
