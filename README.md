@@ -104,11 +104,6 @@ interactive reports.
 
 ## Benchmark of multi-omics integration softwares
 
-``` r
-library(knitr)
-kable(head(comparison_table))
-```
-
 | …1        | Supported omics                  | Pre-processing | Single omic analysis | Integrative models                             | Use case    | Downstream analyses                                                                              | Interactive visualisations | Language | Ref                      |
 |:----------|:---------------------------------|:---------------|:---------------------|:-----------------------------------------------|:------------|:-------------------------------------------------------------------------------------------------|:---------------------------|:---------|:-------------------------|
 | Miodin    | SNP, RNA, methylation, Proteins, | \+             | \-                   | MOFA                                           | BM          | \-                                                                                               | \-                         | R        | Ulfenborg, B. (2019).    |

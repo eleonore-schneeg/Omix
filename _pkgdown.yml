@@ -1,9 +1,3 @@
-title: Omix
-url: https://eleonore-schneeg.github.io/Omix
-template:
-  params:
-    bootswatch: litera
-
 destination: docs
 reference:
 - title: Pre-processing functions

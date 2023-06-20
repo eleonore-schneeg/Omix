@@ -174,7 +174,7 @@ statmod \
 systemfonts \
 viridis \
 visNetwork \
-PCAtools \
+
 && rm -rf /tmp/downloaded_packages
 
 ## Install Bioconductor packages
@@ -189,8 +189,8 @@ NMF \
 IntNMF \
 MASS \
 ActivePathways \
-multiGSEA
-
+multiGSEA \
+PCAtools 
 # RUN Rscript -e  'reticulate::py_config()'
 
 WORKDIR Omix

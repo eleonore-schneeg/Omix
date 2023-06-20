@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Omix - Pseudotemporal multi-omics integration • Omix</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/litera/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -64,14 +64,7 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/eleonore-schneeg/Omix/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -97,7 +90,7 @@ was created by Eléonore Schneegans and Nurun Fancy</h4>
             
             <h4 data-toc-skip class="date">20 June, 2023</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/eleonore-schneeg/Omix/blob/HEAD/vignettes/Omix_vignette_MAP_CV_pseudotemporal.Rmd" class="external-link"><code>vignettes/Omix_vignette_MAP_CV_pseudotemporal.Rmd</code></a></small>
+      
       <div class="hidden name"><code>Omix_vignette_MAP_CV_pseudotemporal.Rmd</code></div>
 
     </div>
@@ -163,7 +156,7 @@ individual level metadata for both omics assays.</p></li>
 </ul>
 <p>Call required packages for vignette:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/eleonore-schneeg/Omix" class="external-link">Omix</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Omix</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## Registered S3 method overwritten by 'ggtree':</span></span>
 <span><span class="co">##   method      from </span></span>
@@ -703,6 +696,8 @@ biological mechanisms that occur during AD progression.</p>
 <h3 id="pseudotemporal-multi-omics-integration-using-mofa">Pseudotemporal multi-omics integration using MOFA<a class="anchor" aria-label="anchor" href="#pseudotemporal-multi-omics-integration-using-mofa"></a>
 </h3>
 <div class="sourceCode" id="cb231"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">multiomics_object</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"~/RDS_ukdri/MAP_integration/integration_MTG_SSC_CV/publication_data/multiassay_skeleton_MOFA.rds"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb232"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multiomics_object</span><span class="op">=</span><span class="fu"><a href="../reference/vertical_integration.html">vertical_integration</a></span><span class="op">(</span>multiassay<span class="op">=</span><span class="va">multiomics_object</span>,</span>
 <span>                                slots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>                                   <span class="st">"rna_processed"</span>,</span>
@@ -718,7 +713,7 @@ biological mechanisms that occur during AD progression.</p>
 <p>The integration process is successful and all integration related
 object are stored in the <code>integration</code> slot of the
 multi-omics object.</p>
-<div class="sourceCode" id="cb232"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb233"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">multiomics_object</span><span class="op">@</span><span class="va">metadata</span><span class="op">$</span><span class="va">integration</span><span class="op">$</span><span class="va">MOFA</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Trained MOFA with the following characteristics: </span></span>
 <span><span class="co">##  Number of views: 2 </span></span>
@@ -731,7 +726,7 @@ multi-omics object.</p>
 <div class="section level4">
 <h4 id="optional-load-a-pretrained-model">Optional: load a pretrained model<a class="anchor" aria-label="anchor" href="#optional-load-a-pretrained-model"></a>
 </h4>
-<div class="sourceCode" id="cb234"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb235"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#multiomics_object@metadata$integration$MOFA=integrative_model</span></span></code></pre></div>
 </div>
 </div>
@@ -743,7 +738,7 @@ multi-omics object.</p>
 analyses functions and visualisations. All downstream analyses will be
 performed on the integrated object stored in the <code>integrated</code>
 slot.</p>
-<div class="sourceCode" id="cb235"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb236"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">integrated_object</span><span class="op">=</span><span class="va">multiomics_object</span><span class="op">@</span><span class="va">metadata</span><span class="op">$</span><span class="va">integration</span><span class="op">$</span><span class="va">MOFA</span></span>
 <span><span class="va">metadata</span><span class="op">=</span><span class="va">integrated_object</span><span class="op">@</span><span class="va">samples_metadata</span></span></code></pre></div>
 <div class="section level3">
@@ -752,14 +747,14 @@ slot.</p>
 <div class="section level4">
 <h4 id="variance-explained">Variance explained<a class="anchor" aria-label="anchor" href="#variance-explained"></a>
 </h4>
-<div class="sourceCode" id="cb236"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb237"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">MOFA2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MOFA2/man/plot_variance_explained.html" class="external-link">plot_variance_explained</a></span><span class="op">(</span><span class="va">integrated_object</span>, max_r2<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="correlation-of-factors-with-covariates">Correlation of factors with covariates<a class="anchor" aria-label="anchor" href="#correlation-of-factors-with-covariates"></a>
 </h4>
-<div class="sourceCode" id="cb237"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb238"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">integrated_object</span><span class="op">@</span><span class="va">samples_metadata</span><span class="op">$</span><span class="va">SOM</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">integrated_object</span><span class="op">@</span><span class="va">samples_metadata</span><span class="op">$</span><span class="va">brain_region</span><span class="op">==</span><span class="st">'SOM'</span>,<span class="fl">1</span>,<span class="fl">0</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/correlation_heatmap.html">correlation_heatmap</a></span><span class="op">(</span><span class="va">integrated_object</span>,</span>
 <span>                   covariates<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AD"</span>,<span class="st">"Braak"</span>,<span class="st">'MTG'</span>,<span class="st">'SOM'</span>,</span>
@@ -924,7 +919,7 @@ neuropathology at the RNA and protein level.</p>
 <div class="section level4">
 <h4 id="chosen-integrated-axes-of-variation">Chosen integrated axes of variation<a class="anchor" aria-label="anchor" href="#chosen-integrated-axes-of-variation"></a>
 </h4>
-<div class="sourceCode" id="cb239"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb240"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">MOFA2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MOFA2/man/plot_factors.html" class="external-link">plot_factors</a></span><span class="op">(</span><span class="va">integrated_object</span>,</span>
 <span>             factors<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8</span>,<span class="fl">6</span><span class="op">)</span>,</span>
 <span>             color_by<span class="op">=</span><span class="st">'PHF1'</span>, shape_by <span class="op">=</span> <span class="st">'brain_region'</span>, scale <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">+</span></span>
@@ -951,7 +946,7 @@ the cluster to start or end the trajectory based on biological
 knowledge. Here, the starting cluster should be <code>3</code> as it
 coincides with lowest neuropathology levels and most “recent” affected
 region in terms of AD trajectory.</p>
-<div class="sourceCode" id="cb240"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb241"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="co">#clusters=MOFA2::cluster_samples(integrated_object, </span></span>
 <span><span class="co">#                         k=3,</span></span>
@@ -962,7 +957,7 @@ region in terms of AD trajectory.</p>
 <span>             factors<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8</span>,<span class="fl">6</span><span class="op">)</span>,</span>
 <span>             color_by<span class="op">=</span><span class="va">clusters</span><span class="op">$</span><span class="va">cluster</span>, scale <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
-<div class="sourceCode" id="cb241"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb242"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pseudotime</span><span class="op">=</span><span class="fu"><a href="../reference/pseudotime_inference.html">pseudotime_inference</a></span><span class="op">(</span><span class="va">integrated_object</span>,</span>
 <span>                                 <span class="va">clusters</span>,</span>
 <span>                                 time_factor<span class="op">=</span><span class="fl">8</span>,</span>
@@ -976,7 +971,7 @@ region in terms of AD trajectory.</p>
 <div class="section level5">
 <h5 id="update-the-integrated_object-with-the-pseudotime">Update the <code>integrated_object</code> with the pseudotime<a class="anchor" aria-label="anchor" href="#update-the-integrated_object-with-the-pseudotime"></a>
 </h5>
-<div class="sourceCode" id="cb242"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb243"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multiomics_object</span><span class="op">@</span><span class="va">metadata</span><span class="op">$</span><span class="va">integration</span><span class="op">$</span><span class="va">MOFA</span><span class="op">=</span><span class="va">pseudotime</span><span class="op">$</span><span class="va">model</span></span>
 <span><span class="va">integrated_object</span><span class="op">=</span><span class="va">multiomics_object</span><span class="op">@</span><span class="va">metadata</span><span class="op">$</span><span class="va">integration</span><span class="op">$</span><span class="va">MOFA</span></span>
 <span><span class="fu">MOFA2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MOFA2/man/samples_metadata.html" class="external-link">samples_metadata</a></span><span class="op">(</span><span class="va">integrated_object</span><span class="op">)</span><span class="op">$</span><span class="va">inferred_pseudotime</span></span></code></pre></div>
@@ -1018,7 +1013,7 @@ weights should coincide with stronger correlation if the
 <code>sense_check_variable</code> is an important driver of variation in
 the designated factor.</p></li>
 </ul>
-<div class="sourceCode" id="cb244"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb245"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">weights</span><span class="op">=</span><span class="fu"><a href="../reference/extract_weigths.html">extract_weigths</a></span><span class="op">(</span><span class="va">integrated_object</span>,</span>
 <span>                           factor<span class="op">=</span><span class="fl">6</span>,</span>
 <span>                           threshold<span class="op">=</span><span class="fl">0.2</span>,</span>
@@ -1026,20 +1021,20 @@ the designated factor.</p></li>
 <div class="section level4">
 <h4 id="weights-distribution-in-factor-6">Weights distribution in Factor 6<a class="anchor" aria-label="anchor" href="#weights-distribution-in-factor-6"></a>
 </h4>
-<div class="sourceCode" id="cb245"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb246"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">weights</span><span class="op">$</span><span class="va">distribution_plot</span><span class="op">$</span><span class="va">rna</span>  </span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
-<div class="sourceCode" id="cb246"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb247"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">weights</span><span class="op">$</span><span class="va">distribution_plot</span><span class="op">$</span><span class="va">protein</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-25-2.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="correlation-to-phf1-and-weights-in-factor-6">Correlation to PHF1 and weights in Factor 6<a class="anchor" aria-label="anchor" href="#correlation-to-phf1-and-weights-in-factor-6"></a>
 </h4>
-<div class="sourceCode" id="cb247"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb248"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">weights</span><span class="op">$</span><span class="va">weights_cor_plot</span><span class="op">$</span><span class="va">rna</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
-<div class="sourceCode" id="cb248"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb249"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">weights</span><span class="op">$</span><span class="va">weights_cor_plot</span><span class="op">$</span><span class="va">protein</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-26-2.png" width="700"></p>
 </div>
@@ -1050,7 +1045,7 @@ the designated factor.</p></li>
 <p>A negative weight indicates that the feature has higher levels in the
 samples with negative factor values, which in this analysis coincides
 with later Braak stages.</p>
-<div class="sourceCode" id="cb249"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb250"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">integrated_object</span><span class="op">@</span><span class="va">samples_metadata</span><span class="op">$</span><span class="va">Braak</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">integrated_object</span><span class="op">@</span><span class="va">samples_metadata</span><span class="op">$</span><span class="va">Braak</span><span class="op">)</span></span>
 <span><span class="fu">MOFA2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MOFA2/man/plot_factor.html" class="external-link">plot_factor</a></span><span class="op">(</span><span class="va">integrated_object</span>, </span>
 <span>            factors <span class="op">=</span> <span class="fl">6</span>, </span>
@@ -1069,7 +1064,7 @@ have weights below -0.3 in factor 6</p></li>
 </ul>
 <p>Some driving features may overlap between transcriptomics and
 proteomics</p>
-<div class="sourceCode" id="cb250"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb251"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">intersect</a></span><span class="op">(</span><span class="va">weights</span><span class="op">$</span><span class="va">weights</span><span class="op">$</span><span class="va">ranked_weights_negative</span><span class="op">$</span><span class="va">rna</span>,<span class="va">weights</span><span class="op">$</span><span class="va">weights</span><span class="op">$</span><span class="va">ranked_weights_negative</span><span class="op">$</span><span class="va">protein</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "ANXA1"   "B2M"     "ICAM5"   "COL18A1" "S100A10" "C4A"     "GFAP"   </span></span>
 <span><span class="co">##  [8] "RLBP1"   "ITPR1"   "S100A4"  "GJA1"    "VIM"     "PRELP"   "CLIC1"  </span></span>
@@ -1092,7 +1087,7 @@ between omic features (0.4)</p></li>
 threshold, which will yield more modules of strongly co-expressed
 features.</p></li>
 </ul>
-<div class="sourceCode" id="cb252"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb253"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Weights_down_n</span><span class="op">=</span><span class="fu"><a href="../reference/multiomics_network.html">multiomics_network</a></span><span class="op">(</span>multiassay<span class="op">=</span><span class="va">multiomics_object</span>,</span>
 <span>                           list<span class="op">=</span><span class="va">weights</span><span class="op">$</span><span class="va">weights</span><span class="op">$</span><span class="va">ranked_weights_negative</span>,</span>
 <span>                           correlation_threshold <span class="op">=</span><span class="fl">0.4</span>,</span>
@@ -1105,10 +1100,10 @@ communities of proteins and RNAs within the multi-omics network.</p>
 <p>This function tries to find densely connected subgraphs in a graph by
 calculating the leading non-negative eigenvector of the modularity
 matrix of the graph.</p>
-<div class="sourceCode" id="cb253"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb254"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">communities</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/communities_network.html">communities_network</a></span><span class="op">(</span>igraph<span class="op">=</span><span class="va">Weights_down_n</span><span class="op">$</span><span class="va">graph</span>,</span>
 <span>                                    community_detection<span class="op">=</span><span class="st">'leading_eigen'</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb254"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb255"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dfr</a></span><span class="op">(</span></span>
 <span>    .x <span class="op">=</span> <span class="va">communities</span><span class="op">$</span><span class="va">communities</span>,</span>
 <span>    .f <span class="op">=</span> <span class="op">~</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/enframe.html" class="external-link">enframe</a></span><span class="op">(</span></span>
@@ -1142,7 +1137,7 @@ intra omic correlation than inter omic correlation</li>
 <div class="section level5">
 <h5 id="community-1">Community 1<a class="anchor" aria-label="anchor" href="#community-1"></a>
 </h5>
-<div class="sourceCode" id="cb255"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb256"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">community_1</span><span class="op">=</span><span class="fu"><a href="../reference/community_graph.html">community_graph</a></span><span class="op">(</span>igraph<span class="op">=</span><span class="va">Weights_down_n</span><span class="op">$</span><span class="va">graph</span>,</span>
 <span>                            community_object<span class="op">=</span><span class="va">communities</span><span class="op">$</span><span class="va">community_object</span>,</span>
 <span>                            community<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
@@ -1153,7 +1148,7 @@ intra omic correlation than inter omic correlation</li>
 <div class="section level5">
 <h5 id="community-2">Community 2<a class="anchor" aria-label="anchor" href="#community-2"></a>
 </h5>
-<div class="sourceCode" id="cb256"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb257"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">community_2</span><span class="op">=</span><span class="fu"><a href="../reference/community_graph.html">community_graph</a></span><span class="op">(</span>igraph<span class="op">=</span><span class="va">Weights_down_n</span><span class="op">$</span><span class="va">graph</span>,</span>
 <span>                            community_object<span class="op">=</span><span class="va">communities</span><span class="op">$</span><span class="va">community_object</span>,</span>
 <span>                            community<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
@@ -1168,7 +1163,7 @@ intra omic correlation than inter omic correlation</li>
 <li>Features are more or less connected in the network, represented by
 their hub score:</li>
 </ul>
-<div class="sourceCode" id="cb257"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb258"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">community_2</span><span class="op">$</span><span class="va">hubs</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       CDH18_rna       ITPR1_rna     SLC17A6_rna     ST8SIA3_rna      VSTM2A_rna </span></span>
 <span><span class="co">##     1.000000000     0.992994207     0.992386252     0.989262342     0.989186745 </span></span>
@@ -1242,7 +1237,7 @@ microglial activation</li>
 </h3>
 <p>Here we proceed with a <code>EWCE</code> analysis to check if modules
 are enriched in specific cell types.</p>
-<div class="sourceCode" id="cb259"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb260"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cell_type</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cell_type_enrichment.html">cell_type_enrichment</a></span><span class="op">(</span></span>
 <span>    multiassay <span class="op">=</span><span class="va">multiomics_object</span>,</span>
 <span>    communities <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">communities</span><span class="op">$</span><span class="va">communities</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"\\_.*"</span>, <span class="st">""</span>,<span class="va">x</span> <span class="op">)</span><span class="op">}</span><span class="op">)</span></span>
@@ -1271,7 +1266,7 @@ enriched modules.</li>
 <div class="section level3">
 <h3 id="pathway-enrichment-analysis">Pathway enrichment analysis<a class="anchor" aria-label="anchor" href="#pathway-enrichment-analysis"></a>
 </h3>
-<div class="sourceCode" id="cb265"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb266"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">communities_l</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">communities</span><span class="op">$</span><span class="va">communities</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"\\_.*"</span>, <span class="st">""</span>,<span class="va">x</span> <span class="op">)</span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">enrichment1</span><span class="op">=</span><span class="fu"><a href="../reference/pathway_analysis_enrichr.html">pathway_analysis_enrichr</a></span><span class="op">(</span><span class="va">communities_l</span><span class="op">$</span><span class="va">`1`</span>,plot<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
@@ -1293,7 +1288,7 @@ enriched modules.</li>
 <span><span class="co">##   Querying BioCarta_2016... Done.</span></span>
 <span><span class="co">## Parsing results... Done.</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Output is returned as a list!</span></span></code></pre>
-<div class="sourceCode" id="cb270"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb271"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enrichment2</span><span class="op">=</span><span class="fu"><a href="../reference/pathway_analysis_enrichr.html">pathway_analysis_enrichr</a></span><span class="op">(</span><span class="va">communities_l</span><span class="op">$</span><span class="va">`2`</span>,plot<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Welcome to enrichR</span></span>
 <span><span class="co">## Checking connection ... </span></span>
@@ -1313,7 +1308,7 @@ enriched modules.</li>
 <span><span class="co">##   Querying BioCarta_2016... Done.</span></span>
 <span><span class="co">## Parsing results... Done.</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Output is returned as a list!</span></span></code></pre>
-<div class="sourceCode" id="cb274"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb275"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enrichment3</span><span class="op">=</span><span class="fu"><a href="../reference/pathway_analysis_enrichr.html">pathway_analysis_enrichr</a></span><span class="op">(</span><span class="va">communities_l</span><span class="op">$</span><span class="va">`3`</span>,plot<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Welcome to enrichR</span></span>
 <span><span class="co">## Checking connection ... </span></span>
@@ -1333,7 +1328,7 @@ enriched modules.</li>
 <span><span class="co">##   Querying BioCarta_2016... Done.</span></span>
 <span><span class="co">## Parsing results... Done.</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Output is returned as a list!</span></span></code></pre>
-<div class="sourceCode" id="cb278"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb279"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enrichment4</span><span class="op">=</span><span class="fu"><a href="../reference/pathway_analysis_enrichr.html">pathway_analysis_enrichr</a></span><span class="op">(</span><span class="va">communities_l</span><span class="op">$</span><span class="va">`4`</span>,plot<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Welcome to enrichR</span></span>
 <span><span class="co">## Checking connection ... </span></span>
@@ -1353,7 +1348,7 @@ enriched modules.</li>
 <span><span class="co">##   Querying BioCarta_2016... Done.</span></span>
 <span><span class="co">## Parsing results... Done.</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Output is returned as a list!</span></span></code></pre>
-<div class="sourceCode" id="cb282"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb283"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enrichment5</span><span class="op">=</span><span class="fu"><a href="../reference/pathway_analysis_enrichr.html">pathway_analysis_enrichr</a></span><span class="op">(</span><span class="va">communities_l</span><span class="op">$</span><span class="va">`5`</span>,plot<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Welcome to enrichR</span></span>
 <span><span class="co">## Checking connection ... </span></span>
@@ -1373,31 +1368,31 @@ enriched modules.</li>
 <span><span class="co">##   Querying BioCarta_2016... Done.</span></span>
 <span><span class="co">## Parsing results... Done.</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Output is returned as a list!</span></span></code></pre>
-<div class="sourceCode" id="cb286"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb287"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enrichment1</span><span class="op">$</span><span class="va">plot</span><span class="op">$</span><span class="va">Reactome_2016</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">12</span><span class="op">)</span>,</span>
 <span>                                     axis.title<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">12</span><span class="op">)</span>,</span>
 <span>                                     strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0</span>, margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                                     legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">9</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-36-1.png" width="700"></p>
-<div class="sourceCode" id="cb287"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb288"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enrichment2</span><span class="op">$</span><span class="va">plot</span><span class="op">$</span><span class="va">Reactome_2016</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">12</span><span class="op">)</span>,</span>
 <span>                                     axis.title<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">12</span><span class="op">)</span>,</span>
 <span>                                     strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0</span>, margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                                     legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">9</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-36-2.png" width="700"></p>
-<div class="sourceCode" id="cb288"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb289"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enrichment3</span><span class="op">$</span><span class="va">plot</span><span class="op">$</span><span class="va">Reactome_2016</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">12</span><span class="op">)</span>,</span>
 <span>                                     axis.title<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">12</span><span class="op">)</span>,</span>
 <span>                                     strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0</span>, margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                                     legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">9</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-36-3.png" width="700"></p>
-<div class="sourceCode" id="cb289"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb290"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enrichment4</span><span class="op">$</span><span class="va">plot</span><span class="op">$</span><span class="va">Reactome_2016</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">12</span><span class="op">)</span>,</span>
 <span>                                     axis.title<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">12</span><span class="op">)</span>,</span>
 <span>                                     strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0</span>, margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                                     legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">9</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-36-4.png" width="700"></p>
-<div class="sourceCode" id="cb290"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb291"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enrichment5</span><span class="op">$</span><span class="va">plot</span><span class="op">$</span><span class="va">Reactome_2016</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">12</span><span class="op">)</span>,</span>
 <span>                                     axis.title<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">12</span><span class="op">)</span>,</span>
 <span>                                     strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0</span>, margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -1410,7 +1405,7 @@ enriched modules.</li>
 <p><code>multiomics_modules</code> compute the module eigen value (PC1
 of scaled transcriptomics/proteomics expression) and correlates it to
 chosen covariates</p>
-<div class="sourceCode" id="cb291"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb292"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">modules</span><span class="op">=</span><span class="fu"><a href="../reference/multiomics_modules.html">multiomics_modules</a></span><span class="op">(</span>multiassay<span class="op">=</span><span class="va">multiomics_object</span>,</span>
 <span>                              metadata<span class="op">=</span><span class="fu">MOFA2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MOFA2/man/samples_metadata.html" class="external-link">samples_metadata</a></span><span class="op">(</span><span class="va">integrated_object</span><span class="op">)</span>,</span>
 <span>                              covariates<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'inferred_pseudotime'</span>,<span class="st">'PHF1'</span>,<span class="st">'amyloid'</span>,<span class="st">'pTau'</span><span class="op">)</span>,</span>
@@ -1418,7 +1413,7 @@ chosen covariates</p>
 <span>                              filter_string_50<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-37-1.png" width="700">
 ## Transcription Factor - target gene enrichment</p>
-<div class="sourceCode" id="cb292"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb293"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">TF</span><span class="op">=</span><span class="fu"><a href="../reference/Transcription_Factor_enrichment.html">Transcription_Factor_enrichment</a></span><span class="op">(</span>communities<span class="op">=</span><span class="va">communities</span><span class="op">$</span><span class="va">communities</span>,</span>
 <span>                                   weights<span class="op">=</span><span class="va">weights</span>,</span>
 <span>                                   TF_gmt<span class="op">=</span><span class="va">TF_fp</span>,</span>
@@ -1436,7 +1431,7 @@ chosen covariates</p>
 <li>Here we related each module eigen value to the pseudotime inferred
 from MOFA integration emmbeddings (Factors 6/8)</li>
 </ul>
-<div class="sourceCode" id="cb293"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb294"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_module_trajectory.html">plot_module_trajectory</a></span><span class="op">(</span>modules<span class="op">=</span><span class="va">modules</span>,</span>
 <span>                                   covariates<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'amyloid'</span>,<span class="st">'pTau'</span>,<span class="st">'PHF1'</span><span class="op">)</span>,</span>
 <span>                                   plot_modules<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ME1"</span>,<span class="st">"ME2"</span>,<span class="st">"ME3"</span>,<span class="st">"ME4"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -1455,7 +1450,7 @@ neuropathological measures</p>
 <div class="section level5">
 <h5 id="phf1">PHF1<a class="anchor" aria-label="anchor" href="#phf1"></a>
 </h5>
-<div class="sourceCode" id="cb295"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb296"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span><span class="op">$</span><span class="va">Braak</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span><span class="op">$</span><span class="va">Braak</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0"</span>,<span class="st">"1"</span>,<span class="st">"2"</span>,<span class="st">"3"</span>,<span class="st">"4"</span>,<span class="st">"5"</span>,<span class="st">"6"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span><span class="op">$</span><span class="va">Braak_num</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span><span class="op">$</span><span class="va">Braak</span><span class="op">)</span></span>
 <span><span class="va">gg</span><span class="op">=</span><span class="fu">ggpubr</span><span class="fu">::</span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggscatter.html" class="external-link">ggscatter</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span>, y <span class="op">=</span> <span class="st">"PHF1"</span>, x <span class="op">=</span> <span class="st">"Braak_num"</span>, palette <span class="op">=</span> <span class="st">"jco"</span>,</span>
@@ -1468,14 +1463,14 @@ neuropathological measures</p>
 <span>                     cor.coeff.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"pearson"</span>, label.x <span class="op">=</span> <span class="fl">4</span>, label.sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gg</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-40-1.png" width="700"></p>
-<div class="sourceCode" id="cb296"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb297"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gb</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-40-2.png" width="700"></p>
 </div>
 <div class="section level5">
 <h5 id="amyloid">Amyloid<a class="anchor" aria-label="anchor" href="#amyloid"></a>
 </h5>
-<div class="sourceCode" id="cb297"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb298"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span><span class="op">$</span><span class="va">Braak</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span><span class="op">$</span><span class="va">Braak</span>, </span>
 <span>                                      levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0"</span>,<span class="st">"1"</span>,<span class="st">"2"</span>,<span class="st">"3"</span>,<span class="st">"4"</span>,<span class="st">"5"</span>,<span class="st">"6"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span><span class="op">$</span><span class="va">Braak_num</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span><span class="op">$</span><span class="va">Braak</span><span class="op">)</span></span>
@@ -1489,7 +1484,7 @@ neuropathological measures</p>
 <span>                     cor.coeff.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"pearson"</span>, label.x <span class="op">=</span> <span class="fl">4</span>, label.sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gg</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-41-1.png" width="700"></p>
-<div class="sourceCode" id="cb298"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb299"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gb</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-41-2.png" width="700"></p>
 </div>
@@ -1498,7 +1493,7 @@ neuropathological measures</p>
 <div class="section level3">
 <h3 id="relationship-with-diagnosis">Relationship with diagnosis<a class="anchor" aria-label="anchor" href="#relationship-with-diagnosis"></a>
 </h3>
-<div class="sourceCode" id="cb299"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb300"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">modules_eigen_value</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="va">gg</span><span class="op">=</span><span class="fu">ggpubr</span><span class="fu">::</span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggscatter.html" class="external-link">ggscatter</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span>, </span>
 <span>                     x <span class="op">=</span> <span class="st">"inferred_pseudotime"</span>, </span>
@@ -1515,7 +1510,7 @@ neuropathological measures</p>
 <div class="section level3">
 <h3 id="relationship-with-phf1">Relationship with PHF1<a class="anchor" aria-label="anchor" href="#relationship-with-phf1"></a>
 </h3>
-<div class="sourceCode" id="cb300"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb301"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">modules_eigen_value</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="va">gg</span><span class="op">=</span><span class="fu">ggpubr</span><span class="fu">::</span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggscatter.html" class="external-link">ggscatter</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span>,</span>
 <span>                     x <span class="op">=</span> <span class="st">"PHF1"</span>, </span>
@@ -1537,7 +1532,7 @@ infered multi-omics pseudotime</p>
 <div class="section level3">
 <h3 id="module-eigenvalue-by-group-boxplots">Module Eigenvalue by group boxplots<a class="anchor" aria-label="anchor" href="#module-eigenvalue-by-group-boxplots"></a>
 </h3>
-<div class="sourceCode" id="cb301"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb302"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">modules_eigen_value</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="va">gg</span><span class="op">=</span><span class="fu">ggpubr</span><span class="fu">::</span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggboxplot.html" class="external-link">ggboxplot</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span>,</span>
 <span>                     x <span class="op">=</span> <span class="st">"diagnosis"</span>, </span>
@@ -1553,7 +1548,7 @@ infered multi-omics pseudotime</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gg</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-44-1.png" width="700"><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-44-2.png" width="700"><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-44-3.png" width="700"><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-44-4.png" width="700"><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-44-5.png" width="700"></p>
-<div class="sourceCode" id="cb302"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb303"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">modules_eigen_value</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="va">gg</span><span class="op">=</span><span class="fu">ggpubr</span><span class="fu">::</span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggboxplot.html" class="external-link">ggboxplot</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span>, </span>
 <span>                     x <span class="op">=</span> <span class="st">"Braak"</span>, </span>
@@ -1567,7 +1562,7 @@ infered multi-omics pseudotime</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gg</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-45-1.png" width="700"><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-45-2.png" width="700"><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-45-3.png" width="700"><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-45-4.png" width="700"><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-45-5.png" width="700"></p>
-<div class="sourceCode" id="cb303"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb304"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">modules_eigen_value</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="va">gg</span><span class="op">=</span><span class="fu">ggpubr</span><span class="fu">::</span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggboxplot.html" class="external-link">ggboxplot</a></span><span class="op">(</span><span class="va">modules</span><span class="op">$</span><span class="va">metadata_modules</span>, </span>
 <span>                     x <span class="op">=</span> <span class="st">"brain_region"</span>, </span>
@@ -1582,7 +1577,7 @@ infered multi-omics pseudotime</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gg</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-46-1.png" width="700"><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-46-2.png" width="700"><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-46-3.png" width="700"><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-46-4.png" width="700"><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-46-5.png" width="700"></p>
-<div class="sourceCode" id="cb304"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb305"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">metadata</span><span class="op">=</span><span class="va">integrated_object</span><span class="op">@</span><span class="va">samples_metadata</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">metadata</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">brain_region</span>, y <span class="op">=</span> <span class="va">inferred_pseudotime</span>,color<span class="op">=</span><span class="va">Braak</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">5</span>, col <span class="op">=</span> <span class="st">"firebrick"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color<span class="op">=</span><span class="va">Braak</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1592,14 +1587,14 @@ infered multi-omics pseudotime</p>
 <pre><code><span><span class="co">## `geom_line()`: Each group consists of only one observation.</span></span>
 <span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span></code></pre>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-47-1.png" width="700"></p>
-<div class="sourceCode" id="cb306"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb307"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">metadata</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">brain_region</span>, y <span class="op">=</span> <span class="va">inferred_pseudotime</span>,color<span class="op">=</span><span class="va">diagnosis</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">5</span>, col <span class="op">=</span> <span class="st">"firebrick"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color<span class="op">=</span><span class="va">Braak</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">BBN_ID</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Brain region"</span>, y <span class="op">=</span> <span class="st">"Inferred_pseudotime"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">diagnosis</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-47-2.png" width="700"></p>
-<div class="sourceCode" id="cb307"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb308"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/ggridges/" class="external-link">ggridges</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">metadata</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">inferred_pseudotime</span>, y <span class="op">=</span> <span class="va">Braak</span>,fill <span class="op">=</span> <span class="va">brain_region</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://wilkelab.org/ggridges/reference/geom_density_ridges.html" class="external-link">geom_density_ridges</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>point_color <span class="op">=</span><span class="va">diagnosis</span>, point_fill <span class="op">=</span> <span class="va">brain_region</span><span class="op">)</span>,</span>
@@ -1612,7 +1607,7 @@ infered multi-omics pseudotime</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>fill<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Picking joint bandwidth of 0.422</span></span></code></pre>
 <p><img src="Omix_vignette_MAP_CV_pseudotemporal_files/figure-html/unnamed-chunk-48-1.png" width="700"></p>
-<div class="sourceCode" id="cb309"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb310"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">metadata</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">inferred_pseudotime</span>, y <span class="op">=</span><span class="va">brain_region</span>,fill <span class="op">=</span> <span class="va">diagnosis</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://wilkelab.org/ggridges/reference/geom_density_ridges.html" class="external-link">geom_density_ridges</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>point_shape <span class="op">=</span><span class="va">diagnosis</span>, point_fill <span class="op">=</span> <span class="va">diagnosis</span><span class="op">)</span>,</span>
 <span>                      jittered_points <span class="op">=</span> <span class="cn">TRUE</span>, position <span class="op">=</span> <span class="st">"raincloud"</span>,</span>

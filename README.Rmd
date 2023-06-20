@@ -83,7 +83,7 @@ devtools::install_github("eleonore-schneeg/Omix")
   
 ## Benchmark of multi-omics integration softwares
   
-```{r, layout="l-body-outset"}
+```{r, echo=F}
 library(knitr)
 kable(head(comparison_table))
 ```

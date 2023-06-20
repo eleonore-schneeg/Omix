@@ -16,7 +16,6 @@ Authors@R:
     )
 Maintainer: Eleonore Schneegans <eleonore.schneegans17@imperial.ac.uk>
 Description: *Omix* provides a generalisable framework to efficiently process, integrate and analyse multi-omics data in an end-to-end manner. 
-URL: https://github.com/eleonore-schneeg/Omix
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
