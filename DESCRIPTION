@@ -84,7 +84,6 @@ Imports:
       IntNMF,
       ActivePathways,
       iClusterPlus,
-      mogsa,
       SNFtool,
       synapser,
       GeneOverlap,

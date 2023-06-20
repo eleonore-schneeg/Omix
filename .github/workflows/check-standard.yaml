@@ -17,6 +17,8 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       RGL_USE_NULL: TRUE
+      synapse_id: ${{ secrets.SYNAPSE_ID }}
+      synapse_password: ${{ secrets.SYNAPSE_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup R
