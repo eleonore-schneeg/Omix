@@ -30,8 +30,8 @@ jobs:
         
       - name: Create and populate .Renviron file
         run: |
-        echo synapse_id="$SYNAPSE_ID" >> ~/.Renviron
-        echo synapse_password="$SYNAPSE_PASSWORD" >> ~/.Renviron
+          echo synapse_id="$SYNAPSE_ID" >> ~/.Renviron
+          echo synapse_password="$SYNAPSE_PASSWORD" >> ~/.Renviron
         shell: bash
 
       - name: Set up Docker Buildx
