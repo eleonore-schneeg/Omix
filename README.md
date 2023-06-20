@@ -16,12 +16,12 @@ multi-omics intended to pre-process, analyse, and v isualise multimodal
 data flexibly to address research questions. Omix is built on four
 consecutive blocks, (1) preparation of the multimodal container, (2)
 processing and quality control, (3) single omic analyses, and (4)
-multi-omics vertical integration
+multi-omics vertical integration.
 
 Pipeline outputs are standardised and include publication-quality plots,
 tables, and interactive reports.
 
-![Figure 1: Omix pipeline](man/figures/Omix_pipeline.jpg)
+![Figure 1: Omix pipeline](man/figures/Omix_pipeline.png)
 
 Omix offers a range of state-of-the-art processing functions and
 integrative models, equipped with versatile parameters and quality
