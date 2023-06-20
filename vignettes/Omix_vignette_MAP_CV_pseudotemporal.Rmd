@@ -271,7 +271,7 @@ multiomics_object=process_protein(
 
 ## Pseudotemporal multi-omics integration using MOFA 
 
-```{r eval=F}
+```{r }
 multiomics_object=vertical_integration(multiassay=multiomics_object,
                                 slots = c(
                                    "rna_processed",

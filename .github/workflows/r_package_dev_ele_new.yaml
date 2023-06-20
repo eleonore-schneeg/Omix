@@ -27,6 +27,12 @@ jobs:
           version=$(grep Version DESCRIPTION | grep -o "[0-9.]\+")
           echo "packageVersion=${version}" >> $GITHUB_ENV
         shell: bash {0}
+        
+      - name: Create and populate .Renviron file
+        run: |
+        echo synapse_id="$SYNAPSE_ID" >> ~/.Renviron
+        echo synapse_password="$SYNAPSE_PASSWORD" >> ~/.Renviron
+        shell: bash
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
