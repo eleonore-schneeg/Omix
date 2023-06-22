@@ -21,7 +21,7 @@ multi-omics vertical integration.
 Pipeline outputs are standardised and include publication-quality plots,
 tables, and interactive reports.
 
-![Figure 1: Omix pipeline](man/figures/Omix_pipeline.png)
+<img src="man/figures/Omix_pipeline.png" width=900 style="align:left;" />
 
 Omix offers a range of state-of-the-art processing functions and
 integrative models, equipped with versatile parameters and quality
@@ -99,8 +99,8 @@ devtools::install_github("eleonore-schneeg/Omix")
         [OpenTargets](https://www.opentargets.org) database
     -   Publication quality plots and analysis reports
 
-Omix implements these modular steps and displays results in an
-interactive reports.
+Omix implements these modular steps and displays results in interactive
+reports.
 
 ## Benchmark of multi-omics integration softwares
 

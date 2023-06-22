@@ -3,7 +3,7 @@
 ## Uses the latest stable ubuntu, R and Bioconductor versions.
 ## Created on unbuntu 20.04, R 4.0 and BiocManager 3.12
 
-FROM rocker/rstudio:4.2.3
+FROM rocker/rstudio:4.2.2
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends apt-utils \
@@ -169,7 +169,6 @@ tidyr \
 stringr \
 scales \
 SNFtool \
-synapser \
 statmod \
 systemfonts \
 viridis \
@@ -192,6 +191,8 @@ ActivePathways \
 multiGSEA \
 PCAtools 
 # RUN Rscript -e  'reticulate::py_config()'
+
+RUN R -e "install.packages('synapser', repos=c('http://ran.synapse.org', 'http://cran.fhcrc.org'))"
 
 WORKDIR Omix
 ADD . .
