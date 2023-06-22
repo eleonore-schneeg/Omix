@@ -8,7 +8,6 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/",
   out.width = "100%"
 )
 library(readr)
@@ -29,7 +28,9 @@ The `Omix` pipeline offers an integration and analysis framework for multi-omics
 
 Pipeline outputs are standardised and include publication-quality plots, tables, and interactive reports. 
 
-<img src="man/figures/Omix_pipeline.png" width=900 style="align:left;" />
+```{r pressure, echo=FALSE, fig.cap="Omix pipeline", out.width = '100%'}
+knitr::include_graphics("man/figures/omix_pipeline_n.png")
+```
 
 Omix offers a range of state-of-the-art processing functions and integrative models, equipped with versatile parameters and quality control features. This empowers researchers to explore different integration strategies easily, enhancing the speed, scalability, and flexibility of multi-omics analyses. 
 
