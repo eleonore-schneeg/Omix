@@ -1,0 +1,6 @@
+,Supported omics,Pre-processing,Single omic analysis,Integrative models,Use case,Downstream analyses,Interactive visualisations,Language,Ref
+Miodin,"SNP, RNA, methylation, Proteins,",+,-,MOFA,BM,-,-,R,"Ulfenborg, B. (2019)."
+MiBiOmics,"miRNA, RNA, Proteins",-,-,Co-inertia analysis,BD,Multi-omics networks,+,Web,"(Zoppi et al., 2021)"
+Muon,Single cell omics,-,-,"MOFA, WNN",NA,-,-,Python,"(Bredikhin et al., 2022)"
+Movics,"SNP, RNA, methylation, Proteins",-,-,Range of clustering algorithm,STR,"Survival analysis, enrichment",-,R,"(Lu, 2020)"
+Omix,"RNA, Proteins",+,+,"MOFA,MEIFESTO, sMBPLS, MBPLS, DIABLO, iCluster","BD, BM, STR","Multi-omics signatures, networks, modules, functional/ cell type/ TF enrichment, pseudotime, etc",+,R,

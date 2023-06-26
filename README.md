@@ -21,7 +21,7 @@ multi-omics vertical integration.
 Pipeline outputs are standardised and include publication-quality plots,
 tables, and interactive reports.
 
-<img src="man/figures/omix_pipeline_n.png" alt="Omix pipeline" width="100%" />
+<img src="man/figures/omix_pipeline_n.png" width="100%" />
 
 Omix offers a range of state-of-the-art processing functions and
 integrative models, equipped with versatile parameters and quality

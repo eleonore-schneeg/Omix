@@ -1,0 +1,6 @@
+"","Package","Pre-processing","Single omic analysis","Choice of integrative models","Downstream analysis","Visualisation dashboards","Single cell multimodal integration","Language","Ref"
+"1","Miodin","No","No","MOFA","-","-","-","R","(Ulfenborg, 2019)"
+"2","MiBiOmics","No","No","Co-inertia analysis","-","+","-","Web-based","(Zoppi, 2021)"
+"3","Muon","No","No","MOFA, WNN","-","-","+","Python","(Bredikhin, 2022)"
+"4","Movics","No","No","Clustering only","-","-","-","R","(Lu, 2020)"
+"5","Omix","Yes","Yes","Range of integrative models","+","+","-","R","(Schneegans et al, 2023)"

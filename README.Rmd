@@ -28,7 +28,7 @@ The `Omix` pipeline offers an integration and analysis framework for multi-omics
 
 Pipeline outputs are standardised and include publication-quality plots, tables, and interactive reports. 
 
-```{r pressure, echo=FALSE, fig.cap="Omix pipeline", out.width = '100%', eval.expr=TRUE}
+```{r out.width = '100%', echo = FALSE}
 knitr::include_graphics("man/figures/omix_pipeline_n.png")
 ```
 
