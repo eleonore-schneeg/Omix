@@ -12,6 +12,7 @@ RUN apt-get update \
 	python3-setuptools \
 	python3-dev \
 	python3-pip \
+	python3-venv \
 	libcurl4-openssl-dev \
 	libcairo2-dev \
 	libfreetype6-dev \
