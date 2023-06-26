@@ -187,9 +187,7 @@ RUN Rscript -e 'requireNamespace("BiocManager"); BiocManager::install(ask=F);' \
 NMF \
 IntNMF \
 MASS \
-ActivePathways \
-multiGSEA \
-PCAtools 
+ActivePathways 
 # RUN Rscript -e  'reticulate::py_config()'
 
 RUN R -e "install.packages('synapser', repos=c('http://ran.synapse.org', 'http://cran.fhcrc.org'))"
