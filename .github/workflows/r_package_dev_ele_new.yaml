@@ -12,8 +12,9 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       RGL_USE_NULL: TRUE
-      synapse_id: ${{ secrets.SYNAPSE_ID }}
-      synapse_password: ${{ secrets.SYNAPSE_PASSWORD }}
+      SYNAPSE_ID: ${{ secrets.SYNAPSE_ID }}
+      SYNAPSE_PASSWORD: ${{ secrets.SYNAPSE_PASSWORD }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
     steps:
       - uses: actions/checkout@v3
@@ -32,6 +33,7 @@ jobs:
         run: |
           echo synapse_id="$SYNAPSE_ID" >> ~/.Renviron
           echo synapse_password="$SYNAPSE_PASSWORD" >> ~/.Renviron
+          echo gh_token="$GH_TOKEN" >> ~/.Renviron
         shell: bash
 
       - name: Set up Docker Buildx

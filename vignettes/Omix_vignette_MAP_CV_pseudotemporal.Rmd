@@ -88,16 +88,16 @@ TF_fp <- file.path(outputDir, "Enrichr_Queries.gmt.txt")
 GO_fp <- file.path(outputDir, "GO_Biological_Process_2021.txt")
 
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", Sys.getenv(gh_token))))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", Sys.getenv(gh_token))))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/Enrichr_Queries.gmt.txt",destfile=TF_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/Enrichr_Queries.gmt.txt",destfile=TF_fp ,headers = c(Authorization = paste("token", Sys.getenv(gh_token))))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/GO_Biological_Process_2021.txt",destfile=GO_fp ,headers = c(Authorization = paste("token", "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")))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/GO_Biological_Process_2021.txt",destfile=GO_fp ,headers = c(Authorization = paste("token", Sys.getenv(gh_token))))
 
 
-synapser::synLogin(email=Sys.getenv('synapse_id'), password=Sys.getenv('synapse_password'))
+synapser::synLogin(email=Sys.getenv(synapse_id), password=Sys.getenv(synapse_password))
 rawdata_rna <- read.csv(synapser::synGet('syn51516100')$path, header=T, stringsAsFactors = F, row.names=1)
 rawdata_protein <- read.csv(synapser::synGet('syn51516105')$path, header=T, stringsAsFactors = F, row.names=1)
 map_rna <-read.csv(synapser::synGet('syn51516102')$path, header=T, stringsAsFactors = F, row.names=1)
