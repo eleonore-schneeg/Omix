@@ -12,10 +12,6 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       RGL_USE_NULL: TRUE
-      SYNAPSE_ID: ${{ env.SYNAPSE_ID }}
-      SYNAPSE_PASSWORD: ${{ env.SYNAPSE_PASSWORD }}
-      GH_TOKEN: ${{ env.GH_TOKEN }}
-
     steps:
       - uses: actions/checkout@v3
       - name: Setup R
@@ -28,6 +24,13 @@ jobs:
           version=$(grep Version DESCRIPTION | grep -o "[0-9.]\+")
           echo "packageVersion=${version}" >> $GITHUB_ENV
         shell: bash {0}
+        
+      - name: Create and populate .Renviron file
+        run: |
+          echo SYNAPSE_ID="${{ env.SYNAPSE_ID }}" >> ~/.Renviron
+          echo SYNAPSE_PASSWORD="${{ env.SYNAPSE_PASSWORD }}" >> ~/.Renviron
+          echo GH_TOKEN="${{ env.GH_TOKEN }}" >> ~/.Renviron
+        shell: bash
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
