@@ -212,17 +212,25 @@ We found a r=`r corr` correlation between pairwise log2FoldChanges (p-value <0.0
 
 ```{r, echo=FALSE}
 
-  plot=DEG$functional_enrichment[[slot]]$down$plot[[database]]
+if (is.null(DEG$functional_enrichment[[slot]]$up)){
+  cat( 'No pathways were found to be significantly up regulated')
+}else{
+  plot=DEG$functional_enrichment[[slot]]$up$plot[[database]]
   plot
+} 
 
 ```
 
 ### Down regulated genes 
 
 ```{r, echo=FALSE}
-
+  
+if (is.null(DEG$functional_enrichment[[slot]]$down)){
+  cat( 'No pathways were found to be significantly down regulated')
+}else{
   plot=DEG$functional_enrichment[[slot]]$down$plot[[database]]
   plot
+} 
 
 ```
 
@@ -233,8 +241,12 @@ We found a r=`r corr` correlation between pairwise log2FoldChanges (p-value <0.0
 
 ```{r, echo=FALSE}
 
+if (is.null(DEP$functional_enrichment[[slot]]$up)){
+  cat( 'No pathways were found to be significantly up regulated')
+}else{
   plot=DEP$functional_enrichment[[slot]]$up$plot[[database]]
   plot
+} 
 
 ```
 
@@ -242,8 +254,12 @@ We found a r=`r corr` correlation between pairwise log2FoldChanges (p-value <0.0
 
 ```{r, echo=FALSE}
 
+if (is.null(DEP$functional_enrichment[[slot]]$down)){
+  cat( 'No pathways were found to be significantly down regulated')
+}else{
   plot=DEP$functional_enrichment[[slot]]$down$plot[[database]]
   plot
+} 
 
 ```
 

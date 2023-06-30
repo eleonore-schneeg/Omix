@@ -10,6 +10,7 @@
 multi_omics_qc <- function(multiassay) {
 
   processing_outputs=list()
+  suppressMessages({
   # Transcriptomics & proteomics slots
   rownames(multiassay@ExperimentList@listData[["rna_processed"]]) <-make.unique(get_ID_names(multiassay,
                                                               id=rownames(multiassay@ExperimentList@listData[["rna_processed"]]),
@@ -20,6 +21,7 @@ multi_omics_qc <- function(multiassay) {
   CompleteMulti <- multi[, complete.cases(multi), ] #
   CommonGenes_Samples <-   MultiAssayExperiment::intersectRows(CompleteMulti) #
   metadata_intersection <- data.frame(colData(CompleteMulti)) #
+
 
   dim_rna_raw=dim(multiassay@ExperimentList@listData[["rna_raw"]])
   dim_rna_processed=dim(multiassay@ExperimentList@listData[["rna_processed"]])
@@ -54,11 +56,11 @@ multi_omics_qc <- function(multiassay) {
   subacc.list <- lapply(subacc.list, t)
   corres <- stats::cor(subacc.list[[1]], subacc.list[[2]])
   gene_max_cor <- names(which.max(diag(corres)))
-  df <- wideFormat(subacc[gene_max_corr, , ])
+  df <- wideFormat(subacc[gene_max_cor, , ])
   df2 <- data.frame(df@listData) #
 
   gene_min_cor <- names(which.min(diag(corres)))
-  df <- wideFormat(subacc[gene_min_corr, , ])
+  df <- wideFormat(subacc[gene_min_cor, , ])
   df3 <- data.frame(df@listData) #
 
   correlations <- data.frame(corr = diag(corres))
@@ -111,5 +113,7 @@ multi_omics_qc <- function(multiassay) {
                           summary=summary)
 
   MultiAssayExperiment::metadata(multiassay)$parameters$processing_outputs$multiomics <- processing_outputs
+  })
+  return(multiassay)
 }
 

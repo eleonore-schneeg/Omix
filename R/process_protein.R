@@ -54,8 +54,8 @@ process_protein <- function(multiassay,
 
 
   "%!in%" <- function(x, y) !("%in%"(x, y))
-  
 
+  suppressMessages({
   protein_raw <- MultiAssayExperiment::getWithColData(
     multiassay,
     "protein_raw"
@@ -67,15 +67,16 @@ process_protein <- function(multiassay,
   }
 
   processing_outputs=list()
-
+  })
   cli::cli_alert_success("SCALING NORMALIZATION")
+  suppressMessages({
   matrix <- SummarizedExperiment::assays(protein_raw)[[1]]
   matrix <- log2(matrix)
   proteins_raw=rownames(matrix)
-
+  })
   if (filter == TRUE) {
     cli::cli_alert_success("FILTERING")
-
+    suppressMessages({
     dim1 <- dim(matrix)[1]
     args2 <- list(
       matrix = matrix,
@@ -89,9 +90,10 @@ process_protein <- function(multiassay,
     matrix <- do.call(filter_protein, args2)
     protein_post_filtering=rownames(matrix)
     dim2 <- dim(matrix)[1]
+    })
     cli::cli_alert_success(paste(dim1 - dim2, "/", dim1, "proteins filtered"))
     cli::cli_alert_success(paste(dim2, "proteins kept for analysis"))
-
+    suppressMessages({
     processing_outputs[["filtering"]]=list(proteins_filtered=dim1 - dim2,
                                            percentage_filtered= (dim1-dim2)/dim1,
                                            proteins_kept=dim2)
@@ -99,6 +101,7 @@ process_protein <- function(multiassay,
     processing_outputs[["post_filtering"]]=list(missing_values_per_feature=rowSums(is.na(matrix)),
                                             missing_values_per_sample=  colSums(is.na(matrix)),
                                             proteins_filtered_out=setdiff(proteins_raw,protein_post_filtering))
+    })
   }
 
   cli::cli_alert_success("IMPUTATION")
@@ -231,6 +234,7 @@ process_protein <- function(multiassay,
 
 
   #####
+  suppressMessages({
   map <- MultiAssayExperiment::sampleMap(multiassay)
   map_df <- data.frame(map@listData)
   map_df <- map_df[which(map_df$assay == "protein_raw"), ]
@@ -267,6 +271,7 @@ process_protein <- function(multiassay,
 
   cli::cli_alert_success("Proteomics data processed!")
   cli::cli_alert_success("Processing parameters saved in metadata")
+  })
 }
 
 

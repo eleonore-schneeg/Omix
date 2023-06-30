@@ -33,7 +33,7 @@ rna_DE_analysis <- function(multiassay,
       )
     ))
   }
-
+  suppressMessages({
   dds <- multiassay@metadata[["dds"]]
   dds <- DESeq2::DESeq(dds)
   res <- list()
@@ -101,11 +101,13 @@ rna_DE_analysis <- function(multiassay,
   })
 
   res$sig_gene <- list_DEG_limma
+  })
 
   functional_list=list()
   for(j in names(res$sig_gene)){
     functional_list[[j]]=lapply(res$sig_gene[[j]] ,pathway_analysis_enrichr)
   }
+  suppressMessages({
   res$functional_enrichment <- functional_list
   MultiAssayExperiment::metadata(multiassay)$DEG <- res
   MultiAssayExperiment::metadata(multiassay)$parameters$single_omic$de$rna <- list(dependent = dependent,
@@ -114,7 +116,7 @@ rna_DE_analysis <- function(multiassay,
                                                                                 log2FoldChange = log2FoldChange,
                                                                                 padj=padj,
                                                                                 filter_protein_coding =filter_protein_coding)
-
-
+  
+  })
   return(multiassay)
 }

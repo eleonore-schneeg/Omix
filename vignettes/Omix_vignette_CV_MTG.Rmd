@@ -21,7 +21,7 @@ editor_options:
   wrap: 72
 ---
 
-```{r style, echo=FALSE, results='asis', message=TRUE, warning=FALSE}
+```{r style, echo=FALSE, results='asis', message=FALSE, warning=FALSE}
 BiocStyle::markdown()
 knitr::opts_chunk$set(tidy = FALSE,
                       message = TRUE,
@@ -70,7 +70,7 @@ The `Omix` pipeline requires the following input:
 
 Call required packages for vignette:
 
-```{r}
+```{r results='asis', message=FALSE, warning=FALSE}
 library(Omix)
 library(purrr)
 library(ggplot2)
@@ -80,22 +80,22 @@ library(tibble)
 
 First we must load the data from Omix for the vignette:
 
-```{r}
+```{r results='asis', message=FALSE, warning=FALSE}
 outputDir <- tempdir()
 ctd_fp <-file.path(outputDir, "ctd.rds")
 ensembl_fp  <- file.path(outputDir, "ensembl.rds")
 GO_fp <- file.path(outputDir, "GO_Biological_Process_2021.txt")
 TF_fp <- file.path(outputDir, "Enrichr_Queries.gmt.txt")
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/GO_Biological_Process_2021.txt",destfile=GO_fp ,headers = c(Authorization = paste("token", Sys.getenv(gh_token))))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/GO_Biological_Process_2021.txt",destfile=GO_fp ,headers = c(Authorization = paste("token", Sys.getenv("GH_TOKEN"))))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", Sys.getenv(gh_token))))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", Sys.getenv("GH_TOKEN"))))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", Sys.getenv(gh_token))))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", Sys.getenv("GH_TOKEN"))))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/Enrichr_Queries.gmt.txt",destfile=TF_fp ,headers = c(Authorization = paste("token", Sys.getenv(gh_token))))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/Enrichr_Queries.gmt.txt",destfile=TF_fp ,headers = c(Authorization = paste("token", Sys.getenv("GH_TOKEN"))))
 
-synapser::synLogin(email=Sys.getenv(synapse_id), password=Sys.getenv(synapse_password))
+synapser::synLogin(email=Sys.getenv("SYNAPSE_ID"), password=Sys.getenv("SYNAPSE_PASSWORD"))
 rawdata_rna <- read.csv(synapser::synGet('syn51533734')$path, header=T, stringsAsFactors = F, row.names=1)
 rawdata_protein <- read.csv(synapser::synGet('syn51533735')$path, header=T, stringsAsFactors = F, row.names=1)
 map_rna <-read.csv(synapser::synGet('syn51533731')$path, header=T, stringsAsFactors = F, row.names=1)
@@ -184,9 +184,8 @@ The package currently supports transcriptomics and proteomics bulk data only.
 
 
 
-```{r}
+```{r results='asis', warning=FALSE}
 # Convert metadata type from character to factor
-
 individual_metadata$diagnosis <- factor(individual_metadata$diagnosis,
                                         levels = c("Control", "AD"))
 individual_metadata$sex <- factor(individual_metadata$sex)
@@ -213,7 +212,7 @@ The following steps will process and perform QC on each omic layers of the
 
 # Step two - Process transcriptomics data
 
-```{r}
+```{r results='asis', warning=FALSE}
 multiomics_object_MTG=process_rna(multiassay=multiomics_object_MTG,
             transformation='rlog',
             protein_coding=TRUE,
@@ -231,7 +230,7 @@ multiomics_object_MTG=process_rna(multiassay=multiomics_object_MTG,
 
 # Step three - Process proteomics data
 
-```{r}
+```{r warning=FALSE}
 multiomics_object_MTG=process_protein(
     multiassay=multiomics_object_MTG,
     filter=TRUE,
@@ -259,7 +258,7 @@ Now we run a differential expression analysis between groups of interest, where
 the first level, here control is the reference. The function requires to run `process_rna`
 first, with covariates of interest. These are adjusted for in the DE. 
 
-```{r}
+```{r warning=FALSE}
 multiomics_object_MTG=rna_DE_analysis(multiassay=multiomics_object_MTG,
                     dependent='diagnosis',
                     levels=c('Control','AD'),
@@ -270,7 +269,7 @@ multiomics_object_MTG=rna_DE_analysis(multiassay=multiomics_object_MTG,
 
 Differential expression results for transcripts are saved in the `multiomics_object_MTG@metadata$DEG` slot 
 
-```{r}
+```{r warning=FALSE}
 
 DT::datatable(multiomics_object_MTG@metadata$DEG$ADvsControl,
               rownames = FALSE, 
@@ -462,7 +461,7 @@ or to run `integrative_results_supervised`, which will create a results object
 containing, multi-omics signatures, network visualisation, cell type and functional 
 enrichment, as well as comparison of signatures against the OpenTargets knowledge base.
 
-```{r, message=FALSE}
+```{r, message=FALSE, echo=F, fig.show='hide'}
 
 multiomics_object_MTG=integrative_results_supervised(multiassay=multiomics_object_MTG,
                                           integration_model = "DIABLO",

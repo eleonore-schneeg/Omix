@@ -144,9 +144,7 @@ posterior_probability <- function(integrated_object,
   if (!is.null(sense_check_variable)) {
     return(result = list(
       weights = list(
-        ranked_weights_positive = Weights_up,
-        ranked_weights_negative = Weights_down
-      ),
+        ranked_weights_positive = Weights_up),
       distribution_plot = list(
         rna = distrib_rna,
         protein = distrib_protein
@@ -165,9 +163,7 @@ posterior_probability <- function(integrated_object,
   if (is.null(sense_check_variable)) {
     return(result = list(
       weights = list(
-        ranked_weights_positive = Weights_up,
-        ranked_weights_negative = Weights_down
-      ),
+        ranked_weights_positive = Weights_up),
       distribution_plot = list(
         rna = distrib_rna,
         protein = distrib_protein

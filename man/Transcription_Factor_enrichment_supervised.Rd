@@ -34,6 +34,7 @@ Transcription factor target enrichment test
 Other Multi-omic integration downstream analysis: 
 \code{\link{OpenTarget_dataframe}()},
 \code{\link{Transcription_Factor_enrichment}()},
+\code{\link{circos_TF}()},
 \code{\link{clustering_DE_analysis}()},
 \code{\link{extract_loadings}()},
 \code{\link{extract_multiomic_signature}()},

@@ -51,7 +51,7 @@ process_rna <- function(multiassay,
                         batch='batch',
                         remove_sample_outliers=FALSE) {
   "%!in%" <- function(x, y) !("%in%"(x, y))
-  suppressWarnings({
+  suppressMessages({
     rna_raw <- MultiAssayExperiment::getWithColData(
       multiassay,
       "rna_raw"
@@ -80,9 +80,10 @@ process_rna <- function(multiassay,
   for (i in covariates) {
     rna_raw <- rna_raw[, !is.na(rna_raw[[paste(i)]])]
   }
-
+  suppressMessages({
   countData <- SummarizedExperiment::assays(rna_raw)[[1]]
   colData <- colData[colnames(countData), ]
+  })
 
   if (!all(colnames(countData) == rownames(colData))) {
     stop(cli::cli_alert_danger(
@@ -93,6 +94,7 @@ process_rna <- function(multiassay,
     ))
   }
 
+  suppressMessages({
   dds <- DESeq2::DESeqDataSetFromMatrix(
     countData = countData,
     colData = colData,
@@ -104,8 +106,9 @@ process_rna <- function(multiassay,
 
   processing_outputs=list()
 
+  })
   cli::cli_alert_success("NORMALISATION & TRANSFORMATION")
-
+  suppressMessages({
   mean_values_feature_df=data.frame(count=rowMeans(counts(dds))) %>% tibble::rownames_to_column(var='ensembl')%>% as.data.frame()
   mean_values_feature_df$gene_id=make.unique(get_ID_names(multiassay,
                                                           id=mean_values_feature_df$ensembl,
@@ -116,29 +119,38 @@ process_rna <- function(multiassay,
 
   processing_outputs[["raw"]]=list(mean_values_feature_df= mean_values_feature_df,
                                    mean_values_sample=  colMeans(counts(dds)))
+  })
 
   if (transformation == "log2") {
+    suppressMessages({
     matrix <- data.frame(log2(DESeq2::counts(dds, normalized = TRUE) + 1))
+    })
   }
 
   if (transformation == "vst") {
+    suppressMessages({
     vsd <- DESeq2::vst(dds, blind = FALSE)
     matrix <- as.data.frame(SummarizedExperiment::assay(vsd))
+    })
   }
 
   if (transformation == "rlog") {
+    suppressMessages({
     rlog <- DESeq2::rlog(dds, blind = FALSE)
     matrix <- as.data.frame(SummarizedExperiment::assay(rlog))
+    })
   }
 
   if (filter == TRUE) {
     cli::cli_alert_success("GENE FILTERING")
     if (protein_coding == TRUE) {
       cli::cli_alert_success("Keeping only protein coding genes")
+      suppressMessages({
       protein_coding_keep <- SummarizedExperiment::rowData(
         rna_raw)$gene_biotype == "protein_coding" &
         !is.na(SummarizedExperiment::rowData(rna_raw)$gene_biotype)
       dds <- dds[protein_coding_keep, ]
+      })
       cli::cli_alert_success(paste(
         dim1 - sum(protein_coding_keep),
         "/", dim1, "non protein coding genes were dropped"
@@ -195,19 +207,25 @@ process_rna <- function(multiassay,
 
     if (transformation == "log2") {
       cli::cli_alert_success("LOG2 TRANSFORMATION")
+      suppressMessages({
       matrix <- data.frame(log2(DESeq2::counts(dds, normalized = TRUE) + 1))
+      })
     }
 
     if (transformation == "vst") {
       cli::cli_alert_success("VST TRANSFORMATION")
+      suppressMessages({
       vsd <- DESeq2::vst(dds, blind = FALSE)
       matrix <- as.data.frame(SummarizedExperiment::assay(vsd))
+      })
     }
 
     if (transformation == "rlog") {
        cli::cli_alert_success("RLOG TRANSFORMATION")
+      suppressMessages({
        rlog <- DESeq2::rlog(dds, blind = FALSE)
        matrix <- as.data.frame(SummarizedExperiment::assay(rlog))
+      })
     }
   }
 
@@ -218,13 +236,14 @@ process_rna <- function(multiassay,
       "to remove technical artefacts, and",
       covariates, "as biological confounders"
     ))
-
+    suppressMessages({
     covariates_data <- MultiAssayExperiment::colData(rna_raw)[, c(covariates)]
     covariates_data <- data.frame(covariates_data)
     covariates_data <- covariates_data %>%
       mutate(across(where(is.character), as.factor))
     covariates_data <- covariates_data %>%
       mutate(across(where(is.factor), as.numeric))
+    })
 
     for (i in colnames(covariates_data)) {
       if (all(!is.na(covariates_data[, i])) == FALSE) {
@@ -237,6 +256,7 @@ process_rna <- function(multiassay,
     }
 
     if (is.null(batch)) {
+      suppressMessages({
       matrix <- limma::removeBatchEffect(
         matrix,
         batch = NULL,
@@ -245,11 +265,13 @@ process_rna <- function(multiassay,
           data = colData
         )
       )
+      })
     }
     if (!is.null(batch)) {
       batch_data <- colData[batch]
       batch_data[[batch]] <- as.factor(batch_data[[batch]])
-
+      
+      suppressMessages({
       matrix <- limma::removeBatchEffect(
         matrix,
         batch = batch_data[[batch]],
@@ -258,6 +280,7 @@ process_rna <- function(multiassay,
           data = colData
         )
       )
+      })
     }
   }
 
@@ -306,7 +329,7 @@ process_rna <- function(multiassay,
                                                          percentage_outliers= length(outliers)/dim2,
                                                          detected_sample_outliers= outliers)
   }
-
+  suppressMessages({ 
   matrix <- as.data.frame(matrix)
   map <- MultiAssayExperiment::sampleMap(multiassay)
   map_df <- data.frame(map@listData)
@@ -321,12 +344,13 @@ process_rna <- function(multiassay,
     sampleMap = map_df
   )
 
-
   MultiAssayExperiment::metadata(multiassay)$dds <- dds
+
 
   if (remove_sample_outliers) {
     MultiAssayExperiment::metadata(multiassay)$OutliersFlags$rna <- outliers
   }
+  
   MultiAssayExperiment::metadata(multiassay)$parameters$processing$rna <- list(
     transformation=transformation,
     min_count = min_count,
@@ -342,7 +366,7 @@ process_rna <- function(multiassay,
   )
 
   MultiAssayExperiment::metadata(multiassay)$parameters$processing_outputs$rna <- processing_outputs
-
+  })
   cli::cli_alert_success("Transcriptomics data processed!")
   cli::cli_alert_success("Processing parameters saved in metadata")
 

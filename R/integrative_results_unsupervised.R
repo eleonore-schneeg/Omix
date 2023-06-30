@@ -14,6 +14,8 @@
 #' @param weights_threshold weights threshold
 #' @param community_detection community detection method
 #' @param pseudotime_analysis TRUE/ FALSE
+#' @param TF_fp file path GMT file with Transcription Factors and target genes. Check `https://maayanlab.cloud/chea3/`
+
 #'
 #' @return List object of integrated results
 #'
@@ -36,7 +38,8 @@ integrative_results_unsupervised <- function(multiassay,
                                              community_detection = "leading_eigen",
                                              pseudotime_analysis = TRUE,
                                              time = NA,
-                                             disease_id = "MONDO_0004975") {
+                                             disease_id = "MONDO_0004975",
+                                             TF_fp) {
   cli::cli_h2("Generating integrative muti-omics results ")
 
   integrated_object <- multiassay@metadata$integration[[integration_model]]
@@ -51,7 +54,7 @@ integrative_results_unsupervised <- function(multiassay,
   ## Multi-omics network
   args <- list(
     integrated_object,
-    factor = MOFA_get_relevant_factor(integrated_object, covariate = sense_check_variable),
+    factor = factor,
     threshold = weights_threshold,
     sense_check_variable = sense_check_variable
   )

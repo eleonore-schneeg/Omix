@@ -25,7 +25,7 @@ library(htmltools)
 library(plotly)
 library(dplyr)
 library(Omix)
-
+library(purrr)
 
 BiocStyle::markdown()
 knitr::opts_chunk$set(tidy = FALSE,
@@ -39,6 +39,8 @@ options(knitr.duplicate.label = "allow")
 data <- qs::qread(params$metadata_path)
 list2env(data, envir = environment())
 database=param$database
+multimodal_omics=integration_param$multimodal_omics
+
 ```
 
 ## Multi-omics integration report overview
@@ -120,7 +122,11 @@ weights$distribution_plot$protein
 
 ```{r, echo=FALSE}
 
-DT::datatable(data.frame(features=weights$weights$ranked_weights_positive$rna))
+dt_weights=weights$weights_df$rna[,c('Weights','Feature')] %>%
+  filter(Weights >0)
+
+DT::datatable(dt_weights)
+
 
 ```
 
@@ -128,7 +134,11 @@ DT::datatable(data.frame(features=weights$weights$ranked_weights_positive$rna))
 
 ```{r, echo=FALSE}
 
-DT::datatable(data.frame(features=weights$weights$ranked_weights_positive$protein))
+dt_weights=weights$weights_df$protein[,c('Weights','Feature')] %>%
+  filter(Weights>0)
+
+DT::datatable(dt_weights)
+
 ```
 
 
@@ -163,7 +173,10 @@ plot_loadings(loadings = weights$weights_df,
 
 ```{r, echo=FALSE}
 
-DT::datatable(data.frame(features=weights$weights$ranked_weights_negative$rna))
+dt_weights=weights$weights_df$rna[,c('Weights','Feature')] %>%
+  filter(Weights<0)
+
+DT::datatable(dt_weights)
 
 
 ```
@@ -172,7 +185,11 @@ DT::datatable(data.frame(features=weights$weights$ranked_weights_negative$rna))
 
 ```{r, echo=FALSE}
 
-DT::datatable(data.frame(features=weights$weights$ranked_weights_negative$protein))
+dt_weights=weights$weights_df$protein[,c('Weights','Feature')] %>%
+  filter(Weights<0)
+
+DT::datatable(dt_weights)
+
 ```
 
 
@@ -204,7 +221,7 @@ plot_loadings(loadings = weights$weights_df,
 
 ### Transcriptomics 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.height=10}
 
 multiomics_heatmap(multimodal_omics,
                                metadata,
@@ -213,14 +230,13 @@ multiomics_heatmap(multimodal_omics,
                                omic='rna',
                                weights=weights,
                                direction='both',
-                               cluster=cluster,
                                num_features=30)
 
 ```
 
 ### Proteomics
 
-```{r, echo=FALSE}
+```{r, echo=FALSE,  fig.height=10}
 multiomics_heatmap(multimodal_omics,
                                metadata,
                                integration_model = "sMBPLS",
@@ -228,7 +244,6 @@ multiomics_heatmap(multimodal_omics,
                                omic='protein',
                                weights=weights,
                                direction='both',
-                               cluster=cluster,
                                num_features=30)
 ```
 
@@ -346,6 +361,7 @@ for (i in names(functional_enrichment$negative)){
 plots
 ```
 
+
 ## Transcription Factor enrichment {.tabset}
 
 ### Positive weights
@@ -358,34 +374,75 @@ run_TF_neg= !is_empty(TF_neg)
 ```
 
 
-```{r conditional_block, echo=FALSE,eval = run_TF_pos}
+#### Enrichment Heatmap
 
+```{r  echo=FALSE}
+
+if(run_TF_pos==TRUE ){
 GeneOverlap::drawHeatmap(TF$positive,what = c("odds.ratio"), log.scale = T, adj.p = F, cutoff = .05,
-                          ncolused = 7, grid.col = c("Blues"), note.col = "red")
+                          ncolused = 7, grid.col = c("Blues"), note.col = "red")  
+}else{
+  cat("No significant TF - gene target enrichment detected!")
+}
+
 
 ```
 
+#### TF - target gene circular plot
+
+```{r fig.height = 10, fig.width=10}
+if(run_TF_pos==TRUE ){
+circos_TF(TF$positive)
+}
+```
+
+
 ### Negative weights
 
-```{r conditional_block, echo=FALSE, eval= run_TF_neg}
+#### Enrichment Heatmap
+
+```{r  echo=FALSE}
+if(run_TF_neg==TRUE ){
 GeneOverlap::drawHeatmap(TF$negative,what = c("odds.ratio"), log.scale = T, adj.p = F, cutoff = .05,
                           ncolused = 7, grid.col = c("Blues"), note.col = "red")
+}else{
+  cat("No significant TF - gene target enrichment detected!")
+}
+```
+
+#### TF - target gene circular plot
+
+```{r fig.height = 10, fig.width=10}
+
+if(run_TF_neg==TRUE ){
+circos_TF(TF$negative)
+}
+
 ```
 
 ## Pseudo-time analysis {.tabset}
 
+```{r  echo=FALSE}
+
+if(exists("pseudotime_analysis") ){
+pseudotime_analysis$plot
+}else{
+  cat("Pseudotime analysis was not conducted")
+}
+
+```
 
 ## Open Targets (Positive weights) {.tabset}
 
 ### Transcriptomics
 
-```{r, echo=FALSE,fig.height=20}
+```{r, echo=FALSE,fig.height=10}
 OpenTargets$positive$rna$plot
 ```
 
 ### Proteomics
 
-```{r, echo=FALSE,fig.height=20}
+```{r, echo=FALSE,fig.height=10}
 OpenTargets$positive$protein$plot
 ```
 
@@ -393,13 +450,13 @@ OpenTargets$positive$protein$plot
 
 ### Transcriptomics
 
-```{r, echo=FALSE,fig.height=20}
+```{r, echo=FALSE,fig.height=10}
 OpenTargets$negative$rna$plot
 ```
 
 ### Proteomics
 
-```{r, echo=FALSE,fig.height=20}
+```{r, echo=FALSE,fig.height=10}
 OpenTargets$negative$protein$plot
 ```
 

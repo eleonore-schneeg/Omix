@@ -11,7 +11,7 @@
 #' @param sense_check_variable sense check
 #' @param covariates cov
 #' @param community_detection community detection method
-#' @param TF_fp GMT file path with Transcription Factors and target genes
+#' @param TF_fp file path GMT file with Transcription Factors and target genes. Check `https://maayanlab.cloud/chea3/`
 #'
 #' @return List object of integrated results
 #'
@@ -315,7 +315,7 @@ integrative_results_sparse_supervised <- function(multiassay,
     community_detection = community_detection,
     disease_id = disease_id
   )
-
+  
   #### RESULTS OBJECT
   integrative_results <- list(
     direction_analysis = sign,

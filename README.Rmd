@@ -29,7 +29,7 @@ The `Omix` pipeline offers an integration and analysis framework for multi-omics
 Pipeline outputs are standardised and include publication-quality plots, tables, and interactive reports. 
 
 ```{r out.width = '100%', echo = FALSE}
-knitr::include_graphics("man/figures/omix_pipeline_n.png")
+knitr::include_graphics("man/figures/Omix-pipeline.png")
 ```
 
 Omix offers a range of state-of-the-art processing functions and integrative models, equipped with versatile parameters and quality control features. This empowers researchers to explore different integration strategies easily, enhancing the speed, scalability, and flexibility of multi-omics analyses. 
@@ -86,6 +86,7 @@ devtools::install_github("eleonore-schneeg/Omix")
   
 ```{r, echo=F}
 library(knitr)
+colnames(comparison_table)[1]='Tool'
 kable(head(comparison_table))
 ```
 

@@ -69,7 +69,7 @@ The `Omix` pipeline requires the following input:
 
 Call required packages for vignette:
 
-```{r}
+```{r results='asis', message=FALSE, warning=FALSE}
 library(Omix)
 library(purrr)
 library(ggplot2)
@@ -80,7 +80,7 @@ library(tibble)
 
 First we must load the data from Omix for the vignette:
 
-```{r}
+```{r results='asis', message=FALSE, warning=FALSE}
 outputDir <- tempdir()
 ctd_fp <-file.path(outputDir, "ctd.rds")
 ensembl_fp  <-file.path(outputDir, "ensembl.rds")
@@ -88,16 +88,16 @@ TF_fp <- file.path(outputDir, "Enrichr_Queries.gmt.txt")
 GO_fp <- file.path(outputDir, "GO_Biological_Process_2021.txt")
 
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", Sys.getenv(gh_token))))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", Sys.getenv("GH_TOKEN"))))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", Sys.getenv(gh_token))))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", Sys.getenv("GH_TOKEN"))))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/Enrichr_Queries.gmt.txt",destfile=TF_fp ,headers = c(Authorization = paste("token", Sys.getenv(gh_token))))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/Enrichr_Queries.gmt.txt",destfile=TF_fp ,headers = c(Authorization = paste("token", Sys.getenv("GH_TOKEN"))))
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/GO_Biological_Process_2021.txt",destfile=GO_fp ,headers = c(Authorization = paste("token", Sys.getenv(gh_token))))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/GO_Biological_Process_2021.txt",destfile=GO_fp ,headers = c(Authorization = paste("token", Sys.getenv("GH_TOKEN"))))
 
 
-synapser::synLogin(email=Sys.getenv(synapse_id), password=Sys.getenv(synapse_password))
+synapser::synLogin(email=Sys.getenv("SYNAPSE_ID"), password=Sys.getenv("SYNAPSE_PASSWORD"))
 rawdata_rna <- read.csv(synapser::synGet('syn51516100')$path, header=T, stringsAsFactors = F, row.names=1)
 rawdata_protein <- read.csv(synapser::synGet('syn51516105')$path, header=T, stringsAsFactors = F, row.names=1)
 map_rna <-read.csv(synapser::synGet('syn51516102')$path, header=T, stringsAsFactors = F, row.names=1)
@@ -186,7 +186,7 @@ To run Omix, we first need to generate a multi-omics object
 The package currently supports transcriptomics and proteomics bulk data only.
 
 
-```{r}
+```{r  warning=FALSE}
 
 individual_metadata$diagnosis <- factor(individual_metadata$diagnosis,
                                         levels = c("Control", "AD"))
@@ -213,7 +213,7 @@ The following steps will process and perform QC on each omic layers of the
 
 # Step two - Process transcriptomics data
 
-```{r}
+```{r  warning=FALSE}
 multiomics_object=process_rna(multiassay=multiomics_object,
             transformation='rlog',
             protein_coding=TRUE,
@@ -230,7 +230,7 @@ multiomics_object=process_rna(multiassay=multiomics_object,
 
 # Step three - Process proteomics data
 
-```{r}
+```{r  warning=FALSE}
 multiomics_object=process_protein(
     multiassay=multiomics_object,
     filter=TRUE,
@@ -267,12 +267,14 @@ multiomics_object=process_protein(
 
  The MTG is known to be affected earlier during AD progression, while SSC at later stages. Using these two regions as pseudotemporal proxi in the integrative process, we are able to gain a deeper understanding of biological mechanisms that occur during AD progression.
  
-<img src="man/figures/cohort.png" width=200 style="align:left;" />
-
+```{r echo=FALSE}
+knitr::include_graphics("../man/figures/cohort.png")
+```
+ 
 ## Pseudotemporal multi-omics integration using MOFA 
 
 
-```{r }
+```{r warning=FALSE}
 multiomics_object=vertical_integration(multiassay=multiomics_object,
                                 slots = c(
                                    "rna_processed",
@@ -294,7 +296,7 @@ print(multiomics_object@metadata$integration$MOFA)
 ```
 
 
-### Optional: load a pretrained model 
+## Optional: load a pretrained model 
 
 ```{r}
 #multiomics_object@metadata$integration$MOFA=integrative_model
@@ -304,6 +306,8 @@ print(multiomics_object@metadata$integration$MOFA)
 
 **Omix** provides a range of built-in downstream analyses functions and visualisations.
 All downstream analyses will be performed on the integrated object stored in the `integrated` slot.
+
+## Load integrated object
 
 ```{r, message=FALSE}
 integrated_object=multiomics_object@metadata$integration$MOFA
@@ -315,18 +319,18 @@ metadata=integrated_object@samples_metadata
 
 ### Variance explained 
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 MOFA2::plot_variance_explained(integrated_object, max_r2=10)
 ```
 
 ### Correlation of factors with covariates 
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
 integrated_object@samples_metadata$SOM=ifelse(integrated_object@samples_metadata$brain_region=='SOM',1,0)
-correlation_heatmap(integrated_object,
+plot=correlation_heatmap(integrated_object,
                    covariates=c("AD","Braak",'MTG','SOM',
                                'amyloid','pTau','PHF1'))
-
 
 ```
 
@@ -344,7 +348,7 @@ Factors 6 and 8 will be chosen for downstream analysis:
 
 ### Chosen integrated axes of variation
 
-```{r}
+```{r echo=TRUE}
 
 MOFA2::plot_factors(integrated_object,
              factors=c(8,6),
@@ -364,8 +368,7 @@ The goal of `slingshot` (Street et al. 2017), is to use clusters of cells to unc
 We can optionally specify the cluster to start or end the trajectory based on biological knowledge. Here, the starting cluster should be `3` as it coincides with lowest neuropathology levels and most "recent" affected region in terms of AD trajectory. 
 
 
-```{r}
-set.seed(42)
+```{r echo=TRUE}
 #clusters=MOFA2::cluster_samples(integrated_object, 
 #                         k=3,
 #                         factors = c(4,6))
@@ -377,7 +380,8 @@ MOFA2::plot_factors(integrated_object,
 
 ```
 
-```{r}
+
+```{r echo=TRUE}
 pseudotime=pseudotime_inference(integrated_object,
                                  clusters,
                                  time_factor=8,
@@ -390,9 +394,9 @@ pseudotime$plot
 
 ```
 
-#### Update the `integrated_object` with the pseudotime
+### Update the integrated_object with the pseudotime
  
-```{r}
+```{r echo=TRUE}
 multiomics_object@metadata$integration$MOFA=pseudotime$model
 integrated_object=multiomics_object@metadata$integration$MOFA
 MOFA2::samples_metadata(integrated_object)$inferred_pseudotime
@@ -444,7 +448,7 @@ weights$weights_cor_plot$protein
 
 A negative weight indicates that the feature has higher levels in the samples with negative factor values, which in this analysis coincides with later Braak stages.
 
-```{r}
+```{r echo=TRUE}
 integrated_object@samples_metadata$Braak=as.factor(integrated_object@samples_metadata$Braak)
 MOFA2::plot_factor(integrated_object, 
             factors = 6, 
@@ -453,6 +457,7 @@ MOFA2::plot_factor(integrated_object,
             dodge = TRUE
 )
 ```
+
 
 ### Selected features based on defined threshold
 
@@ -494,7 +499,6 @@ The next step of the analysis is to find densily co-expressed communities of pro
 This function tries to find densely connected subgraphs in a graph by calculating the leading non-negative eigenvector of the modularity matrix of the graph.
 
 ```{r}
-
 communities <- communities_network(igraph=Weights_down_n$graph,
                                     community_detection='leading_eigen')
 
@@ -534,7 +538,7 @@ DT::datatable(
 
 We can look at each communities:
 
-#### Community 1 
+### Community 1 
 
 ```{r}
 
@@ -544,7 +548,7 @@ community_1=community_graph(igraph=Weights_down_n$graph,
 interactive_network(igraph=community_1$graph,communities=FALSE)
 ```
 
-#### Community 2
+### Community 2
 
 ```{r}
 
@@ -554,7 +558,7 @@ community_2=community_graph(igraph=Weights_down_n$graph,
 interactive_network(igraph=community_2$graph,communities=FALSE)
 ```
 
-#### Community hubs 
+### Community hubs 
 
 
 -   Features are more or less connected in the network, represented by their hub score: 
@@ -632,6 +636,7 @@ modules=multiomics_modules(multiassay=multiomics_object,
                               communities=communities$communities,
                               filter_string_50=TRUE)
 ```
+
 ## Transcription Factor - target gene enrichment 
 
 ```{r}
@@ -643,7 +648,16 @@ TF=Transcription_Factor_enrichment(communities=communities$communities,
 
 GeneOverlap::drawHeatmap(TF,what = c("odds.ratio"), log.scale = T, adj.p = F, cutoff = .05,
                           ncolused = 7, grid.col = c("Blues"), note.col = "red")
+
 ```
+
+## TF-target gene circos plot 
+
+```{r out.width = "100%"}
+circos_TF(TF)
+```
+
+
 
 ## Pseudotime ordering of multi-omics modules 
 
@@ -662,7 +676,7 @@ plot_module_trajectory(modules=modules,
 
 > We find a stronge correlation between inferred pseudotime and PHF1, indicating that the pseudotemporal multiomics integration provides an accurate assessment of AD progression, encompassing all neuropathological measures 
 
-#### PHF1
+### PHF1
 
 ```{r, message= FALSE}
 modules$metadata_modules$Braak=factor(modules$metadata_modules$Braak, levels = c("0","1","2","3","4","5","6"))
@@ -679,7 +693,7 @@ plot(gg)
 plot(gb)
 ```
 
-#### Amyloid 
+### Amyloid 
 
 ```{r, message= FALSE}
 modules$metadata_modules$Braak=factor(modules$metadata_modules$Braak, 

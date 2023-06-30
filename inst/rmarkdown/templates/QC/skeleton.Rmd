@@ -239,7 +239,7 @@ dim=multiomics$dimensions$dim_rna_processed
 ```
 
 After filtering, `r diff` genes were removed from the analysis.
-The final matrix for analysis consisted of `r dim[1]` proteins and `r dim[2]` samples.
+The final matrix for analysis consisted of `r dim[1]` genes and `r dim[2]` samples.
 
 
 ### Raw and processed counts
@@ -398,13 +398,13 @@ eigen_plot1
 
 ## Sample to sample distances
 
-```{r echo=FALSE, warning=FALSE}
+```{r echo=FALSE, warning=FALSE, fig.height=10}
 abundance=data$rna_processed
 metadata_sample=data.frame(data$rna_raw@colData)
 metadata_sample=metadata_sample[colnames(abundance),]
 
 metadata_sample=left_join(metadata_sample,metadata,by=map_by_column, row.names=T)
-rownames(metadata_sample)=metadata_sample[,'sample_name.x']
+rownames(metadata_sample)=metadata_sample[,'sample_name']
 
 sampleDists <- dist(t(abundance))
 sampleDistMatrix <- as.matrix(sampleDists)
@@ -824,12 +824,12 @@ eigen_plot1
 
 ## Sample to sample distances
 
-```{r echo=F, warning=FALSE}
+```{r echo=F, warning=FALSE, fig.height=10}
 abundance=data$protein_processed
 metadata_sample=data.frame(data$protein_raw@colData)
 metadata_sample=metadata_sample[colnames(abundance),]
 metadata_sample=left_join(metadata_sample,metadata,by=map_by_column, row.names=T)
-rownames(metadata_sample)=metadata_sample[,'sample_name.x']
+rownames(metadata_sample)=metadata_sample[,'sample_name']
 
 sampleDists <- dist(t(abundance))
 sampleDistMatrix <- as.matrix(sampleDists)
@@ -1042,7 +1042,7 @@ multiomics$correlations%>%
 colnames(multiomics$feature_max_cor)=c('primary','mRNA','protein')
 gg=ggplot(multiomics$feature_max_cor, aes(x=mRNA, y=protein)) +
     geom_point()+
-    ggtitle(paste0(multiomics$gene_max_cor," gene has the highest correlation between mRNA and protein abundance"))+
+    ggtitle(paste0(multiomics$gene_max_cor,":highest mRNA/protein correlation"))+
     xlab('log2(mRNA expression)')+
     ylab('log2(protein abundance)')+
     theme_classic()

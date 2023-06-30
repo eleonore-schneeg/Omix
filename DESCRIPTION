@@ -65,6 +65,7 @@ Imports:
       readr,
       reshape2,
       reticulate,
+      RColorBrewer,
       S4Vectors,
       slingshot,
       stats,

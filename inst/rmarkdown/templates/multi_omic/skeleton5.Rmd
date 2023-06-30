@@ -26,6 +26,7 @@ library(plotly)
 library(dplyr)
 library(Omix)
 library(table1)
+library(purrr)
 
 
 BiocStyle::markdown()
@@ -133,13 +134,13 @@ weights$distribution_plot$protein
 #### Transcriptomics 
 
 ```{r, echo=FALSE}
-DT::datatable(data.frame(features=differential_expression$rna$sig_feature[[cluster]]$up))
+DT::datatable(data.frame(features=differential_expression[[cluster]]$rna$sig_feature$up))
 ```
 
 #### Proteomics
 
 ```{r, echo=FALSE}
-DT::datatable(data.frame(features=differential_expression$proteins$sig_feature[[cluster]]$up))
+DT::datatable(data.frame(features=differential_expression[[cluster]]$proteins$sig_feature$up))
 ```
 
 ###  Differentially expressed features between clusters {.tabset}
@@ -147,13 +148,13 @@ DT::datatable(data.frame(features=differential_expression$proteins$sig_feature[[
 #### Transcriptomics 
 
 ```{r, echo=FALSE}
-DT::datatable(differential_expression$rna[[cluster]])
+DT::datatable(differential_expression[[cluster]]$rna[[cluster]])
 ```
 
 #### Proteomics
 
 ```{r, echo=FALSE}
-DT::datatable(differential_expression$proteins[[cluster]])
+DT::datatable(differential_expression[[cluster]]$proteins[[cluster]])
 ```
 
 
@@ -161,7 +162,7 @@ DT::datatable(differential_expression$proteins[[cluster]])
 
 ### Transcriptomics 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.height=10}
 
 multiomics_heatmap(multimodal_omics,
                                metadata,
@@ -177,7 +178,7 @@ multiomics_heatmap(multimodal_omics,
 
 ### Proteomics
 
-```{r, echo=FALSE}
+```{r, echo=FALSE ,fig.height=10}
 multiomics_heatmap(multimodal_omics,
                                metadata,
                                integration_model = "iCluster",
@@ -249,11 +250,12 @@ corrplot::corrplot(t(moduleTraitCor[1:nrow(moduleTraitCor - 1), ]),
 ```
 
 
-### Modules from up-regulated features
+### Modules from down-regulated features
 
 ```{r, echo=FALSE}
-moduleTraitCor=module[[cluster]]$down$moduleTraitCor
-moduleTraitPvalue=module[[cluster]]$down$moduleTraitPvalue
+
+moduleTraitCor=modules[[cluster]]$down$moduleTraitCor
+moduleTraitPvalue=modules[[cluster]]$down$moduleTraitPvalue
 
 corrplot::corrplot(t(moduleTraitCor[1:nrow(moduleTraitCor - 1), ]),
                               p.mat = t(moduleTraitPvalue),
@@ -263,6 +265,7 @@ corrplot::corrplot(t(moduleTraitCor[1:nrow(moduleTraitCor - 1), ]),
                               tl.cex=0.9,
                               pch.cex=2,
                               col = colorRampPalette(c("#2166AC","#4393C3","#92C5DE","#D1E5F0","#FDDBC7","#F4A582", "#D6604D","#B2182B"))(50))
+
 ```
 
 ## Cell type enrichment {.tabset}
@@ -311,36 +314,73 @@ plots
 
 ```{r, echo=FALSE}
 TF=multiomic$TF
+TF=multiassay@metadata$integrative_results$iCluster$TF
 TF_pos=names(TF[[cluster]][["up"]]@gsetB)
 TF_neg=names(TF[[cluster]][["down"]]@gsetB)
 run_TF_pos= !is_empty(TF_pos) 
 run_TF_neg= !is_empty(TF_neg) 
-TF[[cluster]]$up
 ```
 
+#### Enrichment Heatmap
 
-```{r conditional_block, echo=FALSE,eval = run_TF_pos}
-if(length(TF_pos)>1){
+```{r  echo=FALSE}
+
+if(run_TF_pos==TRUE ){
+  if(length(TF_pos)>1){
 GeneOverlap::drawHeatmap(TF[[cluster]]$up,what = c("odds.ratio"), log.scale = T, adj.p = F, cutoff = .05,
                           ncolused = 7, grid.col = c("Blues"), note.col = "red")
 }else{
-print(getMatrix(TF[[cluster]]$up,name='pval'))
-print(getMatrix(TF[[cluster]]$up,name='odds.ratio'))
+cat("P values:")
+print(GeneOverlap::getMatrix(TF[[cluster]]$up,name='pval'))
+cat("Odds ratio:")
+print(GeneOverlap::getMatrix(TF[[cluster]]$up,name='odds.ratio'))
+}
+
+}else{
+  cat("No significant TF - gene target enrichment detected!")
 }
 
 
 
 ```
 
+#### TF - target gene circular plot
+
+```{r echo=FALSE ,fig.height = 10, fig.width=10}
+if(run_TF_pos==TRUE ){
+TF_plot=TF[[cluster]]
+circos_TF(TF_plot$up)
+}
+```
+
 ### Negative weights
 
-```{r conditional_block, echo=FALSE, eval= run_TF_neg}
+#### Enrichment Heatmap
+
+```{r  echo=FALSE}
+if(run_TF_neg==TRUE ){
 if(length(TF_neg)>1){
 GeneOverlap::drawHeatmap(TF[[cluster]]$down,what = c("odds.ratio"), log.scale = T, adj.p = F, cutoff = .05,
                           ncolused = 7, grid.col = c("Blues"), note.col = "red")
 }else{
-print(getMatrix(TF[[cluster]]$down,name='pval'))
-print(getMatrix(TF[[cluster]]$down,name='odds.ratio'))
+cat("P values:")
+print(GeneOverlap::getMatrix(TF[[cluster]]$down,name='pval'))
+cat("Odds ratio:")
+print(GeneOverlap::getMatrix(TF[[cluster]]$down,name='odds.ratio'))
+}
+}else{
+  cat("No significant TF - gene target enrichment detected!")
+}
+
+
+```
+
+
+#### TF - target gene circular plot
+
+```{r  echo=FALSE , fig.height = 10, fig.width=10}
+if(run_TF_neg==TRUE ){
+circos_TF(TF_plot$down)
 }
 ```
 
@@ -348,14 +388,14 @@ print(getMatrix(TF[[cluster]]$down,name='odds.ratio'))
 
 ### Transcriptomics
 
-```{r, echo=FALSE,fig.height=20}
+```{r, echo=FALSE,fig.height=10}
 
 OpenTargets[[cluster]]$up$rna$plot
 ```
 
 ### Proteomics
 
-```{r, echo=FALSE,fig.height=20}
+```{r, echo=FALSE,fig.height=10}
 OpenTargets[[cluster]]$up$protein$plot
 ```
 
@@ -363,13 +403,13 @@ OpenTargets[[cluster]]$up$protein$plot
 
 ### Transcriptomics
 
-```{r, echo=FALSE,fig.height=20}
+```{r, echo=FALSE,fig.height=10}
 OpenTargets[[cluster]]$down$rna$plot
 ```
 
 ### Proteomics
 
-```{r, echo=FALSE,fig.height=20}
+```{r, echo=FALSE,fig.height=10}
 OpenTargets[[cluster]]$down$protein$plot
 ```
 

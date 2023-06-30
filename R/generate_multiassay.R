@@ -128,13 +128,12 @@ generate_multiassay <- function(rawdata_rna,
     "rna_raw",
     "protein_raw"
   )
-
+  suppressMessages({
   dfmap <- MultiAssayExperiment::listToMap(map_l)
 
   rawdata_rna <- rawdata_rna[!duplicated(rownames(rawdata_rna)), ]
 
   rna_id_type <- get_ID_type(rownames(rawdata_rna))
-
   se_rna <- SummarizedExperiment::SummarizedExperiment(
     assays = list("rna_raw" = rawdata_rna),
     colData = S4Vectors::DataFrame(metadata_rna),
@@ -143,6 +142,7 @@ generate_multiassay <- function(rawdata_rna,
       rna_id_type
     )
   )
+  })
 
   se_rna@metadata$metadata <- metadata_rna
 
@@ -195,7 +195,8 @@ generate_multiassay <- function(rawdata_rna,
   rawdata_protein <- rawdata_protein[!duplicated(rownames(rawdata_protein)), ]
   protein_id_type <- get_ID_type(rownames(rawdata_protein))
 
-  se_protein <- SummarizedExperiment::SummarizedExperiment(
+  suppressMessages({
+    se_protein <- SummarizedExperiment::SummarizedExperiment(
     assays = list("protein_raw" = rawdata_protein),
     colData = S4Vectors::DataFrame(metadata_protein),
     rowData = magrittr::set_names(
@@ -205,6 +206,7 @@ generate_multiassay <- function(rawdata_rna,
   )
 
   se_protein@metadata$metadata <- metadata_protein
+  })
 
   if (protein_id_type == "uniprot_id") {
     # ID conversion using biomart
@@ -227,7 +229,7 @@ generate_multiassay <- function(rawdata_rna,
 
 
   rownames(individual_metadata) <- individual_metadata[, map_by_column]
-
+  suppressMessages({
   multiassay <- MultiAssayExperiment::MultiAssayExperiment(
     list(
       "rna_raw" = se_rna,
@@ -236,6 +238,7 @@ generate_multiassay <- function(rawdata_rna,
     colData = S4Vectors::DataFrame(individual_metadata),
     sampleMap = S4Vectors::DataFrame(dfmap)
   )
+  })
 
   cli::cli_alert_success("RNA raw data loaded")
   print(se_rna)

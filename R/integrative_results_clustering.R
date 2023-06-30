@@ -13,6 +13,7 @@
 #' @param covariates clinical covariates
 #' @param probability_threshold Posterior probability minimum threshold
 #' @param community_detection community detection method
+#' @param TF_fp file path GMT file with Transcription Factors and target genes. Check `https://maayanlab.cloud/chea3/`
 #'
 #' @return List object of integrated results
 #'
@@ -34,7 +35,8 @@ integrative_results_clustering <- function(multiassay,
                                            correlation_threshold = 0.4,
                                            log2FoldChange = 1,
                                            community_detection = "leading_eigen",
-                                           disease_id = "MONDO_0004975") {
+                                           disease_id = "MONDO_0004975",
+                                           TF_fp) {
   cli::cli_h2("Generating integrative muti-omics results ")
 
   integrated_object <- multiassay@metadata$integration[[integration_model]]
@@ -61,10 +63,10 @@ integrative_results_clustering <- function(multiassay,
   ## Differential expression
   cli::cli_text("Cluster differential expression analysis...")
 
-  list_results <- list()
+  DE_res <- list()
+  list_results=list()
 
-
-  list_results <- lapply(perCombs, function(x) {
+  DE_res <- lapply(perCombs, function(x) {
     res1 <- clustering_DE_analysis(
       normalized_data = multimodal$mRNA,
       colData = metadata,
@@ -88,26 +90,30 @@ integrative_results_clustering <- function(multiassay,
       proteins = res2
     )
 
-
-    Up <- list()
-    Down <- list()
-
-    Up <- list(
-      rna = DE_res$rna$sig_feature[[1]]$up,
-      protein = DE_res$protein$sig_feature[[1]]$up
-    )
-    Down <- list(
-      rna = DE_res$rna$sig_feature[[1]]$down,
-      protein = DE_res$protein$sig_feature[[1]]$down
-    )
-
-    return(list(
-      Up = Up,
-      Down = Down
-    ))
+    return(DE_res)
   })
 
+list_results <- lapply(names(DE_res), function(x) {
 
+  Up <- list()
+  Down <- list()
+
+Up <- list(
+  rna = DE_res[[x]]$rna$sig_feature[[1]]$up,
+  protein = DE_res[[x]]$protein$sig_feature[[1]]$up
+)
+Down <- list(
+  rna = DE_res[[x]]$rna$sig_feature[[1]]$down,
+  protein = DE_res[[x]]$protein$sig_feature[[1]]$down
+)
+
+list_results<- list(Up=Up,
+                    Down=Down)
+
+return(list_results)
+})
+
+names(list_results)=names(DE_res)
   ## Multi-omics network
 
   cli::cli_text("Retrieving weights...")
@@ -128,6 +134,7 @@ integrative_results_clustering <- function(multiassay,
   OpenTargets_results <- list()
   communities_up <- list()
   communities_down <- list()
+
   for (i in names(list_results)) {
     cli::cli_text(i)
     cli::cli_text("Generating multi-omics network...")
@@ -212,7 +219,7 @@ integrative_results_clustering <- function(multiassay,
 
     ## Multi-omics modules (eigenvalue)
     cli::cli_text("Computing module eigen expression for communities...")
-
+    metadata$cluster=as.numeric(metadata$cluster)
     modules[[i]]$up <- multiomics_modules(
       multiassay = multiassay,
       metadata = metadata,

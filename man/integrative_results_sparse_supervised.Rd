@@ -37,7 +37,7 @@ in the network}
 (Alzheimer's Disease) Different disease ontologies can be found on
 https://www.ebi.ac.uk/ols/ontologies}
 
-\item{TF_fp}{GMT file path with Transcription Factors and target genes}
+\item{TF_fp}{file path GMT file with Transcription Factors and target genes. Check \verb{https://maayanlab.cloud/chea3/}}
 }
 \value{
 List object of integrated results
@@ -50,6 +50,7 @@ Other Multi-omic integration downstream analysis:
 \code{\link{OpenTarget_dataframe}()},
 \code{\link{Transcription_Factor_enrichment_supervised}()},
 \code{\link{Transcription_Factor_enrichment}()},
+\code{\link{circos_TF}()},
 \code{\link{clustering_DE_analysis}()},
 \code{\link{extract_loadings}()},
 \code{\link{extract_multiomic_signature}()},

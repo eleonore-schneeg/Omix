@@ -21,7 +21,7 @@ multi-omics vertical integration.
 Pipeline outputs are standardised and include publication-quality plots,
 tables, and interactive reports.
 
-<img src="man/figures/omix_pipeline_n.png" width="100%" />
+<img src="man/figures/Omix-pipeline.png" width="100%" />
 
 Omix offers a range of state-of-the-art processing functions and
 integrative models, equipped with versatile parameters and quality
@@ -104,7 +104,7 @@ reports.
 
 ## Benchmark of multi-omics integration softwares
 
-| …1        | Supported omics                  | Pre-processing | Single omic analysis | Integrative models                             | Use case    | Downstream analyses                                                                              | Interactive visualisations | Language | Ref                      |
+| Tool      | Supported omics                  | Pre-processing | Single omic analysis | Integrative models                             | Use case    | Downstream analyses                                                                              | Interactive visualisations | Language | Ref                      |
 |:----------|:---------------------------------|:---------------|:---------------------|:-----------------------------------------------|:------------|:-------------------------------------------------------------------------------------------------|:---------------------------|:---------|:-------------------------|
 | Miodin    | SNP, RNA, methylation, Proteins, | \+             | \-                   | MOFA                                           | BM          | \-                                                                                               | \-                         | R        | Ulfenborg, B. (2019).    |
 | MiBiOmics | miRNA, RNA, Proteins             | \-             | \-                   | Co-inertia analysis                            | BD          | Multi-omics networks                                                                             | \+                         | Web      | (Zoppi et al., 2021)     |
