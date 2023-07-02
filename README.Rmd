@@ -24,7 +24,7 @@ comparison_table <- read_csv("man/figures/comparison_table_new.csv")
 
 ## Pipeline overview
 
-The `Omix` pipeline offers an integration and analysis framework for multi-omics intended to pre-process, analyse, and v isualise multimodal data flexibly to address research questions. Omix is built on four consecutive blocks, (1) preparation of the multimodal container, (2) processing and quality control, (3) single omic analyses, and (4) multi-omics vertical integration.
+The `Omix` pipeline offers an integration and analysis framework for multi-omics intended to pre-process, analyse, and visualise multimodal data flexibly to address research questions. Omix is built on four consecutive blocks, (1) preparation of the multimodal container, (2) processing and quality control, (3) single omic analyses, and (4) multi-omics vertical integration.
 
 Pipeline outputs are standardised and include publication-quality plots, tables, and interactive reports. 
 

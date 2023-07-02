@@ -12,7 +12,7 @@ v3](https://img.shields.io/badge/License-GPLv3-green.svg)](https://www.gnu.org/l
 ## Pipeline overview
 
 The `Omix` pipeline offers an integration and analysis framework for
-multi-omics intended to pre-process, analyse, and v isualise multimodal
+multi-omics intended to pre-process, analyse, and visualise multimodal
 data flexibly to address research questions. Omix is built on four
 consecutive blocks, (1) preparation of the multimodal container, (2)
 processing and quality control, (3) single omic analyses, and (4)
