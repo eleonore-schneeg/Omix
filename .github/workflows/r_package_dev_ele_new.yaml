@@ -12,6 +12,9 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       RGL_USE_NULL: TRUE
+      SYNAPSE_ID : ${{ secrets.SYNAPSE_ID }}
+      SYNAPSE_PASSWORD : ${{ secrets.SYNAPSE_PASSWORD }}
+      GH_TOKEN : ${{ secrets.GH_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup R
@@ -30,10 +33,6 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v4
-        env :
-          SYNAPSE_ID : ${{ secrets.SYNAPSE_ID }}
-          SYNAPSE_PASSWORD : ${{ secrets.SYNAPSE_PASSWORD }}
-          GH_TOKEN : ${{ secrets.GH_TOKEN }}
         with:
           load: true
           file: ./Dockerfile
