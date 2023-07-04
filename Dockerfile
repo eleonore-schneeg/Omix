@@ -197,7 +197,14 @@ WORKDIR Omix
 ADD . .
 
 # Run R CMD check - will fail with any errors or warnings
-RUN Rscript -e "devtools::check()"
+RUN --mount=type=secret,id=SYNAPSE_ID \
+--mount=type=secret,id=SYNAPSE_PASSWORD \
+--mount=type=secret,id=GH_TOKEN \
+export SYNAPSE_ID=$(cat /run/secrets/SYNAPSE_ID ) && \
+export SYNAPSE_PASSWORD=$(cat /run/secrets/SYNAPSE_PASSWORD ) && \
+export GH_TOKEN=$(cat /run/secrets/GH_TOKEN ) && \
+yarn gen \
+&& Rscript -e "devtools::check()"
 
 # Install R package from source
 RUN Rscript -e "remotes::install_local()"
