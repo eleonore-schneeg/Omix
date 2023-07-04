@@ -38,9 +38,9 @@ jobs:
             eleonoreschneeg/omix:latest
             eleonoreschneeg/omix:dev
           secrets: | 
-            "SYNAPSE_ID: ${{ secrets.SYNAPSE_ID }}"
-            "SYNAPSE_PASSWORD: ${{ secrets.SYNAPSE_PASSWORD }}"
-            "GH_TOKEN: ${{ secrets.GH_TOKEN }}"
+            "SYNAPSE_ID=${{ secrets.SYNAPSE_ID }}"
+            "SYNAPSE_PASSWORD=${{ secrets.SYNAPSE_PASSWORD }}"
+            "GH_TOKEN=${{ secrets.GH_TOKEN }}"
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
