@@ -201,11 +201,11 @@ RUN --mount=type=secret,id=SYNAPSE_ID \
 --mount=type=secret,id=SYNAPSE_PASSWORD \
 --mount=type=secret,id=GH_TOKEN \
 echo 'Sys.setenv(SYNAPSE_ID=$(cat /run/secrets/SYNAPSE_ID ))' \
->>"${HOME}/.Rprofile"
+>>"${HOME}/.Rprofile" \
 && echo 'Sys.setenv(SYNAPSE_PASSWORD=$(cat /run/secrets/SYNAPSE_PASSWORD ))' \
->>"${HOME}/.Rprofile"
+>>"${HOME}/.Rprofile" \
 && echo 'Sys.setenv(GH_TOKEN=$(cat /run/secrets/GH_TOKEN ))' \
->>"${HOME}/.Rprofile"
+>>"${HOME}/.Rprofile" \
 && Rscript -e "devtools::check()"
 
 # Install R package from source
