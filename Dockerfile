@@ -170,7 +170,6 @@ statmod \
 systemfonts \
 viridis \
 visNetwork \
-
 && rm -rf /tmp/downloaded_packages
 
 ## Install Bioconductor packages

@@ -289,9 +289,8 @@ integrate_with_MOFA <- function(multimodal_omics,
     model_options = model_opts,
     training_options = train_opts
   )
-  outfile = file.path(  getwd(),"/model.hdf5")
-
-  MOFAobject <- MOFA2::run_mofa(MOFAobject, use_basilisk = TRUE,save_data=F,outfile=outfile)
+  
+  MOFAobject <- MOFA2::run_mofa(MOFAobject, use_basilisk = TRUE)
   metadata$sample <- rownames(metadata)
   MOFA2::samples_metadata(MOFAobject) <- metadata
   model <- MOFAobject
