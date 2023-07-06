@@ -123,7 +123,7 @@ RUN echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' \
 >>"${R_HOME}/etc/Rprofile.site" \
 
 #Install CRAN pkgs
-&& install2.r -e \
+RUN install2.r -e \
 BiocManager \
 basetheme \
 data.table \
@@ -200,12 +200,9 @@ ADD . .
 RUN --mount=type=secret,id=SYNAPSE_ID \
 --mount=type=secret,id=SYNAPSE_PASSWORD \
 --mount=type=secret,id=GH_TOKEN \
-echo "Sys.setenv(SYNAPSE_ID=$(cat /run/secrets/SYNAPSE_ID ))" \
->>"${HOME}/.Rprofile" \
-&& echo "Sys.setenv(SYNAPSE_PASSWORD=$(cat /run/secrets/SYNAPSE_PASSWORD ))" \
->>"${HOME}/.Rprofile" \
-&& echo "Sys.setenv(GH_TOKEN=$(cat /run/secrets/GH_TOKEN ))" \
->>"${HOME}/.Rprofile" \
+echo "GH_TOKEN=$(cat /run/secrets/GH_TOKEN)" >> "${HOME}/.Renviron"
+&& echo "SYNAPSE_ID=$(cat /run/secrets/SYNAPSE_ID)" >> "${HOME}/.Renviron"
+&& echo "SYNAPSE_PASSWORD=$(cat /run/secrets/SYNAPSE_PASSWORD)" >> "${HOME}/.Renviron"
 && Rscript -e "devtools::check()"
 
 # Install R package from source
