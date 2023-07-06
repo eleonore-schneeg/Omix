@@ -117,11 +117,7 @@ RUN apt-get update \
       && ln -s /opt/cmake-3.24.1/bin/* /usr/local/bin \
   # Install mofapy2
   && python3 -m pip install mofapy2
-
-#Set CRAN mirror
-RUN echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' \
->>"${R_HOME}/etc/Rprofile.site" 
-
+  
 #Install CRAN pkgs
 RUN install2.r -e \
 BiocManager \
