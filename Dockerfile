@@ -120,7 +120,7 @@ RUN apt-get update \
 
 #Set CRAN mirror
 RUN echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' \
->>"${R_HOME}/etc/Rprofile.site" \
+>>"${R_HOME}/etc/Rprofile.site" 
 
 #Install CRAN pkgs
 RUN install2.r -e \
