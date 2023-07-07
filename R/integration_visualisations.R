@@ -96,22 +96,28 @@ multiomics_network <- function(multiassay,
 
   multimodal_object <- multiassay@metadata$multimodal_object$omics
 
-
   matrix1 <- t(multimodal_object[[1]])
   if(filter_string_50==TRUE){
   colnames(matrix1)=substr(colnames(matrix1),1,50)
   }
+  
+  rna_filtered=list[[1]][list[[1]] %in%  colnames(matrix1)]
   matrix1 <- matrix1[, list[[1]]]
-
+  matrix1 <- matrix1[, rna_filtered]
+  
 
   matrix2 <- t(multimodal_object[[2]])
   if(filter_string_50==TRUE){
   colnames(matrix2)=substr(colnames(matrix2),1,50)
   }
-  matrix2 <- matrix2[, list[[2]]]
+  prot_filtered=list[[2]][list[[2]] %in%  colnames(matrix2)]
+  matrix1 <- matrix1[, list[[1]]]
+  matrix2 <- matrix1[,   prot_filtered]
+  pk <- c(length(rna_filtered), length(prot_filtered))
+  
 
   matrix <- scale(cbind(matrix1, matrix2))
-  colnames(matrix) <- features_interest
+  colnames(matrix) <- c(rna_filtered,prot_filtered)
 
   colnames(matrix)[1:pk[1]] <- paste0(colnames(matrix)[1:pk[1]], "_rna")
   colnames(matrix)[(pk[1] + 1):(pk[1] + pk[2])] <- paste0(
