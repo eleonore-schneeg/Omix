@@ -152,6 +152,7 @@ pheatmap \
 plotly \
 purrr \
 psych \
+qs \
 ragg \
 rlang \
 RColorBrewer \
