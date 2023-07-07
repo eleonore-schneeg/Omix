@@ -12,6 +12,7 @@
 #' @param covariates cov
 #' @param community_detection community detection method
 #' @param TF_fp file path GMT file with Transcription Factors and target genes. Check `https://maayanlab.cloud/chea3/`
+#' @param component Component to extract the multi-omics singature from
 #'
 #' @return List object of integrated results
 #'
@@ -351,6 +352,8 @@ integrative_results_sparse_supervised <- function(multiassay,
 #' @param covariates cov
 #' @param community_detection community detection method
 #' @param TF_fp GMT file path with Transcription Factors and target genes
+#' @param component Component to extract the multi-omics signature from
+#' @param weights_threshold Threshold for loadings (weight)
 #'
 #' @return List object of integrated results
 #'

@@ -46,6 +46,7 @@ Imports:
       ggpubr,
       ggrepel,
       ggridges,
+      ggsignif,
       httr,
       igraph,
       jsonlite,
@@ -62,6 +63,7 @@ Imports:
       psych,
       purrr,
       proBatch,
+      qs,
       readr,
       reshape2,
       reticulate,
@@ -91,4 +93,5 @@ Imports:
       multiGSEA,
       pheatmap,
       PCAtools
+      
 VignetteBuilder: knitr
