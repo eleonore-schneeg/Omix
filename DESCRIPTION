@@ -93,5 +93,4 @@ Imports:
       multiGSEA,
       pheatmap,
       PCAtools
-      
 VignetteBuilder: knitr
