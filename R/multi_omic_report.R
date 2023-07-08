@@ -5,10 +5,10 @@
 #' `DIABLO`,`sMBPLS`,`iCluster`,`MEIFESTO`
 #' @param report_folder_path report_folder_path folder path to save the report.
 #' @param report_file  filename for report (without an extension).
-#' @param slot Slot of interest
 #' @param database Enrichment database `GO_Molecular_Function_2021`,`GO_Cellular_Component_2021`,
 #'  `GO_Biological_Process_2021`, `Reactome_2016` , `KEGG_2021_Human` , `MSigDB_Hallmark_2020`
 #' @param cluster In the case of multi-omics clustering, choose two clusters of interest for differential analysis
+#'
 #' @family Report
 #' @return Multi-omic analysis report html
 #' @export

@@ -681,6 +681,7 @@ integrative_results_supervised <- function(multiassay,
 #' @param integrated_object integrated object
 #' @param covariate covariates
 #' @param relevant_component component
+#' @param metadata metadata
 #'
 #' @return Sign
 #' @family Multi-omic integration downstream analysis

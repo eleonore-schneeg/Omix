@@ -11,6 +11,7 @@
 #' transcriptomics and proteomics levels. Setting the parameter to `either`will
 #' return genes that are significant in at least one layer.
 #' @param additional_database_gmt provide GMT file path for integrated pathway enrichment
+#'
 #' @return A list object with `dataframe` and `plot` slots
 #'
 #' @family Single-omic
@@ -22,7 +23,6 @@
 #'
 
 single_omic_comparisons <- function(multiassay,
-                                    slot = "ADvsControl",
                                     threshold = 0.05,
                                     pvalue = c("padj", "pvalue", "all"),
                                     filtering_options = "both_significant",
