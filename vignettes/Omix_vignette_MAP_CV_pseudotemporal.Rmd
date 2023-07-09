@@ -298,8 +298,10 @@ print(multiomics_object@metadata$integration$MOFA)
 
 ## Optional: load a pretrained model 
 
+Since package version slightly affect model outputs, we reload a pre-trained model.
+
 ```{r}
-#multiomics_object@metadata$integration$MOFA=integrative_model
+multiomics_object@metadata$integration$MOFA=integrative_model
 ```
 
 # Step five - Post integration downstream analyses 
@@ -487,7 +489,7 @@ intersect(weights$weights$ranked_weights_negative$rna,weights$weights$ranked_wei
 Weights_down_n=multiomics_network(multiassay=multiomics_object,
                            list=weights$weights$ranked_weights_negative,
                            correlation_threshold =0.4,
-                           filter_string_50= FALSE)
+                           filter_string_50= TRUE)
 
 ```
 
@@ -634,7 +636,7 @@ modules=multiomics_modules(multiassay=multiomics_object,
                               metadata=MOFA2::samples_metadata(integrated_object),
                               covariates=c('inferred_pseudotime','PHF1','amyloid','pTau'),
                               communities=communities$communities,
-                              filter_string_50=FALSE)
+                              filter_string_50=TRUE)
 ```
 
 ## Transcription Factor - target gene enrichment 

@@ -6,6 +6,8 @@
 #' @family Multi-omic integration downstream analysis
 #' @import RColorBrewer
 #' @import circlize
+#' @importFrom purrr is_empty
+
 #' @export
 #'
 
@@ -26,7 +28,7 @@ for(i in modules){
 }
 
 for(i in names(list_genes)){
-  plot=(lapply(list_genes[[i]], is_empty))
+  plot=(lapply(list_genes[[i]], function(x){purrr::is_empty(x)}))
 }
 
 if(all(plot)==FALSE){
