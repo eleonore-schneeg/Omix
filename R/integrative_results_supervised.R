@@ -503,20 +503,25 @@ integrative_results_supervised <- function(multiassay,
   
   metadata <- multiassay@metadata[["multimodal_object"]][["metadata"]]
   modules <- list()
-
-  modules$positive <- multiomics_modules(
+  args <- list(
     multiassay = multiassay,
     metadata = metadata,
     covariates = covariates,
-    communities = communities_pos_neg$positive$communities
+    communities = communities_pos_neg$positive$communities,
+    filter_string_50 = FALSE
   )
-
-  modules$negative <- multiomics_modules(
+  modules$positive <- do.call(multiomics_modules, args)
+  
+  metadata <- multiassay@metadata[["multimodal_object"]][["metadata"]]
+  args <- list(
     multiassay = multiassay,
     metadata = metadata,
     covariates = covariates,
-    communities = communities_pos_neg$negative$communities
+    communities = communities_pos_neg$negative$communities,
+    filter_string_50 = FALSE
   )
+  modules$negative <- do.call(multiomics_modules, args)
+  
 
   cli::cli_text("Boxplots...")
   boxplots <- list()
