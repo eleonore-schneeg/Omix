@@ -10,7 +10,8 @@
 #' @importFrom stats cor
 #' @importFrom psych corr.test
 #' @importFrom corrplot corrplot
-#'
+#' @import RColorBrewer
+#' 
 #' @export
 correlation_heatmap <- function(integrated_object,
                                 covariates = c(

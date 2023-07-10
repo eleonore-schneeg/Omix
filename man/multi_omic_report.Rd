@@ -27,8 +27,6 @@ multi_omic_report(
 \code{GO_Biological_Process_2021}, \code{Reactome_2016} , \code{KEGG_2021_Human} , \code{MSigDB_Hallmark_2020}}
 
 \item{cluster}{In the case of multi-omics clustering, choose two clusters of interest for differential analysis}
-
-\item{slot}{Slot of interest}
 }
 \value{
 Multi-omic analysis report html

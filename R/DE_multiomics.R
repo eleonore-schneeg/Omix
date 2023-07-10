@@ -197,7 +197,7 @@ DE_multiomics <- function(multiassay,
   )
   names(df_rna) <- gsub(
     pattern = "-", replacement = "vs",
-    x = names(res), fixed = TRUE
+    x = names(df_rna), fixed = TRUE
   )
 
   df_protein <- lapply(df_protein, function(x) {

@@ -47,6 +47,7 @@ Imports:
       ggrepel,
       ggridges,
       ggsignif,
+      grDevices,
       httr,
       igraph,
       jsonlite,

@@ -76,6 +76,7 @@ library(purrr)
 library(ggplot2)
 library(dplyr)
 library(tibble)
+library(stats)
 ```
 
 First we must load the data from Omix for the vignette:
@@ -353,7 +354,7 @@ volcano_interactive_comparison(comparison$dataframe)
 ```
 
 ```{r}
-corr= cor(comparison$dataframe$log2FoldChange_transcriptomics,
+corr= stats::cor(comparison$dataframe$log2FoldChange_transcriptomics,
           comparison$dataframe$log2FoldChange_proteomics)
 
 ```
@@ -391,6 +392,7 @@ comparison$dataframe$gene_name[which(comparison$dataframe$direction=='Discordant
 ## Integrative pathway enrichment (Via Active Pathways)
 
 ```{r, message=F}
+
 background=get_background(multiomics_object_MTG)
 scores_group=comparison$dataframe[,c('gene_name','pvalue_transcriptomics','pvalue_proteomics')]
 scores_group=scores_group[!duplicated(scores_group$gene_name), ]
@@ -473,7 +475,8 @@ multiomics_object_MTG=integrative_results_supervised(multiassay=multiomics_objec
                                           weights_threshold = 0.5,
                                           community_detection = "leading_eigen",
                                           disease_id = "MONDO_0004975",
-                                          TF_fp=TF_fp)
+                                          TF_fp=TF_fp,
+                                          ctd=ctd)
 
 ```
 

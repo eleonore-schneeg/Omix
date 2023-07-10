@@ -20,7 +20,6 @@ Adds custom processed dataset to multiassay object
 }
 \seealso{
 Other Helper: 
-\code{\link{ask_chatgpt}()},
 \code{\link{format_res_deseq}()},
 \code{\link{format_res_limma}()},
 \code{\link{get_background}()},

@@ -36,7 +36,6 @@ Formatting differential expression results from DESEQ2
 }
 \seealso{
 Other Helper: 
-\code{\link{ask_chatgpt}()},
 \code{\link{counts_rna}()},
 \code{\link{format_res_limma}()},
 \code{\link{get_background}()},

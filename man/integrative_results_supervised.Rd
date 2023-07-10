@@ -25,12 +25,16 @@ integrative_results_supervised(
 
 \item{dependent}{Dependent variable for groups.}
 
+\item{component}{Component to extract the multi-omics signature from}
+
 \item{sense_check_variable}{sense check}
 
 \item{covariates}{cov}
 
 \item{correlation_threshold}{Absolute correlation threshold to draw edges
 in the network}
+
+\item{weights_threshold}{Threshold for loadings (weight)}
 
 \item{community_detection}{community detection method}
 

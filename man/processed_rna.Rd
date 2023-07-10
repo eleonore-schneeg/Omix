@@ -20,7 +20,6 @@ Adds a custom processed transcriptomics slot to multiassay object
 }
 \seealso{
 Other Helper: 
-\code{\link{ask_chatgpt}()},
 \code{\link{counts_rna}()},
 \code{\link{format_res_deseq}()},
 \code{\link{format_res_limma}()},

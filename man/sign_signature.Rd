@@ -14,6 +14,8 @@ sign_signature(
 \arguments{
 \item{integrated_object}{integrated object}
 
+\item{metadata}{metadata}
+
 \item{covariate}{covariates}
 
 \item{relevant_component}{component}

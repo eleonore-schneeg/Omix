@@ -157,52 +157,6 @@ multiomics_network <- function(multiassay,
     findInterval(x, seq(-1, 1, length.out = colsteps))])
 }
 
-#' @import igraph
-#'
-#' @keywords internal
-.GetGraph <- function(calib_object = NULL, adjacency = NULL,
-                      node_label = NULL, node_color = NULL, node_shape = NULL,
-                      weighted = NULL, satellites = FALSE) {
-  # either out or adjacency have to be provided
-
-  if (is.null(adjacency)) {
-    if (is.null(calib_object)) {
-      stop("Either 'calib_object' or 'adjacency' needs to be provided.")
-    }
-    adjacency <- CalibratedAdjacency(calib_object)
-  }
-
-  if (is.null(node_color)) {
-    node_color <- rep("skyblue", ncol(adjacency))
-  }
-
-  if (is.null(node_shape)) {
-    node_shape <- rep("circle", ncol(adjacency))
-  }
-
-  if (is.null(node_label)) {
-    node_label <- colnames(adjacency)
-  }
-
-  names(node_color) <- colnames(adjacency)
-  names(node_label) <- colnames(adjacency)
-  names(node_shape) <- colnames(adjacency)
-
-  mygraph <- igraph::graph_from_adjacency_matrix(adjacency,
-                                                 mode = "undirected",
-                                                 weighted = weighted)
-  V(mygraph)$label <- node_label[V(mygraph)$name]
-  V(mygraph)$color <- node_color[V(mygraph)$name]
-  V(mygraph)$shape <- node_shape[V(mygraph)$name]
-  V(mygraph)$frame.color <- V(mygraph)$color
-  V(mygraph)$label.family <- "sans"
-  E(mygraph)$color <- "grey60"
-  V(mygraph)$label.color <- "grey20"
-  E(mygraph)$width <- 0.5
-
-  return(mygraph)
-}
-
 #' Get interactive network from igraph object
 
 #'
@@ -329,6 +283,8 @@ communities_network <- function(igraph,
 #' @param community_object community_object
 #'
 #' @return multi-omics network plot
+#' @importFrom grDevices rainbow
+#' @import igraph
 #' @family Plotting
 #'
 #' @import igraph
@@ -345,7 +301,7 @@ plot_communities <- function(igraph,
 
   layout <- layout.fruchterman.reingold(igraph)
 
-  colors=   rainbow(max(membership(community_object)), alpha = 0.3)
+  colors= grDevices::rainbow(max(membership(community_object)), alpha = 0.3)
   vertex.color=colors[membership(community_object)]
 
   plot(community_object,igraph,

@@ -33,7 +33,6 @@ Formatting differential expression results from limma
 }
 \seealso{
 Other Helper: 
-\code{\link{ask_chatgpt}()},
 \code{\link{counts_rna}()},
 \code{\link{format_res_deseq}()},
 \code{\link{get_background}()},

@@ -6,7 +6,6 @@
 \usage{
 single_omic_comparisons(
   multiassay,
-  slot = "ADvsControl",
   threshold = 0.05,
   pvalue = c("padj", "pvalue", "all"),
   filtering_options = "both_significant",

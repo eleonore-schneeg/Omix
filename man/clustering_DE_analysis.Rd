@@ -5,7 +5,7 @@
 \title{Performs differential expression between clusters}
 \usage{
 clustering_DE_analysis(
-  normalized_data = multimodal$rna_processed,
+  normalized_data,
   colData,
   omic,
   dependent = "Cluster",

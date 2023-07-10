@@ -23,7 +23,6 @@ Get background genes
 }
 \seealso{
 Other Helper: 
-\code{\link{ask_chatgpt}()},
 \code{\link{counts_rna}()},
 \code{\link{format_res_deseq}()},
 \code{\link{format_res_limma}()},

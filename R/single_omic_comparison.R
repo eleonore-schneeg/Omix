@@ -140,7 +140,7 @@ single_omic_comparisons <- function(multiassay,
     DE_comparison_dataframe = df,
     weights = NULL,
     databases = NULL,
-    additional_database_gmt = GO_fp
+    additional_database_gmt = additional_database_gmt 
   )
 
   multiGSEA <- do.call(integrated_enrichment_mutliGSEA, args)

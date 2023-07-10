@@ -15,7 +15,7 @@
 #' @export
 #'
 #'
-clustering_DE_analysis <- function(normalized_data = multimodal$rna_processed,
+clustering_DE_analysis <- function(normalized_data,
                                    colData,
                                    omic,
                                    dependent = "Cluster",
