@@ -102,13 +102,15 @@ integrative_results_unsupervised <- function(multiassay,
     multiassay = multiassay,
     communities = lapply(communities_pos_neg$positive$communities, function(x) {
       sub("\\_.*", "", x)
-    })
+    }),
+    ctd=ctd
   )
   cell_type$negative <- cell_type_enrichment(
     multiassay = multiassay,
     communities = lapply(communities_pos_neg$negative$communities, function(x) {
       sub("\\_.*", "", x)
-    })
+    }),
+    ctd=ctd
   )
 
 

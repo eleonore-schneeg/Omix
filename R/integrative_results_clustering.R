@@ -173,13 +173,15 @@ names(list_results)=names(DE_res)
       multiassay = multiassay,
       communities = lapply(communities_pos_neg[[i]]$up$communities, function(x) {
         sub("\\_.*", "", x)
-      })
+      }),
+      ctd=ctd
     )
     cell_type[[i]]$down <- cell_type_enrichment(
       multiassay = multiassay,
       communities = lapply(communities_pos_neg[[i]]$down$communities, function(x) {
         sub("\\_.*", "", x)
-      })
+      }),
+      ctd=ctd
     )
 
 
