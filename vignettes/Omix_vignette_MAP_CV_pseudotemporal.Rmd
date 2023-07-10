@@ -582,7 +582,8 @@ Here we proceed with a `EWCE` analysis to check if modules are enriched in speci
 ```{r, message=FALSE}
 cell_type <- cell_type_enrichment(
     multiassay =multiomics_object,
-    communities = lapply(communities$communities,function(x){sub("\\_.*", "",x )})
+    communities = lapply(communities$communities,function(x){sub("\\_.*", "",x )}),
+    ctd= ctd
   )
 
 cell_type$plots

@@ -268,8 +268,8 @@
 <p>After installing Docker you can first pull the container via:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull eleonoreschneeg/omix:latest</span></code></pre></div>
 <p>and then run the container:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">-v</span> <span class="va">$HOME</span>:/home/rstudio/home <span class="at">-e</span> ROOT=true <span class="at">-e</span> PASSWORD=password <span class="at">-p</span> 8787:8787 eleonoreschneeg/omix:1.0.0</span></code></pre></div>
-<p>An RStudio server session can be accessed via a browser at localhost:8787 using Username: rstudio and Password: password Navigate to Omix and open the Omix.Rproj file.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">-v</span> <span class="va">$HOME</span>:/home/rstudio/home <span class="at">-e</span> ROOT=true <span class="at">-e</span> PASSWORD=password <span class="at">-p</span> 8787:8787 eleonoreschneeg/omix:latest</span></code></pre></div>
+<p>An RStudio server session can be accessed via a browser at localhost:8787 using Username: rstudio and Password: password</p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>

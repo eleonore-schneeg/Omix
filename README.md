@@ -144,12 +144,11 @@ docker pull eleonoreschneeg/omix:latest
 and then run the container:
 
 ``` bash
-docker run --rm -d -v $HOME:/home/rstudio/home -e ROOT=true -e PASSWORD=password -p 8787:8787 eleonoreschneeg/omix:1.0.0
+docker run --rm -d -v $HOME:/home/rstudio/home -e ROOT=true -e PASSWORD=password -p 8787:8787 eleonoreschneeg/omix:latest
 ```
 
 An RStudio server session can be accessed via a browser at
-localhost:8787 using Username: rstudio and Password: password Navigate
-to Omix and open the Omix.Rproj file.
+localhost:8787 using Username: rstudio and Password: password
 
 ## Citation
 
