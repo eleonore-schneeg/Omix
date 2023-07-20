@@ -274,12 +274,8 @@ knitr::include_graphics("../man/figures/cohort.png")
  
 ## Pseudotemporal multi-omics integration using MOFA 
 
-```{r echo=FALSE}
-multiomics_object <- readRDS("~/omix_new/multiassay_mofa.rds")
-```
 
-
-```{r warning=FALSE, eval =FALSE }
+```{r warning=FALSE }
 multiomics_object=vertical_integration(multiassay=multiomics_object,
                                 slots = c(
                                    "rna_processed",
