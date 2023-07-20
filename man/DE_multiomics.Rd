@@ -36,6 +36,8 @@ Performs DE on the multimodal object from the processed slots
 Other Single-omic: 
 \code{\link{protein_DE_analysis}()},
 \code{\link{rna_DE_analysis}()},
-\code{\link{single_omic_comparisons}()}
+\code{\link{single_omic_comparisons}()},
+\code{\link{spls_wrapper}()},
+\code{\link{wgcna_wrapper}()}
 }
 \concept{Single-omic}

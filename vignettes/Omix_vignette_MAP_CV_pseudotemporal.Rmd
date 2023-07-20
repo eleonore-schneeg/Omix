@@ -3,21 +3,22 @@ title: "Omix - Pseudotemporal multi-omics integration"
 author: "This vignette was created by Eléonore Schneegans and Nurun Fancy"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
   html_document:
     self_contained: yes
-    theme: "flatly"
-    toc: true
-    toc_float: true
-    fig_caption: true
+    theme: flatly
+    toc: yes
+    toc_float: yes
+    fig_caption: yes
     toc_depth: 3
     code_folding: show
     df_print: paged
-vignette: >
-  %\VignetteIndexEntry{Omix - Pseudotemporal multi-omics integration}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
-editor_options: 
-  markdown: 
+vignette: |
+  %\VignetteIndexEntry{Omix - Pseudotemporal multi-omics integration} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
+editor_options:
+  markdown: null
   wrap: 72
 ---
 
@@ -261,7 +262,7 @@ multiomics_object=process_protein(
 
 > In this vignette, we proceed with a pseudotemporal multi-omics integration of 40 brain Alzheimer's disease (AD) and Control samples coming from two brain regions
 
-> -   The somatosensory cortext (SSC)
+> -   The somatosensory cortext (SOM)
 
 > -   The middle frontal gyrus (MTG)
 
@@ -273,8 +274,12 @@ knitr::include_graphics("../man/figures/cohort.png")
  
 ## Pseudotemporal multi-omics integration using MOFA 
 
+```{r echo=FALSE}
+multiomics_object <- readRDS("~/omix_new/multiassay_mofa.rds")
+```
 
-```{r warning=FALSE}
+
+```{r warning=FALSE, eval =FALSE }
 multiomics_object=vertical_integration(multiassay=multiomics_object,
                                 slots = c(
                                    "rna_processed",
@@ -340,7 +345,7 @@ Factors 6 and 8 will be chosen for downstream analysis:
 
 -   Factor 6: Is strongly correlated with neuropathological variables including PHF1 and amyloid.
 
--   Factor 8: Is strongly correlated with pseudotemporal covariates, MTG and SSC
+-   Factor 8: Is strongly correlated with pseudotemporal covariates, MTG and SOM
 
 -   Both share some level of variance explained by the transcriptomics and proteomics layers
 
@@ -366,14 +371,14 @@ The goal of `slingshot` (Street et al. 2017), is to use clusters of cells to unc
 
 > Here, we extend the use of `slingshot` to infer on individual level pseudotime to infer on Alzheimer's disease trajectory.
 
-`slingshot` takes a matrix of embeddings in reduced dimension as input, which here are Factors 8 and 1 from the `MEIFESTO` multi-omics integration.
-We can optionally specify the cluster to start or end the trajectory based on biological knowledge. Here, the starting cluster should be `3` as it coincides with lowest neuropathology levels and most "recent" affected region in terms of AD trajectory. 
+`slingshot` takes a matrix of embeddings in reduced dimension as input, which here are Factors 8 and 6 from the `MOFA` multi-omics integration.
+We can optionally specify the cluster to start or end the trajectory based on biological knowledge. Here, the starting cluster should be `1` as it coincides with lowest neuropathology levels and most "recent" affected region in terms of AD trajectory. 
 
 
 ```{r echo=TRUE}
 #clusters=MOFA2::cluster_samples(integrated_object, 
 #                         k=3,
-#                         factors = c(4,6))
+#                         factors = c(8,6))
 
 #load clusters for reproducibility
 MOFA2::plot_factors(integrated_object,
@@ -550,14 +555,14 @@ community_1=community_graph(igraph=Weights_down_n$graph,
 interactive_network(igraph=community_1$graph,communities=FALSE)
 ```
 
-### Community 2
+### Community 4
 
 ```{r}
 
-community_2=community_graph(igraph=Weights_down_n$graph,
+community_4=community_graph(igraph=Weights_down_n$graph,
                             community_object=communities$community_object,
-                            community=2)
-interactive_network(igraph=community_2$graph,communities=FALSE)
+                            community=4)
+interactive_network(igraph=community_4$graph,communities=FALSE)
 ```
 
 ### Community hubs 
@@ -566,13 +571,13 @@ interactive_network(igraph=community_2$graph,communities=FALSE)
 -   Features are more or less connected in the network, represented by their hub score: 
 
 ```{r}
-print(sort(community_2$hubs, decreasing = TRUE))
+print((sort(community_4$hubs, decreasing = TRUE)))
 ```
 
 
-- Top gene in module 2 is `r names(sort(community_2$hubs, decreasing = TRUE)[1])`
-- TREM2 is present here 
-- From prior knowledge, many of the genes in module 2 are related to microglial activation
+- Top gene in module 4 is `r names(sort(community_4$hubs, decreasing = TRUE)[1])`
+- TREM2 or CLU, known AD risk genes expressed on microglia are present here
+- From prior knowledge, many of the genes in module 4 are related to microglial activation
 
 
 ## Cell type enrichment of modules
@@ -801,8 +806,8 @@ gg=ggpubr::ggboxplot(modules$metadata_modules,
   xlab('Diagnosis')+
   ylab(paste('Eigen value in',i))+
   theme_classic()+
-  ggsignif::geom_signif(comparisons = list(c('MTG', 'SSC')))+
-  scale_color_manual(values = c("#DC0000FF","forestgreen"))
+  ggsignif::geom_signif(comparisons = list(c('MTG', 'SOM')))+
+  scale_color_manual(values = c("#DC0000FF","darkblue"))
 plot(gg)
 }
 ```
@@ -825,7 +830,7 @@ ggplot(metadata, aes(x = brain_region, y = inferred_pseudotime,color=diagnosis))
 ```{r}
 library(ggridges)
 ggplot(metadata, aes(x = inferred_pseudotime, y = Braak,fill = brain_region)) +
-  geom_density_ridges(aes(point_color =diagnosis, point_fill = brain_region),
+  geom_density_ridges(aes(point_shape =diagnosis, point_fill = brain_region),
                       jittered_points = TRUE, position = "raincloud",
                       alpha = 0.7, scale = 0.9, panel_scaling=FALSE
   )+

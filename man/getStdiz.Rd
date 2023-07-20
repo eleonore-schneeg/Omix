@@ -24,7 +24,11 @@ getStdiz(
 A standardized data.frame containing multi-omics data.
 }
 \description{
-This function prepare standardized data for generating heatmap. Omics data, especially for expression, should be centered or scaled or z-scored (both centered and scaled). Generally, DNA methylation beta matrix and somatic mutation (0 and 1 binary matrix) should not be normalized. This function also provides an argument of \code{halfwidth} for continuous omics data; such argument is used to truncate the 'extremum' after normalization; specifically, normalized values that exceed the halfwidth boundaries will be replaced by the halfwidth, which is vary useful to map colors in heatmap.
+This function prepare standardized data for generating heatmap. Omics data, especially for expression, should be centered or scaled or z-scored (both centered and scaled). Generally, DNA methylation beta matrix and somatic mutation (0 and 1 binary matrix) should not be normalized. This function also provides an argument of \code{halfwidth}
+for continuous omics data; such argument is used to truncate the 'extremum' after normalization; specifically, normalized values that exceed the halfwidth boundaries will be replaced by the halfwidth, which is vary useful to map colors in heatmap. Function adapted from package \code{MOVICS}  (see ref)
+}
+\references{
+Lu, X., et al. (2020). MOVICS: an R package for multi-omics integration and visualization in cancer subtyping. Bioinformatics, 36(22-23), 5539–5541.
 }
 \seealso{
 Other Plotting: 

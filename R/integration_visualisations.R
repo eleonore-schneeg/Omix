@@ -354,8 +354,9 @@ community_graph <- function(igraph,
 
 
 
-#' Plot optimal number of clusters from `getClustNum()`
-#' Function adapted from package `MOVICS`
+#' @title plot_optimal_cluster 
+#' @description plot optimal number of clusters from `getClustNum()`
+#' Function adapted from package `MOVICS`  (see ref)
 #' @param optk1 Cluster Prediction Index
 #' @param optk2 Gap statistics
 #' @param try.N.clust A integer vector to indicate possible choices of number of clusters.
@@ -364,6 +365,7 @@ community_graph <- function(igraph,
 #' @export
 #' @family Plotting
 #' @importFrom ggplot2 alpha
+#' @references Lu, X., et al. (2020). MOVICS: an R package for multi-omics integration and visualization in cancer subtyping. Bioinformatics, 36(22-23), 5539–5541. 
 
 plot_optimal_cluster <- function(optk1,
                                  optk2,

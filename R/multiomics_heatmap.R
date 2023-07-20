@@ -1,6 +1,7 @@
 #' @name getStdiz
 #' @title Get standardized omics data
-#' @description This function prepare standardized data for generating heatmap. Omics data, especially for expression, should be centered or scaled or z-scored (both centered and scaled). Generally, DNA methylation beta matrix and somatic mutation (0 and 1 binary matrix) should not be normalized. This function also provides an argument of `halfwidth` for continuous omics data; such argument is used to truncate the 'extremum' after normalization; specifically, normalized values that exceed the halfwidth boundaries will be replaced by the halfwidth, which is vary useful to map colors in heatmap.
+#' @description This function prepare standardized data for generating heatmap. Omics data, especially for expression, should be centered or scaled or z-scored (both centered and scaled). Generally, DNA methylation beta matrix and somatic mutation (0 and 1 binary matrix) should not be normalized. This function also provides an argument of `halfwidth` 
+#' for continuous omics data; such argument is used to truncate the 'extremum' after normalization; specifically, normalized values that exceed the halfwidth boundaries will be replaced by the halfwidth, which is vary useful to map colors in heatmap. Function adapted from package `MOVICS`  (see ref)
 #' @param data A list of data.frame or matrix storing raw multiple omics data with rows for features and columns for samples.
 #' @param halfwidth A numeric vector to assign marginal cutoff for truncating values in data; 1 by default.
 #' @param centerFlag A logical vector to indicate if each subdata should be centered; TRUE by default.
@@ -8,6 +9,8 @@
 #' @export
 #' @family Plotting
 #' @return A standardized data.frame containing multi-omics data.
+#' @references Lu, X., et al. (2020). MOVICS: an R package for multi-omics integration and visualization in cancer subtyping. Bioinformatics, 36(22-23), 5539–5541. 
+
 getStdiz <- function(data       = NULL,
                      halfwidth  = rep(1, length(data)),
                      centerFlag = rep(TRUE, length(data)),

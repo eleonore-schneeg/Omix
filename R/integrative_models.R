@@ -377,8 +377,9 @@ integrate_with_MEFISTO <- function(multimodal_omics,
 #' @name getClustNum
 #' @title Get estimation of optimal clustering number
 #' @description This function provides two measurements (i.e., clustering prediction index and Gap-statistics) and aims to search the optimal number for multi-omics integrative clustering. In short, the peaks reach by the red (CPI) and blue (Gap-statistics) lines should be referred to determine `N.clust`.
+#' Function adapted from package `MOVICS` (see ref)
 #' @param data List of matrices.
-#' @param is.binary A logicial vector to indicate if the subdata is binary matrix of 0 and 1 such as mutation.
+#' @param is.binary A logical vector to indicate if the subdata is binary matrix of 0 and 1 such as mutation.
 #' @param try.N.clust A integer vector to indicate possible choices of number of clusters.
 #' @param center A logical value to indicate if the variables should be centered. TRUE by default.
 #' @param scale A logical value to indicate if the variables should be scaled. FALSE by default.
@@ -392,9 +393,8 @@ integrate_with_MEFISTO <- function(multimodal_omics,
 #' @importFrom dplyr %>%
 #' @examples # There is no example and please refer to vignette.
 #' @references Chalise P, Fridley BL (2017). Integrative clustering of multi-level omic data based on non-negative matrix factorization algorithm. PLoS One, 12(5):e0176278.
-#'
 #' Tibshirani, R., Walther, G., Hastie, T. (2001). Estimating the number of data clusters via the Gap statistic. J R Stat Soc Series B Stat Methodol, 63(2):411-423.
-#'
+#' Lu, X., et al. (2020). MOVICS: an R package for multi-omics integration and visualization in cancer subtyping. Bioinformatics, 36(22-23), 5539–5541. 
 getClustNum <- function(data = NULL,
                         is.binary = rep(FALSE, length(data)),
                         try.N.clust = 2:8,

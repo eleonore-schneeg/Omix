@@ -15,7 +15,7 @@ getClustNum(
 \arguments{
 \item{data}{List of matrices.}
 
-\item{is.binary}{A logicial vector to indicate if the subdata is binary matrix of 0 and 1 such as mutation.}
+\item{is.binary}{A logical vector to indicate if the subdata is binary matrix of 0 and 1 such as mutation.}
 
 \item{try.N.clust}{A integer vector to indicate possible choices of number of clusters.}
 
@@ -28,14 +28,15 @@ A figure that helps to choose the optimal clustering number (argument of \code{N
 }
 \description{
 This function provides two measurements (i.e., clustering prediction index and Gap-statistics) and aims to search the optimal number for multi-omics integrative clustering. In short, the peaks reach by the red (CPI) and blue (Gap-statistics) lines should be referred to determine \code{N.clust}.
+Function adapted from package \code{MOVICS} (see ref)
 }
 \examples{
 # There is no example and please refer to vignette.
 }
 \references{
 Chalise P, Fridley BL (2017). Integrative clustering of multi-level omic data based on non-negative matrix factorization algorithm. PLoS One, 12(5):e0176278.
-
 Tibshirani, R., Walther, G., Hastie, T. (2001). Estimating the number of data clusters via the Gap statistic. J R Stat Soc Series B Stat Methodol, 63(2):411-423.
+Lu, X., et al. (2020). MOVICS: an R package for multi-omics integration and visualization in cancer subtyping. Bioinformatics, 36(22-23), 5539–5541.
 }
 \seealso{
 Other Multi-omic integration: 

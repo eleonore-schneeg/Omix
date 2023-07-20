@@ -2,8 +2,7 @@
 % Please edit documentation in R/integration_visualisations.R
 \name{plot_optimal_cluster}
 \alias{plot_optimal_cluster}
-\title{Plot optimal number of clusters from \code{getClustNum()}
-Function adapted from package \code{MOVICS}}
+\title{plot_optimal_cluster}
 \usage{
 plot_optimal_cluster(optk1, optk2, try.N.clust)
 }
@@ -18,8 +17,11 @@ plot_optimal_cluster(optk1, optk2, try.N.clust)
 plot
 }
 \description{
-Plot optimal number of clusters from \code{getClustNum()}
-Function adapted from package \code{MOVICS}
+plot optimal number of clusters from \code{getClustNum()}
+Function adapted from package \code{MOVICS}  (see ref)
+}
+\references{
+Lu, X., et al. (2020). MOVICS: an R package for multi-omics integration and visualization in cancer subtyping. Bioinformatics, 36(22-23), 5539–5541.
 }
 \seealso{
 Other Plotting: 
