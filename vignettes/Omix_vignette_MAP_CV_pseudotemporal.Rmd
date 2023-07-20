@@ -3,12 +3,9 @@ title: "Omix - Pseudotemporal multi-omics integration"
 author: "This vignette was created by Eléonore Schneegans and Nurun Fancy"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: '3'
   html_document:
     self_contained: yes
-    theme: flatly
+    theme: "flatly"
     toc: yes
     toc_float: yes
     fig_caption: yes
@@ -20,7 +17,7 @@ vignette: |
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 editor_options:
-  markdown: null
+  markdown: 
   wrap: 72
 ---
 
