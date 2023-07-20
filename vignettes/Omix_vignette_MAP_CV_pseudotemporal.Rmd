@@ -16,7 +16,9 @@ output:
     code_folding: show
     df_print: paged
 vignette: |
-  %\VignetteIndexEntry{Omix - Pseudotemporal multi-omics integration} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Omix - Pseudotemporal multi-omics integration} 
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 editor_options:
   markdown: null
   wrap: 72
