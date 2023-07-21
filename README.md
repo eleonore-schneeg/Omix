@@ -122,13 +122,15 @@ examples on how to use Omix.
 
 ## Data
 
-The experiments described in our vignettes rely on in house data from
-the Multi-Omics Atlas Project, which may be obtained from the synapse
-portal for registered users.
+The experiments described in our vignettes rely on in-house data from
+the Multi-Omics Atlas Project, which may be obtained from the [synapse
+portal](https://www.synapse.org/#!Synapse:syn36812517/wiki/619350) for
+registered users. (Project SynID: syn36812517)
 
--   Project SynID: syn36812517
+#### Datasets:
+
 -   Get started data: syn51533729
--   Pseudo-temporal multi-omics integration: syn51516099
+-   Pseudo-temporal multi-omics integration data: syn51516099
 
 ## Docker image
 
