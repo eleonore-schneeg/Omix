@@ -37,19 +37,14 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          load: true
+          context: .
           file: ./Dockerfile
+          push: true
           tags: |
-            eleonoreschneeg/omix:${{ env.packageVersion }}
-            eleonoreschneeg/omix:latest
-            eleonoreschneeg/omix:dev
+            ${{ secrets.DOCKERHUB_USERNAME }}/omix:${{ env.packageVersion }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/omix:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/omix:dev
           secrets: | 
             SYNAPSE_ID=${{ secrets.SYNAPSE_ID }}
             SYNAPSE_PASSWORD=${{ secrets.SYNAPSE_PASSWORD }}
             GH_TOKEN=${{ secrets.GH_TOKEN }}
-
-      - name: push service
-        run: |
-          docker push eleonoreschneeg/omix:${{ env.packageVersion }}
-          docker push eleonoreschneeg/omix:latest
-          docker push eleonoreschneeg/omix:dev
