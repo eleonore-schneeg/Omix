@@ -463,7 +463,7 @@ or to run `integrative_results_supervised`, which will create a results object
 containing, multi-omics signatures, network visualisation, cell type and functional 
 enrichment, as well as comparison of signatures against the OpenTargets knowledge base.
 
-```{r, message=FALSE, fig.show='hide'}
+```{r, message=FALSE, fig.show='hide', eval=FALSE}
 
 multiomics_object_MTG=integrative_results_supervised(multiassay=multiomics_object_MTG,
                                           integration_model = "DIABLO",
