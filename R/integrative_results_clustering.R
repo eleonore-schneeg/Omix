@@ -167,24 +167,23 @@ names(list_results)=names(DE_res)
 
     ## Cell type enrichment
     cli::cli_text("Cell type enrichment of communities...")
+   
+    cell_type <- list()
+    args=list( multiassay = multiassay,
+               communities = lapply(communities_pos_neg[[i]]$up$communities, function(x) {
+                 sub("\\_.*", "", x)
+               }),
+               ctd=ctd)
+    cell_type[[i]]$up  <- do.call(cell_type_enrichment,args)
+    
 
-
-    cell_type[[i]]$up <- cell_type_enrichment(
-      multiassay = multiassay,
-      communities = lapply(communities_pos_neg[[i]]$up$communities, function(x) {
-        sub("\\_.*", "", x)
-      }),
-      ctd=ctd
-    )
-    cell_type[[i]]$down <- cell_type_enrichment(
-      multiassay = multiassay,
-      communities = lapply(communities_pos_neg[[i]]$down$communities, function(x) {
-        sub("\\_.*", "", x)
-      }),
-      ctd=ctd
-    )
-
-
+    args=list( multiassay = multiassay,
+               communities = lapply(communities_pos_neg[[i]]$down$communities, function(x) {
+                 sub("\\_.*", "", x)
+               }),
+               ctd=ctd)
+    cell_type[[i]]$down <- do.call(cell_type_enrichment,args)
+    
     ## Functional enrichment
     cli::cli_text("Functional enrichment of communities...")
 

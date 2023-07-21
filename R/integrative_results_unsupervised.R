@@ -98,21 +98,19 @@ integrative_results_unsupervised <- function(multiassay,
   cli::cli_text("Cell type enrichment of communities...")
 
   cell_type <- list()
-  cell_type$positive <- cell_type_enrichment(
-    multiassay = multiassay,
-    communities = lapply(communities_pos_neg$positive$communities, function(x) {
-      sub("\\_.*", "", x)
-    }),
-    ctd=ctd
-  )
-  cell_type$negative <- cell_type_enrichment(
-    multiassay = multiassay,
-    communities = lapply(communities_pos_neg$negative$communities, function(x) {
-      sub("\\_.*", "", x)
-    }),
-    ctd=ctd
-  )
-
+  args=list( multiassay = multiassay,
+             communities = lapply(communities_pos_neg$positive$communities, function(x) {
+               sub("\\_.*", "", x)
+             }),
+             ctd=ctd)
+  cell_type$positive <- do.call(cell_type_enrichment,args)
+  
+  args=list( multiassay = multiassay,
+             communities = lapply(communities_pos_neg$negative$communities, function(x) {
+               sub("\\_.*", "", x)
+             }),
+             ctd=ctd)
+  
 
   ## Functional enrichment
   cli::cli_text("Functional enrichment of communities...")

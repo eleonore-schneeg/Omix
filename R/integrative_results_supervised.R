@@ -105,21 +105,19 @@ integrative_results_sparse_supervised <- function(multiassay,
   cli::cli_text("Cell type enrichment of communities...")
 
   cell_type <- list()
-  cell_type$positive <- cell_type_enrichment(
-    multiassay = multiassay,
-    communities = lapply(communities_pos_neg$positive$communities, function(x) {
-      sub("\\_.*", "", x)
-    }),
-    ctd=ctd
-  )
-  cell_type$negative <- cell_type_enrichment(
-    multiassay = multiassay,
-    communities = lapply(communities_pos_neg$negative$communities, function(x) {
-      sub("\\_.*", "", x)
-    }),
-    ctd=ctd
-  )
-
+  args=list( multiassay = multiassay,
+             communities = lapply(communities_pos_neg$positive$communities, function(x) {
+               sub("\\_.*", "", x)
+             }),
+             ctd=ctd)
+  cell_type$positive <- do.call(cell_type_enrichment,args)
+  
+  args=list( multiassay = multiassay,
+             communities = lapply(communities_pos_neg$negative$communities, function(x) {
+               sub("\\_.*", "", x)
+             }),
+             ctd=ctd)
+  
 
   ## Functional enrichment
   cli::cli_text("Functional enrichment of communities...")
@@ -381,8 +379,8 @@ integrative_results_supervised <- function(multiassay,
                                             weights_threshold = 0.8,
                                             community_detection = "leading_eigen",
                                             disease_id = "MONDO_0004975",
-                                           TF_fp,
-                                           ctd) {
+                                            TF_fp,
+                                            ctd) {
   cli::cli_h2("Generating integrative muti-omics results ")
 
   integrated_object <- multiassay@metadata$integration[[integration_model]]
@@ -447,20 +445,20 @@ integrative_results_supervised <- function(multiassay,
   cli::cli_text("Cell type enrichment of communities...")
 
   cell_type <- list()
-  cell_type$positive <- cell_type_enrichment(
-    multiassay = multiassay,
-    communities = lapply(communities_pos_neg$positive$communities, function(x) {
-      sub("\\_.*", "", x)
-    }),
-    ctd=ctd
-  )
-  cell_type$negative <- cell_type_enrichment(
-    multiassay = multiassay,
-    communities = lapply(communities_pos_neg$negative$communities, function(x) {
-      sub("\\_.*", "", x)
-    }),
-    ctd=ctd
-  )
+  args=list( multiassay = multiassay,
+             communities = lapply(communities_pos_neg$positive$communities, function(x) {
+               sub("\\_.*", "", x)
+             }),
+             ctd=ctd)
+  cell_type$positive <- do.call(cell_type_enrichment,args)
+  
+  args=list( multiassay = multiassay,
+             communities = lapply(communities_pos_neg$negative$communities, function(x) {
+               sub("\\_.*", "", x)
+             }),
+             ctd=ctd)
+
+  cell_type$negative <-  do.call(cell_type_enrichment,args)
 
 
   ## Functional enrichment
