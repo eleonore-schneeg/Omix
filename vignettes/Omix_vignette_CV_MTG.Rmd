@@ -6,13 +6,13 @@ output:
   html_document:
     self_contained: yes
     theme: "flatly"
-    toc: true
-    toc_float: true
-    fig_caption: true
+    toc: yes
+    toc_float: yes
+    fig_caption: yes
     toc_depth: 3
     code_folding: show
     df_print: paged
-vignette: >
+vignette: |
   %\VignetteIndexEntry{Omix - Get started}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
