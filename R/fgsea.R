@@ -2,6 +2,7 @@
 #'
 #' @param gene_list vector of genes
 #' @param pval threshold for adjusted pvalue
+#' @param geneset path to GMT file
 #'
 #' @return List of results
 #'
@@ -10,11 +11,14 @@
 #' @importFrom fgsea fgsea collapsePathways
 #' @importFrom dplyr filter arrange desc %>%
 #' @importFrom msigdbr msigdbr
+#' @importFrom ActivePathways read.GMT
 #' @importFrom data.table as.data.table
 #' @export
 #'
 
-GSEA <- function(gene_list, pval) {
+GSEA <- function(gene_list,
+                 pval,
+                 geneset) {
   set.seed(54321)
 
   if (any(duplicated(names(gene_list)))) {
@@ -26,14 +30,18 @@ GSEA <- function(gene_list, pval) {
     gene_list <- sort(gene_list, decreasing = TRUE)
   }
 
-  cgp_gene_sets <- msigdbr::msigdbr(species = "human",
-                                    category = "C5",
-                                    subcategory = "GO:BP")
-  msigdbr_list <- split(x = cgp_gene_sets$gene_symbol, f = cgp_gene_sets$gs_name)
-  names(msigdbr_list) <- sub(".*GOBP_", "", names(msigdbr_list))
-  names(msigdbr_list) <- gsub("_", " ", names(msigdbr_list))
-  names(msigdbr_list) <- tolower(names(msigdbr_list))
-  myGO <- msigdbr_list
+  myGO <- ActivePathways::read.GMT(geneset)
+  myGO <- lapply(myGO , function(x) {
+    x$genes
+  })
+  # cgp_gene_sets <- msigdbr::msigdbr(species = "human",
+  #                                   category = "C5",
+  #                                   subcategory = "GO:BP")
+  # msigdbr_list <- split(x = cgp_gene_sets$gene_symbol, f = cgp_gene_sets$gs_name)
+  # names(msigdbr_list) <- sub(".*GOBP_", "", names(msigdbr_list))
+  # names(msigdbr_list) <- gsub("_", " ", names(msigdbr_list))
+  # names(msigdbr_list) <- tolower(names(msigdbr_list))
+  # myGO <- msigdbr_list
 
   fgRes <- suppressWarnings({
     fgsea::fgsea(

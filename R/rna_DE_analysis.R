@@ -8,7 +8,7 @@
 #' @param filter_protein_coding Logical whether to filter out non protein coding
 #' genes
 #' @param log2FoldChange log2 fold-change cutoff.
-#'
+#' @param padj adjusted p value threshold. Default to 0.05
 #' @return Adds differential expression results to Multiassay object generated
 #' by Omix
 #'
@@ -23,7 +23,8 @@ rna_DE_analysis <- function(multiassay,
                             dependent = "diagnosis",
                             levels = NULL,
                             filter_protein_coding = TRUE,
-                            log2FoldChange = 0.5) {
+                            log2FoldChange = 0.5,
+                            padj=0.05) {
   if (("dds" %in% names(multiassay@metadata)) == FALSE) {
     stop(cli::cli_alert_danger(
       paste("dds object not found in metadata, please run",
@@ -32,7 +33,7 @@ rna_DE_analysis <- function(multiassay,
       )
     ))
   }
-
+  suppressMessages({
   dds <- multiassay@metadata[["dds"]]
   dds <- DESeq2::DESeq(dds)
   res <- list()
@@ -83,8 +84,8 @@ rna_DE_analysis <- function(multiassay,
 
   list_DEG_limma <- list()
   list_DEG_limma <- lapply(res, function(x) {
-    up <- x$gene_name[which(x$padj <= 0.05 & x$de == "Up")]
-    down <- x$gene_name[which(x$padj <= 0.05 & x$de == "Down")]
+    up <- x$gene_name[which(x$padj <= padj & x$de == "Up")]
+    down <- x$gene_name[which(x$padj <= padj & x$de == "Down")]
     return(list(
       up = up,
       down = down
@@ -100,7 +101,22 @@ rna_DE_analysis <- function(multiassay,
   })
 
   res$sig_gene <- list_DEG_limma
-  MultiAssayExperiment::metadata(multiassay)$DEG <- res
+  })
 
+  functional_list=list()
+  for(j in names(res$sig_gene)){
+    functional_list[[j]]=lapply(res$sig_gene[[j]] ,pathway_analysis_enrichr)
+  }
+  suppressMessages({
+  res$functional_enrichment <- functional_list
+  MultiAssayExperiment::metadata(multiassay)$DEG <- res
+  MultiAssayExperiment::metadata(multiassay)$parameters$single_omic$de$rna <- list(dependent = dependent,
+                                                                                design= multiassay@metadata[["dds"]]@design,
+                                                                                levels = levels,
+                                                                                log2FoldChange = log2FoldChange,
+                                                                                padj=padj,
+                                                                                filter_protein_coding =filter_protein_coding)
+  
+  })
   return(multiassay)
 }

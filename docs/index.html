@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Multi-Omics Integration Toolkit • Omix</title>
+<title>A Multi-Omics Integration Pipeline • Omix</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="A Multi-Omics Integration Toolkit">
-<meta property="og:description" content="Generalisable framework that can effectively process, integrate and analyse patient-specific multi-omic data in an end-to-end manner. ">
+<script src="pkgdown.js"></script><meta property="og:title" content="A Multi-Omics Integration Pipeline">
+<meta property="og:description" content="*Omix* provides a generalisable framework to efficiently process, integrate and analyse multi-omics data in an end-to-end manner. ">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -55,7 +55,13 @@
     <li>
       <a href="articles/Omix_vignette_MAP_CV_pseudotemporal.html">Omix - Pseudotemporal multi-omics integration</a>
     </li>
+    <li>
+      <a href="articles/demo.html">Omix - Sample reports</a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -72,16 +78,17 @@
   <div class="contents col-md-9">
 
 <p><img src="reference/figures/Omix_logo.png" width="200" style="align:left;"></p>
-<div class="section level1">
-<div class="page-header"><h1 id="omix">Omix<a class="anchor" aria-label="anchor" href="#omix"></a>
-</h1></div>
 <!-- badges: start -->
 
-<p>The Omix pipeline provides a generalisable framework that can effectively process, visualise and analyse patient-specific multi-omic data in an end-to-end manner. Omix is built on four consecutive blocks, summarised in the figure below.</p>
-<div class="figure">
-<img src="reference/figures/Omix_workflow.png" alt=""><p class="caption">Omix</p>
+<div class="section level2">
+<h2 id="pipeline-overview">Pipeline overview<a class="anchor" aria-label="anchor" href="#pipeline-overview"></a>
+</h2>
+<p>The <code>Omix</code> pipeline offers an integration and analysis framework for multi-omics intended to pre-process, analyse, and visualise multimodal data flexibly to address research questions. Omix is built on four consecutive blocks, (1) preparation of the multimodal container, (2) processing and quality control, (3) single omic analyses, and (4) multi-omics vertical integration.</p>
+<p>Pipeline outputs are standardised and include publication-quality plots, tables, and interactive reports.</p>
+<p><img src="reference/figures/Omix-pipeline.png" width="100%"></p>
+<p>Omix offers a range of state-of-the-art processing functions and integrative models, equipped with versatile parameters and quality control features. This empowers researchers to explore different integration strategies easily, enhancing the speed, scalability, and flexibility of multi-omics analyses.</p>
+<p>While the current version focuses on bulk transcriptomics and proteomics, future iterations aim to encompass a broader range of omics types, expanding the software’s applicability and usefulness.</p>
 </div>
-<p>This bioinformatics pipeline aims to address important gaps related to the integration of multi-omics data, namely by enabling the reproducibility of integrative analyses and providing grounds for more systematic benchmarking of analyses. Pipeline outputs are standardized and include publication-quality plots, tables, and interactive dashboards.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -119,9 +126,10 @@
 <ul>
 <li>Omix provides a series of state-of-the-art integration models to perform patient-specific multi-omic integration, including:</li>
 <li><a href="https://biofam.github.io/MOFA2/" class="external-link">MOFA</a></li>
+<li><a href="https://biofam.github.io/MOFA2/" class="external-link">MEIFESTO</a></li>
 <li><a href="http://mixomics.org" class="external-link">Sparse Multi-Block PLS (sMB-PLS)</a></li>
 <li><a href="http://mixomics.org" class="external-link">DIABLO</a></li>
-<li>A range of multi-omics clustering models implemented in <a href="https://github.com/xlucpu/MOVICS" class="external-link">MOVICS</a>
+<li>Multi-omics clustering models such as <a href="https://rdrr.io/bioc/iClusterPlus/man/iCluster.html" class="external-link">iCluster</a>
 </li>
 </ul>
 </li>
@@ -143,9 +151,140 @@
 </ul>
 </li>
 </ul>
-<p>Omix implements these modular steps and displays results in an interactive results dashboard.</p>
-<p>The package functions are designed to interface neatly with NextFlow for scalable and containerized pipelines deployed locally, on high-performance computing clusters, or in the cloud. See <a href="https://nf-co.re/omix" class="external-link uri">https://nf-co.re/omix</a> for the accompanying NextFlow pipeline.</p>
+<p>Omix implements these modular steps and displays results in interactive reports.</p>
 </div>
+<div class="section level2">
+<h2 id="benchmark-of-multi-omics-integration-softwares">Benchmark of multi-omics integration softwares<a class="anchor" aria-label="anchor" href="#benchmark-of-multi-omics-integration-softwares"></a>
+</h2>
+<table class="table">
+<colgroup>
+<col width="3%">
+<col width="11%">
+<col width="5%">
+<col width="7%">
+<col width="15%">
+<col width="4%">
+<col width="32%">
+<col width="9%">
+<col width="3%">
+<col width="8%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Tool</th>
+<th align="left">Supported omics</th>
+<th align="left">Pre-processing</th>
+<th align="left">Single omic analysis</th>
+<th align="left">Integrative models</th>
+<th align="left">Use case</th>
+<th align="left">Downstream analyses</th>
+<th align="left">Interactive visualisations</th>
+<th align="left">Language</th>
+<th align="left">Ref</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Miodin</td>
+<td align="left">SNP, RNA, methylation, Proteins,</td>
+<td align="left">+</td>
+<td align="left">-</td>
+<td align="left">MOFA</td>
+<td align="left">BM</td>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">R</td>
+<td align="left">Ulfenborg, B. (2019).</td>
+</tr>
+<tr class="even">
+<td align="left">MiBiOmics</td>
+<td align="left">miRNA, RNA, Proteins</td>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">Co-inertia analysis</td>
+<td align="left">BD</td>
+<td align="left">Multi-omics networks</td>
+<td align="left">+</td>
+<td align="left">Web</td>
+<td align="left">(Zoppi et al., 2021)</td>
+</tr>
+<tr class="odd">
+<td align="left">Muon</td>
+<td align="left">Single cell omics</td>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">MOFA, WNN</td>
+<td align="left">NA</td>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">Python</td>
+<td align="left">(Bredikhin et al., 2022)</td>
+</tr>
+<tr class="even">
+<td align="left">Movics</td>
+<td align="left">SNP, RNA, methylation, Proteins</td>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">Range of clustering algorithm</td>
+<td align="left">STR</td>
+<td align="left">Survival analysis, enrichment</td>
+<td align="left">-</td>
+<td align="left">R</td>
+<td align="left">(Lu, 2020)</td>
+</tr>
+<tr class="odd">
+<td align="left">Omix</td>
+<td align="left">RNA, Proteins</td>
+<td align="left">+</td>
+<td align="left">+</td>
+<td align="left">MOFA,MEIFESTO, sMBPLS, MBPLS, DIABLO, iCluster</td>
+<td align="left">BD, BM, STR</td>
+<td align="left">Multi-omics signatures, networks, modules, functional/ cell type/ TF enrichment, pseudotime, etc</td>
+<td align="left">+</td>
+<td align="left">R</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<p>Biomarker Discovery (BD), Biological Mechanisms (BM), Sample stratification (STR)</p>
+</div>
+<div class="section level2">
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
+<p>The Getting Started section of the documentation contains downloadable examples on how to use Omix.</p>
+</div>
+<div class="section level2">
+<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+</h2>
+<p>The experiments described in our vignettes rely on in-house data from the Multi-Omics Atlas Project, which may be obtained from the <a href="https://www.synapse.org/#!Synapse:syn36812517/wiki/619350" class="external-link">synapse portal</a> for registered users. (Project SynID: syn36812517)</p>
+<div class="section level4">
+<h4 id="datasets">Datasets:<a class="anchor" aria-label="anchor" href="#datasets"></a>
+</h4>
+<ul>
+<li>Get started data: syn51533729</li>
+<li>Pseudo-temporal multi-omics integration data: syn51516099</li>
+</ul>
+</div>
+</div>
+<div class="section level2">
+<h2 id="docker-image">Docker image<a class="anchor" aria-label="anchor" href="#docker-image"></a>
+</h2>
+<p>For reproducibility purposes, we provide a Docker container <a href="https://hub.docker.com/r/eleonoreschneeg/omix" class="external-link">here</a>.</p>
+<p>After installing Docker you can first pull the container via:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull eleonoreschneeg/omix:latest</span></code></pre></div>
+<p>and then run the container:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">-v</span> <span class="va">$HOME</span>:/home/rstudio/home <span class="at">-e</span> ROOT=true <span class="at">-e</span> PASSWORD=password <span class="at">-p</span> 8787:8787 eleonoreschneeg/omix:latest</span></code></pre></div>
+<p>An RStudio server session can be accessed via a browser at localhost:8787 using Username: rstudio and Password: password</p>
+</div>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
+<p>Please cite <code>Omix</code> as:</p>
+<p>Eléonore Schneegans, Nurun Fancy, Michael Thomas, Nanet Willumsen, Paul M Matthews, Johanna Jackson (2023) Omix: A Multi-Omics Integration Pipeline</p>
+</div>
+<div class="section level2">
+<h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
+</h2>
+<p>For feature requests, please open an issue <a href="https://github.com/eleonore-schneeg/Omix/issues" class="external-link">here</a>.</p>
+<p>Alternatively, you can fork the repository, add your change and issue a pull request.</p>
 </div>
 
   </div>

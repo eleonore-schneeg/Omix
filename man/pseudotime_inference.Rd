@@ -38,7 +38,24 @@ A list object with \code{model} and \code{plot} slots
 Pseudotime_inference based on integrated embeddings and clusters
 }
 \seealso{
-Other Pseudotime inference: 
-\code{\link{pseudotime_ordering_modules}()}
+Other Multi-omic integration downstream analysis: 
+\code{\link{OpenTarget_dataframe}()},
+\code{\link{Transcription_Factor_enrichment_supervised}()},
+\code{\link{Transcription_Factor_enrichment}()},
+\code{\link{circos_TF}()},
+\code{\link{clustering_DE_analysis}()},
+\code{\link{extract_loadings}()},
+\code{\link{extract_multiomic_signature}()},
+\code{\link{extract_weigths}()},
+\code{\link{integrative_results_clustering}()},
+\code{\link{integrative_results_sparse_supervised}()},
+\code{\link{integrative_results_supervised}()},
+\code{\link{integrative_results_unsupervised}()},
+\code{\link{multiomics_modules}()},
+\code{\link{multiomics_network_matrix}()},
+\code{\link{multiomics_network}()},
+\code{\link{plot_module_trajectory}()},
+\code{\link{posterior_probability}()},
+\code{\link{sign_signature}()}
 }
-\concept{Pseudotime inference}
+\concept{Multi-omic integration downstream analysis}

@@ -35,15 +35,24 @@ Extract_weigths from MOFA model for a given factor of interest at a
 defined absolute threshold
 }
 \seealso{
-Other Helper: 
-\code{\link{ask_chatgpt}()},
-\code{\link{counts_rna}()},
+Other Multi-omic integration downstream analysis: 
+\code{\link{OpenTarget_dataframe}()},
+\code{\link{Transcription_Factor_enrichment_supervised}()},
+\code{\link{Transcription_Factor_enrichment}()},
+\code{\link{circos_TF}()},
+\code{\link{clustering_DE_analysis}()},
+\code{\link{extract_loadings}()},
 \code{\link{extract_multiomic_signature}()},
-\code{\link{format_res_deseq}()},
-\code{\link{format_res_limma}()},
-\code{\link{get_background}()},
-\code{\link{get_metadata}()},
-\code{\link{processed_proteomics}()},
-\code{\link{processed_rna}()}
+\code{\link{integrative_results_clustering}()},
+\code{\link{integrative_results_sparse_supervised}()},
+\code{\link{integrative_results_supervised}()},
+\code{\link{integrative_results_unsupervised}()},
+\code{\link{multiomics_modules}()},
+\code{\link{multiomics_network_matrix}()},
+\code{\link{multiomics_network}()},
+\code{\link{plot_module_trajectory}()},
+\code{\link{posterior_probability}()},
+\code{\link{pseudotime_inference}()},
+\code{\link{sign_signature}()}
 }
-\concept{Helper}
+\concept{Multi-omic integration downstream analysis}

@@ -39,7 +39,7 @@ Vertical integration with DIABLO including model tuning
 Other Multi-omic integration: 
 \code{\link{getClustNum}()},
 \code{\link{integrate_with_MBPLS}()},
-\code{\link{integrate_with_MEIFESTO}()},
+\code{\link{integrate_with_MEFISTO}()},
 \code{\link{integrate_with_MOFA}()},
 \code{\link{integrate_with_iCluster}()},
 \code{\link{integrate_with_sMBPLS}()},

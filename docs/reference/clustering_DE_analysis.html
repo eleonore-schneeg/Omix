@@ -37,7 +37,13 @@
     <li>
       <a href="../articles/Omix_vignette_MAP_CV_pseudotemporal.html">Omix - Pseudotemporal multi-omics integration</a>
     </li>
+    <li>
+      <a href="../articles/demo.html">Omix - Sample reports</a>
+    </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -58,8 +64,9 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">clustering_DE_analysis</span><span class="op">(</span></span>
-<span>  normalized_data <span class="op">=</span> <span class="va">multimodal</span><span class="op">$</span><span class="va">rna_processed</span>,</span>
+<span>  <span class="va">normalized_data</span>,</span>
 <span>  <span class="va">colData</span>,</span>
+<span>  <span class="va">omic</span>,</span>
 <span>  dependent <span class="op">=</span> <span class="st">"Cluster"</span>,</span>
 <span>  levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CS2"</span>, <span class="st">"CS1"</span><span class="op">)</span>,</span>
 <span>  log2FoldChange <span class="op">=</span> <span class="fl">0.5</span></span>
@@ -74,6 +81,10 @@
 
 <dt>colData</dt>
 <dd><p>The coldadata variable</p></dd>
+
+
+<dt>omic</dt>
+<dd><p><code>protein</code> or <code>mRNA</code></p></dd>
 
 
 <dt>dependent</dt>
@@ -91,9 +102,24 @@
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other Multi-omic integration downstream analysis: 
+<code><a href="OpenTarget_dataframe.html">OpenTarget_dataframe</a>()</code>,
+<code><a href="Transcription_Factor_enrichment_supervised.html">Transcription_Factor_enrichment_supervised</a>()</code>,
+<code><a href="Transcription_Factor_enrichment.html">Transcription_Factor_enrichment</a>()</code>,
+<code><a href="circos_TF.html">circos_TF</a>()</code>,
+<code><a href="extract_loadings.html">extract_loadings</a>()</code>,
+<code><a href="extract_multiomic_signature.html">extract_multiomic_signature</a>()</code>,
+<code><a href="extract_weigths.html">extract_weigths</a>()</code>,
+<code><a href="integrative_results_clustering.html">integrative_results_clustering</a>()</code>,
+<code><a href="integrative_results_sparse_supervised.html">integrative_results_sparse_supervised</a>()</code>,
 <code><a href="integrative_results_supervised.html">integrative_results_supervised</a>()</code>,
 <code><a href="integrative_results_unsupervised.html">integrative_results_unsupervised</a>()</code>,
-<code><a href="multiomics_modules.html">multiomics_modules</a>()</code></p></div>
+<code><a href="multiomics_modules.html">multiomics_modules</a>()</code>,
+<code><a href="multiomics_network_matrix.html">multiomics_network_matrix</a>()</code>,
+<code><a href="multiomics_network.html">multiomics_network</a>()</code>,
+<code><a href="plot_module_trajectory.html">plot_module_trajectory</a>()</code>,
+<code><a href="posterior_probability.html">posterior_probability</a>()</code>,
+<code><a href="pseudotime_inference.html">pseudotime_inference</a>()</code>,
+<code><a href="sign_signature.html">sign_signature</a>()</code></p></div>
     </div>
 
   </div>

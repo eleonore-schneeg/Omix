@@ -3,6 +3,7 @@
 #' @param normalized_data Normalized rna/protein data
 #' @param colData The coldadata variable
 #' @param dependent The dependent variable
+#' @param omic `protein` or `mRNA`
 #' @param levels Levels to compare
 #' @param log2FoldChange logFC cutoff
 #'
@@ -13,9 +14,10 @@
 #'
 #' @export
 #'
-
-clustering_DE_analysis <- function(normalized_data = multimodal$rna_processed,
+#'
+clustering_DE_analysis <- function(normalized_data,
                                    colData,
+                                   omic,
                                    dependent = "Cluster",
                                    levels = c("CS2", "CS1"),
                                    log2FoldChange = 0.5) {
@@ -57,10 +59,19 @@ clustering_DE_analysis <- function(normalized_data = multimodal$rna_processed,
 
   contr.matrix <- limma::makeContrasts(contrasts = x, levels = colnames(design))
 
+  if(omic=='mRNA'){
   fit <- limma::lmFit(abundance, design)
   vfit <- limma::contrasts.fit(fit, contrasts = contr.matrix)
   efit <- limma::eBayes(vfit)
   de <- limma::topTable(efit, n = Inf)
+  }
+
+  if(omic=='protein'){
+  fit <- limma::lmFit(abundance, design, method = "robust")
+  vfit <- limma::contrasts.fit(fit, contrasts = contr.matrix)
+  efit <- limma::eBayes(vfit, robust = TRUE)
+  de <- limma::topTable(efit, n = Inf)
+  }
 
   list_results <- list()
   for (i in 1:length(perCombs)) {
@@ -85,8 +96,8 @@ clustering_DE_analysis <- function(normalized_data = multimodal$rna_processed,
 
   list_DEP_limma <- list()
   list_DEP_limma <- lapply(res, function(x) {
-    up <- x$gene_name[which(x$adj.P.Val <= 0.05 & x$de == "Up")]
-    down <- x$gene_name[which(x$adj.P.Val <= 0.05 & x$de == "Down")]
+    up <- x$gene_name[which(x$padj <= 0.05 & x$de == "Up")]
+    down <- x$gene_name[which(x$padj <= 0.05 & x$de == "Down")]
     return(list(
       up = up,
       down = down

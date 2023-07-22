@@ -1,0 +1,488 @@
+---
+title: "<b>Omix</b> -  Multi-Omics analysis report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    theme: "flatly"
+    toc: true
+    toc_float: true
+    highlight: tango
+    fig_caption: true
+    keep_md: false
+    css: !expr system.file("rmarkdown/css/style.css", package = "Omix")
+    includes:
+      in_header: header.html
+      after_body: !expr system.file("rmarkdown/html/footer.html", package = "Omix")
+params:
+  metadata_path: false
+---
+
+```{r style, echo=FALSE, results='asis', message=TRUE, warning=FALSE}
+library(DT)
+library(utils)
+library(knitr)
+library(htmltools)
+library(plotly)
+library(dplyr)
+library(Omix)
+library(purrr)
+
+BiocStyle::markdown()
+knitr::opts_chunk$set(tidy = FALSE,
+                      message = TRUE,
+                      warning = FALSE)
+options(knitr.duplicate.label = "allow")
+```
+
+
+```{r, load_data, results='hide', include=FALSE}
+data <- qs::qread(params$metadata_path)
+list2env(data, envir = environment())
+database=param$database
+multimodal_omics=integration_param$multimodal_omics
+```
+
+
+
+## Multi-omics integration report overview
+
+* **Integration overview**
+* **Correlation heatmap**
+* **Sample plots**
+* **Multi-omics signatures**
+* **Multi-omics heatmap**
+* **Multi-omics network**
+* **Multi-omics modules**
+* **Cell type enrichment**
+* **Functional enrichment**
+* **Transcription Factor enrichment**
+* **Open targets**
+
+
+## Integration overview {.tabset}
+
+### Analysis summary
+
+**Integration model:** `r analysis_parameters$integration_model`  
+**Dependent variable:** `r analysis_parameters$dependent`  
+**Sense check variable:** `r analysis_parameters$sense_check_variable`  
+**Clinical covariates:** `r analysis_parameters$covariates`  
+**Correlation threshold:** `r analysis_parameters$correlation_threshold`  
+**Disease ID (Open target database):** `r analysis_parameters$disease_id` 
+
+
+The interpretation depends on the direction of the analysis. If the continuous dependent variable increases with disease state, then features with positive weights are up regulated in disease, and vice versa.
+
+**Direction of the analysis:** `r direction_analysis`  
+
+### Model
+
+```{r, echo=FALSE}
+model
+```
+
+### Variance explained
+
+```{r, echo=FALSE}
+
+  DT::datatable(variance,
+                rownames = TRUE)
+
+```
+
+## Correlation heatmap {.tabset}
+
+```{r, echo=FALSE, results = FALSE}
+correlation_heatmap_supervised(  integrated_object =model,
+    covariates = analysis_parameters$covariates,
+    metadata=metadata
+  )
+
+```
+
+## Sample plots  {.tabset}
+
+### Transcriptomics
+
+```{r, echo=FALSE}
+plot_components(model,
+                metadata,
+                dependent=analysis_parameters$dependent,
+                layer = "mRNA") 
+```
+
+
+### Proteomics
+
+```{r, echo=FALSE}
+plot_components(model,
+                metadata,
+                dependent=analysis_parameters$dependent,
+                layer = "proteins") 
+```
+
+## Multi-omics signatures
+
+### Weights distribution {.tabset}
+
+#### Transcriptomics
+
+```{r, echo=FALSE}
+weights$distribution_plot$rna
+```
+
+
+#### Proteomics
+
+```{r, echo=FALSE}
+weights$distribution_plot$protein
+```
+
+###  Multi-omics signature from positive weights {.tabset}
+
+#### Transcriptomics 
+
+```{r, echo=FALSE}
+
+dt_weights=weights$weights_df$rna[,c('Weights','Feature')] %>%
+  filter(Weights >0)
+
+DT::datatable(dt_weights)
+
+
+```
+
+#### Proteomics
+
+```{r, echo=FALSE}
+
+dt_weights=weights$weights_df$protein[,c('Weights','Feature')] %>%
+  filter(Weights>0)
+
+DT::datatable(dt_weights)
+
+```
+
+
+
+###  Top positive features plots {.tabset}
+
+#### Transcriptomics 
+
+```{r, echo=FALSE}
+
+plot_loadings(loadings = weights$weights_df,
+                          layer = "rna",
+                          sign = 'positive',
+                          abs = TRUE,
+                          nfeatures = 30)
+```
+
+#### Proteomics
+
+```{r, echo=FALSE}
+plot_loadings(loadings = weights$weights_df,
+                          layer = "protein",
+                          sign = 'positive',
+                          abs = TRUE,
+                          nfeatures = 30)
+```
+
+
+###  Multi-omics signature from negative weights {.tabset}
+
+#### Transcriptomics
+
+```{r, echo=FALSE}
+
+dt_weights=weights$weights_df$rna[,c('Weights','Feature')] %>%
+  filter(Weights<0)
+
+DT::datatable(dt_weights)
+
+
+```
+
+#### Proteomics
+
+```{r, echo=FALSE}
+
+dt_weights=weights$weights_df$protein[,c('Weights','Feature')] %>%
+  filter(Weights<0)
+
+DT::datatable(dt_weights)
+
+```
+
+
+###  Top negative features plots {.tabset}
+
+#### Transcriptomics 
+
+```{r, echo=FALSE}
+
+plot_loadings(loadings = weights$weights_df,
+                          layer = "rna",
+                          sign = 'negative',
+                          abs = TRUE,
+                          nfeatures = 30)
+```
+
+#### Proteomics
+
+```{r, echo=FALSE}
+plot_loadings(loadings = weights$weights_df,
+                          layer = "protein",
+                          sign = 'negative',
+                          abs = TRUE,
+                          nfeatures = 30)
+```
+
+## Multi-omics heatmap {.tabset}
+
+### Transcriptomics 
+
+```{r, echo=FALSE, fig.height=10}
+
+multiomics_heatmap(multimodal_omics,
+                               metadata,
+                               integration_model = "DIABLO",
+                               covariates=covariates,
+                               omic='rna',
+                               weights=weights,
+                               direction='both',
+                               num_features=30)
+
+```
+
+### Proteomics
+
+```{r, echo=FALSE, fig.height=10}
+multiomics_heatmap(multimodal_omics,
+                               metadata,
+                               integration_model = "DIABLO",
+                               covariates=covariates,
+                               omic='protein',
+                               weights=weights,
+                               direction='both',
+                               num_features=30)
+```
+
+
+## Multi-omics network {.tabset}
+
+### Positive weights
+
+```{r, echo=FALSE}
+
+plot_communities(igraph= multiomic_networks$positive$graph,
+                   community_object=communities$positive$community_object)
+
+```
+
+### Negative weights
+
+```{r, echo=FALSE}
+plot_communities(igraph= multiomic_networks$negative$graph,
+                   community_object=communities$negative$community_object)
+
+```
+
+## Interactive visualisation  {.tabset}
+
+### Positive weights
+
+```{r, echo=FALSE}
+interactive_network(igraph=multiomic_networks$positive$graph,
+                      communities = TRUE,
+                      cluster=communities$positive)
+
+```
+
+### Negative weights
+
+```{r, echo=FALSE}
+interactive_network(igraph=multiomic_networks$negative$graph,
+                      communities = TRUE,
+                      cluster=communities$negative)
+
+```
+
+
+## Multi-omics modules {.tabset}
+
+
+### Modules from positive weights
+
+```{r, echo=FALSE}
+moduleTraitCor=modules$positive$moduleTraitCor
+moduleTraitPvalue=modules$positive$moduleTraitPvalue
+
+corrplot::corrplot(t(moduleTraitCor[1:nrow(moduleTraitCor - 1), ]),
+                              p.mat = t(moduleTraitPvalue),
+                              insig = "label_sig",
+                              sig.level = c(0.001, 0.01, 0.05),
+                              diag = TRUE,
+                              tl.cex=0.9,
+                              pch.cex=2,
+                              col = colorRampPalette(c("#2166AC","#4393C3","#92C5DE","#D1E5F0","#FDDBC7","#F4A582", "#D6604D","#B2182B"))(50))
+```
+
+
+### Modules from negative weights
+
+```{r, echo=FALSE, message=FALSE}
+moduleTraitCor=modules$negative$moduleTraitCor
+moduleTraitPvalue=modules$negative$moduleTraitPvalue
+
+corrplot::corrplot(t(moduleTraitCor),
+                              p.mat = t(moduleTraitPvalue),
+                              insig = "label_sig",
+                              sig.level = c(0.001, 0.01, 0.05),
+                              diag = TRUE,
+                              tl.cex=0.9,
+                              pch.cex=2,
+                              col = colorRampPalette(c("#2166AC","#4393C3","#92C5DE","#D1E5F0","#FDDBC7","#F4A582", "#D6604D","#B2182B"))(50))
+```
+
+
+## Cell type enrichment {.tabset}
+
+### Positive weights
+
+```{r, echo=FALSE}
+cell_type$positive$plots
+```
+
+### Negative weights
+
+```{r, echo=FALSE}
+cell_type$negative$plots
+```
+
+## Functional enrichment {.tabset}
+
+### Positive weights
+
+```{r, echo=FALSE}
+plots=list()
+for (i in names(functional_enrichment$positive)){
+  plots[[i]]<-functional_enrichment$positive[[i]]$plot[[database]]
+}
+
+plots
+```
+
+### Negative weights
+
+```{r, echo=FALSE}
+plots=list()
+for (i in names(functional_enrichment$negative)){
+  plots[[i]]<-functional_enrichment$negative[[i]]$plot[[database]]
+}
+
+plots
+```
+
+
+## Transcription Factor enrichment {.tabset}
+
+### Positive weights
+
+```{r, echo=FALSE}
+TF_pos=names(TF[["positive"]]@gsetB)
+TF_neg=names(TF[["negative"]]@gsetB)
+run_TF_pos= !is_empty(TF_pos) 
+run_TF_neg= !is_empty(TF_neg) 
+```
+
+
+#### Enrichment Heatmap
+
+```{r  echo=FALSE}
+
+if(run_TF_pos==TRUE ){
+GeneOverlap::drawHeatmap(TF$positive,what = c("odds.ratio"), log.scale = T, adj.p = F, cutoff = .05,
+                          ncolused = 7, grid.col = c("Blues"), note.col = "red")  
+}else{
+  cat("No significant TF - gene target enrichment detected!")
+}
+
+
+```
+
+#### TF - target gene circular plot
+
+```{r fig.height = 10, fig.width=10}
+if(run_TF_pos==TRUE ){
+circos_TF(TF$positive)
+}
+```
+
+
+### Negative weights
+
+#### Enrichment Heatmap
+
+```{r  echo=FALSE}
+if(run_TF_neg==TRUE ){
+GeneOverlap::drawHeatmap(TF$negative,what = c("odds.ratio"), log.scale = T, adj.p = F, cutoff = .05,
+                          ncolused = 7, grid.col = c("Blues"), note.col = "red")
+}else{
+  cat("No significant TF - gene target enrichment detected!")
+}
+```
+
+#### TF - target gene circular plot
+
+```{r fig.height = 10, fig.width=10}
+
+if(run_TF_neg==TRUE ){
+circos_TF(TF$negative)
+}
+
+```
+
+
+## Pseudo-time analysis {.tabset}
+
+```{r  echo=FALSE}
+
+if(exists("pseudotime_analysis") ){
+pseudotime_analysis$plot
+}else{
+  cat("Pseudotime analysis was not conducted")
+}
+
+```
+
+## Open Targets (Positive weights) {.tabset}
+
+### Transcriptomics
+
+```{r, echo=FALSE,fig.height=20}
+OpenTargets$positive$rna$plot
+```
+
+### Proteomics
+
+```{r, echo=FALSE,fig.height=10}
+OpenTargets$positive$protein$plot
+```
+
+## Open Targets (Negative weights) {.tabset}
+
+### Transcriptomics
+
+```{r, echo=FALSE,fig.height=10}
+OpenTargets$negative$rna$plot
+```
+
+### Proteomics
+
+```{r, echo=FALSE,fig.height=10}
+OpenTargets$negative$protein$plot
+```
+
+<br>Omix v`r utils::packageVersion("Omix")` -- `r Sys.time()`
+

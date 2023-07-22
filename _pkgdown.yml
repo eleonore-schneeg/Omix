@@ -12,7 +12,7 @@ reference:
   contents:
     - has_concept("Multi-omic integration")
 
-- title: Downstream analysis of multi-omics integrated data
+- title: Multi-omic integration downstream analysis
   contents:
     - has_concept("Multi-omic integration downstream analysis")
 
@@ -31,5 +31,7 @@ reference:
 - title: Functional enrichment functions
   contents:
     - has_concept("Enrichment analysis")
-
-
+    
+- title: Generate report functions
+  contents:
+    - has_concept("Report")

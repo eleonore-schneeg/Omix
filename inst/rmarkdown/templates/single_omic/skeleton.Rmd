@@ -1,0 +1,281 @@
+---
+title: "<b>Omix</b> - Single Omic analyses report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    theme: "flatly"
+    toc: true
+    toc_float: true
+    highlight: tango
+    fig_caption: true
+    keep_md: false
+    css: !expr system.file("rmarkdown/css/style.css", package = "Omix")
+    includes:
+      in_header: header.html
+      after_body: !expr system.file("rmarkdown/html/footer.html", package = "Omix")
+params:
+  metadata_path: false
+---
+
+```{r style, echo=FALSE, results='asis', message=TRUE, warning=FALSE}
+library(DT)
+library(utils)
+library(knitr)
+library(htmltools)
+library(plotly)
+library(dplyr)
+library(Omix)
+library(table1)
+
+
+BiocStyle::markdown()
+knitr::opts_chunk$set(tidy = FALSE,
+                      message = TRUE,
+                      warning = FALSE)
+options(knitr.duplicate.label = "allow")
+```
+
+
+```{r, load_data, results='hide', include=FALSE}
+data <- qs::qread(params$metadata_path)
+list2env(data, envir = environment())
+slot=param$slot
+database=param$database
+if('integrated_enrichment' %in% names(single_omic_comparison[[slot]])){
+multiGSEA=single_omic_comparison[[slot]]$integrated_enrichment
+integrated_enrichment=TRUE
+}
+dependent=parameters_processing_protein$dependent
+design_rna=paste(as.character(parameters_analysis_rna$design), collapse = '')
+design_prot=paste(as.character(parameters_analysis_protein$design), collapse = '')
+```
+
+## Single omic report overview 
+
+* **Cohort overview**
+* **Transcriptomics**
+* **Proteomics**
+* **Single omic comparison**
+* **Functional enrichment**
+
+
+### Analysis summary
+
+**Analysis name:** `r slot`  
+**Enrichment database:** `r database`  
+
+Cohort overview
+=======================================================================
+
+## Table1
+
+```{r, echo=FALSE}
+dependent_var=metadata[,dependent]
+table1::table1(~. | dependent_var, data=metadata[,c(clinical_covariates)])
+
+```
+
+
+Transcriptomics
+=======================================================================
+
+## Analysis parameters 
+
+**Dependent variable:** `r parameters_analysis_rna$dependent`
+**Differential expression design:** `r design_rna`  
+**Log2 Fold Change threshold:** `r parameters_analysis_rna$log2FoldChange`  
+**Adjusted p value threshold:** `r parameters_analysis_rna$padj`  
+**Filter protein coding genes:** `r parameters_analysis_rna$filter_protein_coding`  
+
+## Differential expression {.tabset}
+
+
+### Results
+
+```{r, echo=FALSE}
+
+  DT::datatable(DEG[[slot]],
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+
+
+```
+
+### Volcano plot
+
+```{r, echo=FALSE}
+
+
+  plot=volcano_interactive(DEG[[slot]], padj=0.05)
+  plot
+
+
+```
+
+
+Proteomics
+=======================================================================
+
+
+```{r echo=FALSE}
+if(parameters_processing_protein$denoise==TRUE){
+exp=paste(parameters_processing_protein$covariates,collapse = ' + ')
+ans=paste(design_prot,'+',exp)
+}else{ ans= 'No denoising, design is shown above'}
+```
+
+## Analysis parameters 
+
+**Dependent variable:** `r parameters_analysis_protein$dependent`   
+**Differential expression design:** `r design_prot`   
+**Actual design (if denoising in processing step):** `r ans`   
+**Log2 Fold Change threshold:** `r parameters_analysis_protein$log2FoldChange`  
+**Adjusted p value threshold:** `r parameters_analysis_protein$padj`    
+
+
+## Differential expression {.tabset}
+
+
+### Results
+
+```{r, echo=FALSE}
+
+  DT::datatable(DEP[[slot]],
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+
+```
+
+### Volcano plot
+
+```{r, echo=FALSE}
+
+  plot=volcano_interactive(DEP[[slot]], padj=0.05)
+  plot
+
+```
+
+
+Single omic comparison
+=======================================================================
+
+
+
+## Table
+
+```{r, echo=FALSE}
+
+  DT::datatable(single_omic_comparison[[slot]]$dataframe,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+
+```
+
+### Volcano plot
+
+```{r, echo=FALSE}
+
+  plot=volcano_interactive_comparison(single_omic_comparison[[slot]]$dataframe)
+  plot
+
+
+```
+
+### Correlation
+
+```{r, echo=FALSE}
+corr= cor(single_omic_comparison[[slot]]$dataframe$log2FoldChange_transcriptomics,single_omic_comparison[[slot]]$dataframe$log2FoldChange_proteomics)
+```
+
+**Correlation between transcriptomics/proteomics:** `r corr`  
+
+
+We found a r=`r corr` correlation between pairwise log2FoldChanges (p-value <0.05) indicating a moderate positive correlation between the mRNA and protein level changes, which is reinforced by the existence of discordant pairs.
+
+
+## Functional enrichment results  
+
+
+## Transcriptomics {.tabset}
+
+### Up regulated genes 
+
+
+```{r, echo=FALSE}
+
+if (is.null(DEG$functional_enrichment[[slot]]$up)){
+  cat( 'No pathways were found to be significantly up regulated')
+}else{
+  plot=DEG$functional_enrichment[[slot]]$up$plot[[database]]
+  plot
+} 
+
+```
+
+### Down regulated genes 
+
+```{r, echo=FALSE}
+  
+if (is.null(DEG$functional_enrichment[[slot]]$down)){
+  cat( 'No pathways were found to be significantly down regulated')
+}else{
+  plot=DEG$functional_enrichment[[slot]]$down$plot[[database]]
+  plot
+} 
+
+```
+
+
+## Proteomics {.tabset}
+
+### Up regulated proteins
+
+```{r, echo=FALSE}
+
+if (is.null(DEP$functional_enrichment[[slot]]$up)){
+  cat( 'No pathways were found to be significantly up regulated')
+}else{
+  plot=DEP$functional_enrichment[[slot]]$up$plot[[database]]
+  plot
+} 
+
+```
+
+### Down regulated proteins
+
+```{r, echo=FALSE}
+
+if (is.null(DEP$functional_enrichment[[slot]]$down)){
+  cat( 'No pathways were found to be significantly down regulated')
+}else{
+  plot=DEP$functional_enrichment[[slot]]$down$plot[[database]]
+  plot
+} 
+
+```
+
+
+## Integrative pathway enrichment (Via multiGSEA)
+
+multiGSEA works with nested lists where each sublist represents an omics layer. The function rankFeatures calculates the pre-ranked features, that are needed for the subsequent calculation of the enrichment score. rankFeatures calculates the a local statistic ls based on the direction of the fold change and the magnitude of its significance 
+
+```{r, message=F,  , echo=FALSE, eval = integrated_enrichment == TRUE}
+  DT::datatable(multiGSEA,
+                rownames = TRUE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+<br>Omix v`r utils::packageVersion("Omix")` -- `r Sys.time()`
+

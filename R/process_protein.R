@@ -32,7 +32,6 @@
 #' @importFrom SummarizedExperiment SummarizedExperiment assay rowData
 #' @export
 #'
-
 process_protein <- function(multiassay,
                             # STEP 1 - FILTERING
                             filter = TRUE,
@@ -56,6 +55,7 @@ process_protein <- function(multiassay,
 
   "%!in%" <- function(x, y) !("%in%"(x, y))
 
+  suppressMessages({
   protein_raw <- MultiAssayExperiment::getWithColData(
     multiassay,
     "protein_raw"
@@ -66,13 +66,17 @@ process_protein <- function(multiassay,
     colData[[dependent]] <- factor(colData[[dependent]], levels = levels)
   }
 
+  processing_outputs=list()
+  })
   cli::cli_alert_success("SCALING NORMALIZATION")
+  suppressMessages({
   matrix <- SummarizedExperiment::assays(protein_raw)[[1]]
   matrix <- log2(matrix)
-
+  proteins_raw=rownames(matrix)
+  })
   if (filter == TRUE) {
     cli::cli_alert_success("FILTERING")
-
+    suppressMessages({
     dim1 <- dim(matrix)[1]
     args2 <- list(
       matrix = matrix,
@@ -80,10 +84,24 @@ process_protein <- function(multiassay,
       groups = colData[[dependent]]
     )
 
+    processing_outputs[["raw"]]=list(missing_values_per_feature=rowSums(is.na(matrix)),
+                                           missing_values_per_sample=  colSums(is.na(matrix)))
+
     matrix <- do.call(filter_protein, args2)
+    protein_post_filtering=rownames(matrix)
     dim2 <- dim(matrix)[1]
+    })
     cli::cli_alert_success(paste(dim1 - dim2, "/", dim1, "proteins filtered"))
     cli::cli_alert_success(paste(dim2, "proteins kept for analysis"))
+    suppressMessages({
+    processing_outputs[["filtering"]]=list(proteins_filtered=dim1 - dim2,
+                                           percentage_filtered= (dim1-dim2)/dim1,
+                                           proteins_kept=dim2)
+
+    processing_outputs[["post_filtering"]]=list(missing_values_per_feature=rowSums(is.na(matrix)),
+                                            missing_values_per_sample=  colSums(is.na(matrix)),
+                                            proteins_filtered_out=setdiff(proteins_raw,protein_post_filtering))
+    })
   }
 
   cli::cli_alert_success("IMPUTATION")
@@ -99,6 +117,7 @@ process_protein <- function(multiassay,
     50% of minimum level of abundance for each protein")
     matrix <- impute_minimum_value(matrix)
   }
+
 
   if (imputation == "zero") {
     cli::cli_alert_success("Imputation of remaining missing values to zero")
@@ -175,12 +194,17 @@ process_protein <- function(multiassay,
 
     idx <- ((rowSums(matrix, 2) / ncol(matrix) > q) &
               (rowSums(matrix, 2) / ncol(matrix) < q2))
+    detected_feature_outliers=names(idx)[idx ==FALSE]
     matrix <- matrix[idx, ]
     dim4 <- dim(matrix)[1]
     cli::cli_alert_success(paste(
       dim3 - dim4, "feature outliers out of",
       dim3, "features detected and dropped"
     ))
+
+    processing_outputs[["remove_feature_outliers"]]=list(feature_outliers= dim3 - dim4,
+                                                          percentage_outliers= (dim3 - dim4)/dim3,
+                                                          detected_feature_outliers= detected_feature_outliers)
   }
 
 
@@ -202,10 +226,15 @@ process_protein <- function(multiassay,
 
     MultiAssayExperiment::metadata(multiassay)$OutliersFlags$protein <-
       outliers
+
+    processing_outputs[["remove_sample_outliers"]]=list(sample_outliers= dim5 - dim6,
+                                                         percentage_outliers= (dim5 - dim6)/dim4,
+                                                         detected_sample_outliers= outliers)
   }
 
 
   #####
+  suppressMessages({
   map <- MultiAssayExperiment::sampleMap(multiassay)
   map_df <- data.frame(map@listData)
   map_df <- map_df[which(map_df$assay == "protein_raw"), ]
@@ -220,7 +249,7 @@ process_protein <- function(multiassay,
                   sampleMap = map_df
   )
 
-  MultiAssayExperiment::metadata(multiassay)$parameters_processing_protein <-
+  MultiAssayExperiment::metadata(multiassay)$parameters$processing$protein <-
     list(
     filter = filter,
     min_sample = min_sample,
@@ -235,10 +264,14 @@ process_protein <- function(multiassay,
     denoise = denoise,
     covariates = covariates
   )
+
+  MultiAssayExperiment::metadata(multiassay)$parameters$processing_outputs$protein <- processing_outputs
+
   return(multiassay)
 
   cli::cli_alert_success("Proteomics data processed!")
   cli::cli_alert_success("Processing parameters saved in metadata")
+  })
 }
 
 
@@ -278,7 +311,7 @@ processed_proteomics <- function(multiassay,
   )
 
   MultiAssayExperiment::metadata(
-    multiassay)$parameters_processing_protein$custom_processed_df <- TRUE
+    multiassay)$parameters$processing$protein$custom_processed_df <- TRUE
 
   cli::cli_alert_success("Custom processed proteomics added!")
 }

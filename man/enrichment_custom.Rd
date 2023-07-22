@@ -27,6 +27,7 @@ Functional enrichment based on given reference annotations
 Other Enrichment analysis: 
 \code{\link{GSEA}()},
 \code{\link{cell_type_enrichment}()},
+\code{\link{integrated_enrichment_mutliGSEA}()},
 \code{\link{pathway_analysis_enrichr}()}
 }
 \concept{Enrichment analysis}

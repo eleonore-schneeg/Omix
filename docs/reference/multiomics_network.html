@@ -37,7 +37,13 @@
     <li>
       <a href="../articles/Omix_vignette_MAP_CV_pseudotemporal.html">Omix - Pseudotemporal multi-omics integration</a>
     </li>
+    <li>
+      <a href="../articles/demo.html">Omix - Sample reports</a>
+    </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -57,7 +63,12 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">multiomics_network</span><span class="op">(</span><span class="va">multiassay</span>, <span class="va">list</span>, correlation_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">multiomics_network</span><span class="op">(</span></span>
+<span>  <span class="va">multiassay</span>,</span>
+<span>  <span class="va">list</span>,</span>
+<span>  correlation_threshold <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  filter_string_50 <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -75,6 +86,10 @@
 <dd><p>Absolute correlation threshold to draw edges
 in the network</p></dd>
 
+
+<dt>filter_string_50</dt>
+<dd><p>should be set to TRUE if <code>MOFA</code> integration was used</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -84,18 +99,25 @@ in the network</p></dd>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p>Other Plotting: 
-<code><a href="communities_network.html">communities_network</a>()</code>,
-<code><a href="community_graph.html">community_graph</a>()</code>,
-<code><a href="interactive_network.html">interactive_network</a>()</code>,
-<code><a href="multiomics_network_cluster.html">multiomics_network_cluster</a>()</code>,
+    <div class="dont-index"><p>Other Multi-omic integration downstream analysis: 
+<code><a href="OpenTarget_dataframe.html">OpenTarget_dataframe</a>()</code>,
+<code><a href="Transcription_Factor_enrichment_supervised.html">Transcription_Factor_enrichment_supervised</a>()</code>,
+<code><a href="Transcription_Factor_enrichment.html">Transcription_Factor_enrichment</a>()</code>,
+<code><a href="circos_TF.html">circos_TF</a>()</code>,
+<code><a href="clustering_DE_analysis.html">clustering_DE_analysis</a>()</code>,
+<code><a href="extract_loadings.html">extract_loadings</a>()</code>,
+<code><a href="extract_multiomic_signature.html">extract_multiomic_signature</a>()</code>,
+<code><a href="extract_weigths.html">extract_weigths</a>()</code>,
+<code><a href="integrative_results_clustering.html">integrative_results_clustering</a>()</code>,
+<code><a href="integrative_results_sparse_supervised.html">integrative_results_sparse_supervised</a>()</code>,
+<code><a href="integrative_results_supervised.html">integrative_results_supervised</a>()</code>,
+<code><a href="integrative_results_unsupervised.html">integrative_results_unsupervised</a>()</code>,
+<code><a href="multiomics_modules.html">multiomics_modules</a>()</code>,
 <code><a href="multiomics_network_matrix.html">multiomics_network_matrix</a>()</code>,
-<code><a href="plot_OpenTarget.html">plot_OpenTarget</a>()</code>,
-<code><a href="plot_optimal_cluster.html">plot_optimal_cluster</a>()</code>,
-<code><a href="volcano_interactive_comparison.html">volcano_interactive_comparison</a>()</code>,
-<code><a href="volcano_interactive.html">volcano_interactive</a>()</code>,
-<code><a href="volcano_plot_deseq.html">volcano_plot_deseq</a>()</code>,
-<code><a href="volcano_plot_limma.html">volcano_plot_limma</a>()</code></p></div>
+<code><a href="plot_module_trajectory.html">plot_module_trajectory</a>()</code>,
+<code><a href="posterior_probability.html">posterior_probability</a>()</code>,
+<code><a href="pseudotime_inference.html">pseudotime_inference</a>()</code>,
+<code><a href="sign_signature.html">sign_signature</a>()</code></p></div>
     </div>
 
   </div>

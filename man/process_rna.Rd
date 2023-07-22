@@ -7,16 +7,16 @@
 process_rna(
   multiassay,
   transformation = c("vst", "rlog", "log2"),
-  protein_coding,
-  filter,
+  protein_coding = TRUE,
+  filter = TRUE,
   min_count = 10,
-  min_sample = 1,
-  dependent,
+  min_sample = 0.5,
+  dependent = "diagnosis",
   levels = NULL,
   covariates,
-  batch_correction,
-  batch,
-  remove_sample_outliers
+  batch_correction = TRUE,
+  batch = "batch",
+  remove_sample_outliers = FALSE
 )
 }
 \arguments{

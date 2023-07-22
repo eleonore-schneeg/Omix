@@ -3,7 +3,7 @@
 ## Uses the latest stable ubuntu, R and Bioconductor versions.
 ## Created on unbuntu 20.04, R 4.0 and BiocManager 3.12
 
-FROM rocker/rstudio:4.2.3
+FROM rocker/rstudio:4.2.2
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends apt-utils \
@@ -12,6 +12,7 @@ RUN apt-get update \
 	python3-setuptools \
 	python3-dev \
 	python3-pip \
+	python3-venv \
 	libcurl4-openssl-dev \
 	libcairo2-dev \
 	libfreetype6-dev \
@@ -116,13 +117,9 @@ RUN apt-get update \
       && ln -s /opt/cmake-3.24.1/bin/* /usr/local/bin \
   # Install mofapy2
   && python3 -m pip install mofapy2
-
-#Set CRAN mirror
-RUN echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' \
->>"${R_HOME}/etc/Rprofile.site" \
-
+  
 #Install CRAN pkgs
-&& install2.r -e \
+RUN install2.r -e \
 BiocManager \
 basetheme \
 data.table \
@@ -137,6 +134,7 @@ ggplot2 \
 ggpubr \
 ggrastr \
 ggrepel \
+ggridges \
 ggsignif \
 GGally \
 ggbeeswarm \
@@ -154,6 +152,7 @@ pheatmap \
 plotly \
 purrr \
 psych \
+qs \
 ragg \
 rlang \
 RColorBrewer \
@@ -162,6 +161,7 @@ remotes \
 reshape2 \
 reticulate \
 rmarkdown \
+table1 \
 tibble \
 tidyr \
 stringr \
@@ -171,6 +171,7 @@ statmod \
 systemfonts \
 viridis \
 visNetwork \
+grDevices \
 && rm -rf /tmp/downloaded_packages
 
 ## Install Bioconductor packages
@@ -185,14 +186,21 @@ NMF \
 IntNMF \
 MASS \
 ActivePathways 
-
 # RUN Rscript -e  'reticulate::py_config()'
+
+RUN R -e "install.packages('synapser', repos=c('http://ran.synapse.org', 'http://cran.fhcrc.org'))"
 
 WORKDIR Omix
 ADD . .
 
 # Run R CMD check - will fail with any errors or warnings
-RUN Rscript -e "devtools::check()"
+RUN --mount=type=secret,id=SYNAPSE_ID \
+--mount=type=secret,id=SYNAPSE_PASSWORD \
+--mount=type=secret,id=GH_TOKEN \
+echo "GH_TOKEN=$(cat /run/secrets/GH_TOKEN)" >> "${HOME}/.Renviron" \
+&& echo "SYNAPSE_ID=$(cat /run/secrets/SYNAPSE_ID)" >> "${HOME}/.Renviron" \
+&& echo "SYNAPSE_PASSWORD=$(cat /run/secrets/SYNAPSE_PASSWORD)" >> "${HOME}/.Renviron" \
+&& Rscript -e "devtools::check(error_on = 'error')"
 
 # Install R package from source
 RUN Rscript -e "remotes::install_local()"

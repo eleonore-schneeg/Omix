@@ -4,5 +4,6 @@ pkgdown_sha: ~
 articles:
   Omix_vignette_CV_MTG: Omix_vignette_CV_MTG.html
   Omix_vignette_MAP_CV_pseudotemporal: Omix_vignette_MAP_CV_pseudotemporal.html
-last_built: 2023-04-13T14:40Z
+  demo: demo.html
+last_built: 2023-06-29T16:32Z
 

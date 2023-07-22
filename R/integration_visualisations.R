@@ -7,7 +7,7 @@
 #'
 #' @return List containing `graph` and `matrix` slots
 #'
-#' @family Plotting
+#' @family Multi-omic integration downstream analysis
 #'
 #' @import igraph
 #' @export
@@ -77,10 +77,11 @@ multiomics_network_matrix <- function(multimodal_object,
 #' @param list named list of processed omic slots and features of interest
 #' @param correlation_threshold Absolute correlation threshold to draw edges
 #' in the network
+#' @param filter_string_50 should be set to TRUE if `MOFA` integration was used
 #'
 #' @return List containing `graph` and `matrix` slots
 #'
-#' @family Plotting
+#' @family Multi-omic integration downstream analysis
 #'
 #' @import igraph
 #'
@@ -88,24 +89,28 @@ multiomics_network_matrix <- function(multimodal_object,
 #'
 multiomics_network <- function(multiassay,
                                 list,
-                                correlation_threshold = 0.5) {
+                                correlation_threshold = 0.5,
+                               filter_string_50=FALSE) {
   features_interest <- c(list[[1]], list[[2]])
   pk <- c(length(list[[1]]), length(list[[2]]))
 
   multimodal_object <- multiassay@metadata$multimodal_object$omics
 
-
   matrix1 <- t(multimodal_object[[1]])
+  if(filter_string_50==TRUE){
   colnames(matrix1)=substr(colnames(matrix1),1,50)
+  }
+  
   matrix1 <- matrix1[, list[[1]]]
 
-
   matrix2 <- t(multimodal_object[[2]])
+  if(filter_string_50==TRUE){
   colnames(matrix2)=substr(colnames(matrix2),1,50)
+  }
   matrix2 <- matrix2[, list[[2]]]
 
+
   matrix <- scale(cbind(matrix1, matrix2))
-  colnames(matrix) <- features_interest
 
   colnames(matrix)[1:pk[1]] <- paste0(colnames(matrix)[1:pk[1]], "_rna")
   colnames(matrix)[(pk[1] + 1):(pk[1] + pk[2])] <- paste0(
@@ -152,52 +157,6 @@ multiomics_network <- function(multiassay,
     findInterval(x, seq(-1, 1, length.out = colsteps))])
 }
 
-#' @import igraph
-#'
-#' @keywords internal
-.GetGraph <- function(calib_object = NULL, adjacency = NULL,
-                      node_label = NULL, node_color = NULL, node_shape = NULL,
-                      weighted = NULL, satellites = FALSE) {
-  # either out or adjacency have to be provided
-
-  if (is.null(adjacency)) {
-    if (is.null(calib_object)) {
-      stop("Either 'calib_object' or 'adjacency' needs to be provided.")
-    }
-    adjacency <- CalibratedAdjacency(calib_object)
-  }
-
-  if (is.null(node_color)) {
-    node_color <- rep("skyblue", ncol(adjacency))
-  }
-
-  if (is.null(node_shape)) {
-    node_shape <- rep("circle", ncol(adjacency))
-  }
-
-  if (is.null(node_label)) {
-    node_label <- colnames(adjacency)
-  }
-
-  names(node_color) <- colnames(adjacency)
-  names(node_label) <- colnames(adjacency)
-  names(node_shape) <- colnames(adjacency)
-
-  mygraph <- igraph::graph_from_adjacency_matrix(adjacency,
-                                                 mode = "undirected",
-                                                 weighted = weighted)
-  V(mygraph)$label <- node_label[V(mygraph)$name]
-  V(mygraph)$color <- node_color[V(mygraph)$name]
-  V(mygraph)$shape <- node_shape[V(mygraph)$name]
-  V(mygraph)$frame.color <- V(mygraph)$color
-  V(mygraph)$label.family <- "sans"
-  E(mygraph)$color <- "grey60"
-  V(mygraph)$label.color <- "grey20"
-  E(mygraph)$width <- 0.5
-
-  return(mygraph)
-}
-
 #' Get interactive network from igraph object
 
 #'
@@ -217,9 +176,10 @@ multiomics_network <- function(multiassay,
 #'
 
 interactive_network <- function(igraph,
-                                 communities = FALSE,
+                                 communities = TRUE,
                                  cluster) {
   data1 <- visNetwork::toVisNetworkData(igraph)
+  data1$nodes$label=sub("\\_.*", "",  data1$nodes$label )
   data1$nodes$font.color <- "black"
   nodes1 <- data1$nodes
   edges1 <- data1$edges
@@ -227,14 +187,14 @@ interactive_network <- function(igraph,
 
   # Create group column
   if (communities == TRUE) {
-    cluster <- communities$community_object
+    cluster <- cluster$community_object
     cluster_df <- data.frame(as.list(membership(cluster)))
     cluster_df <- as.data.frame(t(cluster_df))
     cluster_df$label <- rownames(cluster_df)
 
 
     nodes1 <- merge(x = nodes1, y = cluster_df, by = "label", all.x = TRUE)
-    colnames(nodes1)[8] <- "group"
+    colnames(nodes1)[8] <- "community"
   }
 
   visNetwork::visNetwork(nodes1,
@@ -264,7 +224,9 @@ interactive_network <- function(igraph,
       shadow = FALSE,
       color = list(color = "grey", highlight = "#C62F4B")
     ) %>%
-    visNetwork::visLayout(randomSeed = 11)
+    visNetwork::visLayout(randomSeed = 11) %>%
+    visNetwork::visOptions(selectedBy= list(variable="community",multiple=T))
+
 }
 
 
@@ -308,12 +270,6 @@ communities_network <- function(igraph,
   attributes(communities) <- NULL
   names(communities) <- names
 
-  layout <- layout.fruchterman.reingold(igraph)
-  plot(lc1, igraph,
-    layout = layout,
-    vertex.label = NA, vertex.size = 5, edge.arrow.size = .2
-  )
-
   return(list(
     community_object = lc1,
     communities = communities
@@ -321,90 +277,46 @@ communities_network <- function(igraph,
 }
 
 
-#' Creates a multi-omics network based on clustered subgroups following
-#' multi-omics clustering
+#' Plots multi-ommics network communities
 #'
-#' @param multiassay Multiassay experiment object generated by Omix
-#' @param integration multi-omics clustering integration method.
-#' Default `iCluster`
-#' @param cluster Cluster of interest
-#' @param list Named list of processed omic slots and features of interest
-#' @param correlation_threshold Absolute correlation threshold to draw edges
-#' in the network
+#' @param igraph Multi-omics network
+#' @param community_object community_object
 #'
-#' @return `Igraph` object
-#'
+#' @return multi-omics network plot
+#' @importFrom grDevices rainbow
+#' @import igraph
 #' @family Plotting
 #'
 #' @import igraph
 #' @export
 #'
 
-multiomics_network_cluster <- function(multiassay,
-                                        integration = "iCluster",
-                                        cluster = 1,
-                                        list,
-                                        correlation_threshold = 0.5) {
-  features_interest <- c(list[[1]], list[[2]])
-  multimodal_object <- multiassay@metadata$multimodal_object$omics
+plot_communities <- function(igraph,
+                             community_object){
 
-  clusters <- multiassay@metadata$integration[[
-    paste(integration)]]$clust.res$clust
-  keep <- clusters == cluster
+  communities <- igraph::communities(community_object)
+  names <- attributes(communities)$dimnames[[1]]
+  attributes(communities) <- NULL
+  names(communities) <- names
 
-  matrix1 <- t(multimodal_object[[1]])
-  matrix1 <- matrix1[keep, ]
-  matrix1 <- matrix1[, colnames(matrix1) %in% list[[1]]]
+  layout <- layout.fruchterman.reingold(igraph)
 
-  matrix2 <- t(multimodal_object[[2]])
-  matrix2 <- matrix2[keep, ]
-  matrix2 <- matrix2[, colnames(matrix2) %in% list[[2]]]
+  colors= grDevices::rainbow(max(membership(community_object)), alpha = 0.3)
+  vertex.color=colors[membership(community_object)]
 
-  matrix <- cbind(matrix1, matrix2)
+  plot(community_object,igraph,
+       layout = layout,
+       col=vertex.color,
+       edge.color=	"#D3D3D3",
+       vertex.label = NA, vertex.size = 5, edge.arrow.size = .2, alpha = 0.5)
 
-  rho <- cor(matrix)
-  thr_cor <- correlation_threshold
-  rho <- ifelse(abs(rho) >= thr_cor, yes = rho, no = 0)
-  A <- ifelse(rho != 0, yes = 1, no = 0)
-  diag(A) <- 0
+  legend("topleft",bty = "n",
+         legend=names,
+         fill=colors, border=NA)
 
 
-  a <- apply(rho, 1, function(x) {
-    .color.gradient(x)
-  })
-  rownames(a) <- colnames(a)
-
-  pk <- c(length(list[[1]]), length(list[[2]]))
-  mynode_colours <- c(rep("#B39DDB", pk[1]), rep("#00796B", pk[2]))
-  mynode_labels <- sub("*\\.[0-9]", "", features_interest)
-
-  mygraph <- .GetGraph(adjacency = A,
-                       node_color = mynode_colours,
-                       node_label = mynode_labels)
-
-  data <- as_edgelist(mygraph)
-  V1 <- data[, 1]
-  V2 <- data[, 2]
-  b <- numeric()
-
-  for (i in 1:length(V1)) {
-    b[i] <- a[which(rownames(a) == V1[i]), which(colnames(a) == V2[i])]
-  }
-
-  V(mygraph)$name <- mynode_labels
-  E(mygraph)$color <- b
-  E(mygraph)$width <- 3
-  set.seed(1)
-
-  return(mygraph)
 }
 
-.color.gradient <- function(x,
-                            colors = c("blue", "white", "red"),
-                            colsteps = 100) {
-  return(colorRampPalette(colors)(colsteps)[
-    findInterval(x, seq(-1, 1, length.out = colsteps))])
-}
 
 #' Creates a subnetwork graph based on detected communities
 #'
@@ -441,8 +353,10 @@ community_graph <- function(igraph,
 }
 
 
-#' Plot optimal number of clusters from `getClustNum()`
-#'
+
+#' @title plot_optimal_cluster 
+#' @description plot optimal number of clusters from `getClustNum()`
+#' Function adapted from package `MOVICS`  (see ref)
 #' @param optk1 Cluster Prediction Index
 #' @param optk2 Gap statistics
 #' @param try.N.clust A integer vector to indicate possible choices of number of clusters.
@@ -451,6 +365,7 @@ community_graph <- function(igraph,
 #' @export
 #' @family Plotting
 #' @importFrom ggplot2 alpha
+#' @references Lu, X., et al. (2020). MOVICS: an R package for multi-omics integration and visualization in cancer subtyping. Bioinformatics, 36(22-23), 5539–5541. 
 
 plot_optimal_cluster <- function(optk1,
                                  optk2,
@@ -466,7 +381,7 @@ plot_optimal_cluster <- function(optk1,
   points(try.N.clust, apply(optk1, 1, mean), pch = 19, col = ggplot2::alpha("#224A8D"), cex = 1.5)
   lines(try.N.clust, apply(optk1, 1, mean), col = "#224A8D", lwd = 2, lty = 4)
   mtext("Cluster Prediction Index", side = 2, line = 2, cex = 1.5, col = "#224A8D", las = 3)
-  
+
   par(new = TRUE, xpd = FALSE)
   plot(NULL, NULL,
        xlim = c(min(try.N.clust), max(try.N.clust)),

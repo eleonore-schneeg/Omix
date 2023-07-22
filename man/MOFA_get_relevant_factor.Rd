@@ -2,7 +2,7 @@
 % Please edit documentation in R/integrative_results_unsupervised.R
 \name{MOFA_get_relevant_factor}
 \alias{MOFA_get_relevant_factor}
-\title{Selects the top factor that is most strongly associated with outcomes of interest}
+\title{Selects the top factor that is most strongly associated with outcomes of interest and that has the most balanced explained variation across omic layers}
 \usage{
 MOFA_get_relevant_factor(MOFAobject, covariate)
 }
@@ -15,6 +15,6 @@ MOFA_get_relevant_factor(MOFAobject, covariate)
 String of relevant factor
 }
 \description{
-Selects the top factor that is most strongly associated with outcomes of interest
+Selects the top factor that is most strongly associated with outcomes of interest and that has the most balanced explained variation across omic layers
 }
 \keyword{internal}

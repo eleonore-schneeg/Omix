@@ -13,13 +13,31 @@
     <loc>/articles/Omix_vignette_MAP_CV_pseudotemporal.html</loc>
   </url>
   <url>
+    <loc>/articles/demo.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
   </url>
   <url>
+    <loc>/demo/QC_report_Omix.html</loc>
+  </url>
+  <url>
+    <loc>/demo/multi_omic_report_MOFA.html</loc>
+  </url>
+  <url>
+    <loc>/demo/multi_omic_report_Omix_iCluster.html</loc>
+  </url>
+  <url>
+    <loc>/demo/single_omic_report_Omix.html</loc>
+  </url>
+  <url>
     <loc>/index.html</loc>
+  </url>
+  <url>
+    <loc>/news/index.html</loc>
   </url>
   <url>
     <loc>/reference/DE_multiomics.html</loc>
@@ -28,10 +46,22 @@
     <loc>/reference/GSEA.html</loc>
   </url>
   <url>
+    <loc>/reference/MOFA_get_pseudotime_factor.html</loc>
+  </url>
+  <url>
     <loc>/reference/MOFA_get_relevant_factor.html</loc>
   </url>
   <url>
+    <loc>/reference/OpenTarget_dataframe.html</loc>
+  </url>
+  <url>
     <loc>/reference/OpenTargets.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Transcription_Factor_enrichment.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Transcription_Factor_enrichment_supervised.html</loc>
   </url>
   <url>
     <loc>/reference/ask_chatgpt.html</loc>
@@ -41,6 +71,9 @@
   </url>
   <url>
     <loc>/reference/cell_type_enrichment.html</loc>
+  </url>
+  <url>
+    <loc>/reference/circos_TF.html</loc>
   </url>
   <url>
     <loc>/reference/circular_corrplot.html</loc>
@@ -59,6 +92,15 @@
   </url>
   <url>
     <loc>/reference/community_graph.html</loc>
+  </url>
+  <url>
+    <loc>/reference/correlation_heatmap.html</loc>
+  </url>
+  <url>
+    <loc>/reference/correlation_heatmap_clusters.html</loc>
+  </url>
+  <url>
+    <loc>/reference/correlation_heatmap_supervised.html</loc>
   </url>
   <url>
     <loc>/reference/counts_rna.html</loc>
@@ -124,6 +166,9 @@
     <loc>/reference/enrichment_custom.html</loc>
   </url>
   <url>
+    <loc>/reference/extract_loadings.html</loc>
+  </url>
+  <url>
     <loc>/reference/extract_multiomic_signature.html</loc>
   </url>
   <url>
@@ -146,6 +191,9 @@
   </url>
   <url>
     <loc>/reference/getMoHeatmap.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getStdiz.html</loc>
   </url>
   <url>
     <loc>/reference/get_ID_names.html</loc>
@@ -181,6 +229,9 @@
     <loc>/reference/integrate_with_MBPLS.html</loc>
   </url>
   <url>
+    <loc>/reference/integrate_with_MEFISTO.html</loc>
+  </url>
+  <url>
     <loc>/reference/integrate_with_MEIFESTO.html</loc>
   </url>
   <url>
@@ -193,7 +244,13 @@
     <loc>/reference/integrate_with_sMBPLS.html</loc>
   </url>
   <url>
+    <loc>/reference/integrated_enrichment_mutliGSEA.html</loc>
+  </url>
+  <url>
     <loc>/reference/integrative_results_clustering.html</loc>
+  </url>
+  <url>
+    <loc>/reference/integrative_results_sparse_supervised.html</loc>
   </url>
   <url>
     <loc>/reference/integrative_results_supervised.html</loc>
@@ -206,6 +263,15 @@
   </url>
   <url>
     <loc>/reference/median_centering_correction.html</loc>
+  </url>
+  <url>
+    <loc>/reference/multi_omic_report.html</loc>
+  </url>
+  <url>
+    <loc>/reference/multi_omics_qc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/multiomics_heatmap.html</loc>
   </url>
   <url>
     <loc>/reference/multiomics_modules.html</loc>
@@ -226,10 +292,25 @@
     <loc>/reference/plot_OpenTarget.html</loc>
   </url>
   <url>
+    <loc>/reference/plot_communities.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot_components.html</loc>
+  </url>
+  <url>
     <loc>/reference/plot_geneset_clusters.html</loc>
   </url>
   <url>
+    <loc>/reference/plot_loadings.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot_module_trajectory.html</loc>
+  </url>
+  <url>
     <loc>/reference/plot_optimal_cluster.html</loc>
+  </url>
+  <url>
+    <loc>/reference/posterior_probability.html</loc>
   </url>
   <url>
     <loc>/reference/process_protein.html</loc>
@@ -253,13 +334,22 @@
     <loc>/reference/pseudotime_ordering_modules.html</loc>
   </url>
   <url>
+    <loc>/reference/qc_report.html</loc>
+  </url>
+  <url>
     <loc>/reference/rna_DE_analysis.html</loc>
+  </url>
+  <url>
+    <loc>/reference/sign_signature.html</loc>
   </url>
   <url>
     <loc>/reference/single_omic_comparison.html</loc>
   </url>
   <url>
     <loc>/reference/single_omic_comparisons.html</loc>
+  </url>
+  <url>
+    <loc>/reference/single_omic_report.html</loc>
   </url>
   <url>
     <loc>/reference/vertical_integration.html</loc>

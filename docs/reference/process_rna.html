@@ -37,7 +37,13 @@
     <li>
       <a href="../articles/Omix_vignette_MAP_CV_pseudotemporal.html">Omix - Pseudotemporal multi-omics integration</a>
     </li>
+    <li>
+      <a href="../articles/demo.html">Omix - Sample reports</a>
+    </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -60,16 +66,16 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">process_rna</span><span class="op">(</span></span>
 <span>  <span class="va">multiassay</span>,</span>
 <span>  transformation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vst"</span>, <span class="st">"rlog"</span>, <span class="st">"log2"</span><span class="op">)</span>,</span>
-<span>  <span class="va">protein_coding</span>,</span>
-<span>  <span class="va">filter</span>,</span>
+<span>  protein_coding <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  min_count <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  min_sample <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="va">dependent</span>,</span>
+<span>  min_sample <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  dependent <span class="op">=</span> <span class="st">"diagnosis"</span>,</span>
 <span>  levels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">covariates</span>,</span>
-<span>  <span class="va">batch_correction</span>,</span>
-<span>  <span class="va">batch</span>,</span>
-<span>  <span class="va">remove_sample_outliers</span></span>
+<span>  batch_correction <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  batch <span class="op">=</span> <span class="st">"batch"</span>,</span>
+<span>  remove_sample_outliers <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 

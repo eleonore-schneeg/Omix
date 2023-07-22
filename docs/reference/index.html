@@ -37,7 +37,13 @@
     <li>
       <a href="../articles/Omix_vignette_MAP_CV_pseudotemporal.html">Omix - Pseudotemporal multi-omics integration</a>
     </li>
+    <li>
+      <a href="../articles/demo.html">Omix - Sample reports</a>
+    </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -90,7 +96,7 @@ Internal to <code><a href="../reference/process_protein.html">process_protein()<
       </tr></tbody><tbody><tr><td>
           <p><code><a href="DE_multiomics.html">DE_multiomics()</a></code> </p>
         </td>
-        <td><p>Performs DE on multiomics object from the processed slots</p></td>
+        <td><p>Performs DE on the multimodal object from the processed slots</p></td>
       </tr><tr><td>
           <p><code><a href="protein_DE_analysis.html">protein_DE_analysis()</a></code> </p>
         </td>
@@ -103,6 +109,14 @@ Internal to <code><a href="../reference/process_protein.html">process_protein()<
           <p><code><a href="single_omic_comparisons.html">single_omic_comparisons()</a></code> </p>
         </td>
         <td><p>Compare differential expressed genes and proteins</p></td>
+      </tr><tr><td>
+          <p><code><a href="spls_wrapper.html">spls_wrapper()</a></code> </p>
+        </td>
+        <td><p>Performs sparse partial least squares regression on processed slots (rna and protein)</p></td>
+      </tr><tr><td>
+          <p><code><a href="wgcna_wrapper.html">wgcna_wrapper()</a></code> </p>
+        </td>
+        <td><p>Performs WGCNA on processed slots (rna and protein)</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="multi-omic-integration-function">Multi-omic integration function <a href="#multi-omic-integration-function" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
@@ -120,9 +134,9 @@ Internal to <code><a href="../reference/process_protein.html">process_protein()<
         </td>
         <td><p>Vertical integration with MBPLS</p></td>
       </tr><tr><td>
-          <p><code><a href="integrate_with_MEIFESTO.html">integrate_with_MEIFESTO()</a></code> </p>
+          <p><code><a href="integrate_with_MEFISTO.html">integrate_with_MEFISTO()</a></code> </p>
         </td>
-        <td><p>Vertical integration with MEIFESTO</p></td>
+        <td><p>Vertical integration with MEFISTO</p></td>
       </tr><tr><td>
           <p><code><a href="integrate_with_MOFA.html">integrate_with_MOFA()</a></code> </p>
         </td>
@@ -140,13 +154,50 @@ Internal to <code><a href="../reference/process_protein.html">process_protein()<
         </td>
         <td><p>Patient specific vertical integration</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="downstream-analysis-of-multi-omics-integrated-data">Downstream analysis of multi-omics integrated data <a href="#downstream-analysis-of-multi-omics-integrated-data" class="anchor" aria-hidden="true"></a></h2>
+          <h2 id="multi-omic-integration-downstream-analysis">Multi-omic integration downstream analysis <a href="#multi-omic-integration-downstream-analysis" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
+          <p><code><a href="OpenTarget_dataframe.html">OpenTarget_dataframe()</a></code> </p>
+        </td>
+        <td><p>Interface to OpenTargets database</p></td>
+      </tr><tr><td>
+          <p><code><a href="Transcription_Factor_enrichment.html">Transcription_Factor_enrichment()</a></code> </p>
+        </td>
+        <td><p>Transcription factor target enrichment test</p></td>
+      </tr><tr><td>
+          <p><code><a href="Transcription_Factor_enrichment_supervised.html">Transcription_Factor_enrichment_supervised()</a></code> </p>
+        </td>
+        <td><p>Transcription factor target enrichment test</p></td>
+      </tr><tr><td>
+          <p><code><a href="circos_TF.html">circos_TF()</a></code> </p>
+        </td>
+        <td><p>Creates a circos plot of identified TF and gene targets in modules</p></td>
+      </tr><tr><td>
           <p><code><a href="clustering_DE_analysis.html">clustering_DE_analysis()</a></code> </p>
         </td>
         <td><p>Performs differential expression between clusters</p></td>
+      </tr><tr><td>
+          <p><code><a href="extract_loadings.html">extract_loadings()</a></code> </p>
+        </td>
+        <td><p>Extract loadings</p></td>
+      </tr><tr><td>
+          <p><code><a href="extract_multiomic_signature.html">extract_multiomic_signature()</a></code> </p>
+        </td>
+        <td><p>Extracts a multi-omics signature from loadings</p></td>
+      </tr><tr><td>
+          <p><code><a href="extract_weigths.html">extract_weigths()</a></code> </p>
+        </td>
+        <td><p>Extract_weigths from MOFA model for a given factor of interest at a
+defined absolute threshold</p></td>
+      </tr><tr><td>
+          <p><code><a href="integrative_results_clustering.html">integrative_results_clustering()</a></code> </p>
+        </td>
+        <td><p>Downstream analysis for integrated multi-omics data - Clustering models</p></td>
+      </tr><tr><td>
+          <p><code><a href="integrative_results_sparse_supervised.html">integrative_results_sparse_supervised()</a></code> </p>
+        </td>
+        <td><p>Downstream analysis for integrated multi-omics data - Sparse Supervised models</p></td>
       </tr><tr><td>
           <p><code><a href="integrative_results_supervised.html">integrative_results_supervised()</a></code> </p>
         </td>
@@ -160,39 +211,42 @@ Internal to <code><a href="../reference/process_protein.html">process_protein()<
         </td>
         <td><p>Compute the module eigen value (PC1 of scaled transcriptomics/proteomics
 expression) and correlates it to chosen covariates</p></td>
-      </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="pseudotime-inference-functions">Pseudotime inference functions <a href="#pseudotime-inference-functions" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr></tbody><tbody><tr><td>
+      </tr><tr><td>
+          <p><code><a href="multiomics_network.html">multiomics_network()</a></code> </p>
+        </td>
+        <td><p>Get multiomics networks from multiassay object</p></td>
+      </tr><tr><td>
+          <p><code><a href="multiomics_network_matrix.html">multiomics_network_matrix()</a></code> </p>
+        </td>
+        <td><p>Get multiomics networks from multimodal object</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_module_trajectory.html">plot_module_trajectory()</a></code> </p>
+        </td>
+        <td><p>PLot scaled changes in modules eigenvalue alongside inferred_psuedotime</p></td>
+      </tr><tr><td>
+          <p><code><a href="posterior_probability.html">posterior_probability()</a></code> </p>
+        </td>
+        <td><p>Retrieves posterior probabilities from iCluster integration</p></td>
+      </tr><tr><td>
           <p><code><a href="pseudotime_inference.html">pseudotime_inference()</a></code> </p>
         </td>
         <td><p>Pseudotime_inference based on integrated embeddings and clusters</p></td>
       </tr><tr><td>
-          <p><code><a href="pseudotime_ordering_modules.html">pseudotime_ordering_modules()</a></code> </p>
+          <p><code><a href="sign_signature.html">sign_signature()</a></code> </p>
         </td>
-        <td><p>Generates a plot relating modules eigenvalue along pseudotime</p></td>
+        <td><p>Extract sign</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="pseudotime-inference-functions">Pseudotime inference functions <a href="#pseudotime-inference-functions" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody></tbody><tbody><tr><th colspan="2">
           <h2 id="helper-functions">Helper functions <a href="#helper-functions" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="ask_chatgpt.html">ask_chatgpt()</a></code> </p>
-        </td>
-        <td><p>Calls chatGPT with a specific prompt</p></td>
-      </tr><tr><td>
           <p><code><a href="counts_rna.html">counts_rna()</a></code> </p>
         </td>
         <td><p>Adds custom processed dataset to multiassay object</p></td>
-      </tr><tr><td>
-          <p><code><a href="extract_multiomic_signature.html">extract_multiomic_signature()</a></code> </p>
-        </td>
-        <td><p>Extracts a multi-omics signature from loadings</p></td>
-      </tr><tr><td>
-          <p><code><a href="extract_weigths.html">extract_weigths()</a></code> </p>
-        </td>
-        <td><p>Extract_weigths from MOFA model for a given factor of interest at a
-defined absolute threshold</p></td>
       </tr><tr><td>
           <p><code><a href="format_res_deseq.html">format_res_deseq()</a></code> </p>
         </td>
@@ -222,6 +276,10 @@ defined absolute threshold</p></td>
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
+          <p><code><a href="circular_corrplot.html">circular_corrplot()</a></code> </p>
+        </td>
+        <td><p>Circular heatmap of module-trait correlations and module-cell type enrichments</p></td>
+      </tr><tr><td>
           <p><code><a href="communities_network.html">communities_network()</a></code> </p>
         </td>
         <td><p>Detects communities in multi-omics network</p></td>
@@ -230,30 +288,49 @@ defined absolute threshold</p></td>
         </td>
         <td><p>Creates a subnetwork graph based on detected communities</p></td>
       </tr><tr><td>
+          <p><code><a href="correlation_heatmap.html">correlation_heatmap()</a></code> </p>
+        </td>
+        <td><p>Correlation heatmap between Factors and covariates of interest</p></td>
+      </tr><tr><td>
+          <p><code><a href="correlation_heatmap_clusters.html">correlation_heatmap_clusters()</a></code> </p>
+        </td>
+        <td><p>Correlation heatmap between Factors and covariates of interest</p></td>
+      </tr><tr><td>
+          <p><code><a href="correlation_heatmap_supervised.html">correlation_heatmap_supervised()</a></code> </p>
+        </td>
+        <td><p>Correlation heatmap between Factors and covariates of interest</p></td>
+      </tr><tr><td>
+          <p><code><a href="getStdiz.html">getStdiz()</a></code> </p>
+        </td>
+        <td><p>Get standardized omics data</p></td>
+      </tr><tr><td>
           <p><code><a href="interactive_network.html">interactive_network()</a></code> </p>
         </td>
         <td><p>Get interactive network from igraph object</p></td>
       </tr><tr><td>
-          <p><code><a href="multiomics_network.html">multiomics_network()</a></code> </p>
+          <p><code><a href="multiomics_heatmap.html">multiomics_heatmap()</a></code> </p>
         </td>
-        <td><p>Get multiomics networks from multiassay object</p></td>
-      </tr><tr><td>
-          <p><code><a href="multiomics_network_cluster.html">multiomics_network_cluster()</a></code> </p>
-        </td>
-        <td><p>Creates a multi-omics network based on clustered subgroups following
-multi-omics clustering</p></td>
-      </tr><tr><td>
-          <p><code><a href="multiomics_network_matrix.html">multiomics_network_matrix()</a></code> </p>
-        </td>
-        <td><p>Get multiomics networks from multimodal object</p></td>
+        <td><p>Multi-omics heatmap</p></td>
       </tr><tr><td>
           <p><code><a href="plot_OpenTarget.html">plot_OpenTarget()</a></code> </p>
         </td>
-        <td><p>Interface to OpenTargets database</p></td>
+        <td><p>Plot Interface to OpenTargets database</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_communities.html">plot_communities()</a></code> </p>
+        </td>
+        <td><p>Plots multi-ommics network communities</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_components.html">plot_components()</a></code> </p>
+        </td>
+        <td><p>Plot components</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_loadings.html">plot_loadings()</a></code> </p>
+        </td>
+        <td><p>Plot loadings</p></td>
       </tr><tr><td>
           <p><code><a href="plot_optimal_cluster.html">plot_optimal_cluster()</a></code> </p>
         </td>
-        <td><p>Plot optimal number of clusters from <code><a href="../reference/getClustNum.html">getClustNum()</a></code></p></td>
+        <td><p>plot_optimal_cluster</p></td>
       </tr><tr><td>
           <p><code><a href="volcano_interactive.html">volcano_interactive()</a></code> </p>
         </td>
@@ -287,9 +364,33 @@ multi-omics clustering</p></td>
         </td>
         <td><p>Functional enrichment based on given reference annotations</p></td>
       </tr><tr><td>
+          <p><code><a href="integrated_enrichment_mutliGSEA.html">integrated_enrichment_mutliGSEA()</a></code> </p>
+        </td>
+        <td><p>Integrated pathway enrichment with multiGSEA</p></td>
+      </tr><tr><td>
           <p><code><a href="pathway_analysis_enrichr.html">pathway_analysis_enrichr()</a></code> </p>
         </td>
         <td><p>Functional enrichment analysis using enrichR</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="generate-report-functions">Generate report functions <a href="#generate-report-functions" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="multi_omic_report.html">multi_omic_report()</a></code> </p>
+        </td>
+        <td><p>Generate a report for single omic analysis</p></td>
+      </tr><tr><td>
+          <p><code><a href="multi_omics_qc.html">multi_omics_qc()</a></code> </p>
+        </td>
+        <td><p>Generate multi-omics QC results</p></td>
+      </tr><tr><td>
+          <p><code><a href="qc_report.html">qc_report()</a></code> </p>
+        </td>
+        <td><p>Generate a report for single omic analysis</p></td>
+      </tr><tr><td>
+          <p><code><a href="single_omic_report.html">single_omic_report()</a></code> </p>
+        </td>
+        <td><p>Generate a report for single omic analysis</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

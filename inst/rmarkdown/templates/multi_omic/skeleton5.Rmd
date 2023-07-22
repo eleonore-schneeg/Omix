@@ -1,0 +1,417 @@
+---
+title: "<b>Omix</b> -  Multi-Omics analysis report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    theme: "flatly"
+    toc: true
+    toc_float: true
+    highlight: tango
+    fig_caption: true
+    keep_md: false
+    css: !expr system.file("rmarkdown/css/style.css", package = "Omix")
+    includes:
+      in_header: header.html
+      after_body: !expr system.file("rmarkdown/html/footer.html", package = "Omix")
+params:
+  metadata_path: false
+---
+
+```{r style, echo=FALSE, results='asis', message=TRUE, warning=FALSE}
+library(DT)
+library(utils)
+library(knitr)
+library(htmltools)
+library(plotly)
+library(dplyr)
+library(Omix)
+library(table1)
+library(purrr)
+
+
+BiocStyle::markdown()
+knitr::opts_chunk$set(tidy = FALSE,
+                      message = TRUE,
+                      warning = FALSE)
+options(knitr.duplicate.label = "allow")
+```
+
+
+```{r, load_data, results='hide', include=FALSE}
+data <- qs::qread(params$metadata_path)
+list2env(data, envir = environment())
+database=param$database
+cluster=param$cluster
+tuning=integration_param$tuning
+try.N.clust=integration_param$try.N.clust
+model=multiomic$model
+clusters <- model$clusters
+metadata$cluster=  as.factor(paste0("C", clusters))
+multimodal_omics=integration_param$multimodal_omics
+```
+
+
+## Multi-omics integration report overview
+
+* **Integration overview**
+* **Correlation heatmap**
+* **Multi-omics signatures**
+* **Multi-omics heatmap**
+* **Multi-omics network**
+* **Multi-omics modules**
+* **Cell type enrichment**
+* **Functional enrichment**
+* **Transcription Factor enrichment**
+* **Open targets**
+
+
+## Integration overview {.tabset}
+
+### Analysis summary
+
+**Integration model:** `r analysis_parameters$integration_model`  
+**Dependent variable:** `r analysis_parameters$dependent`  
+**Sense check variable:** `r analysis_parameters$sense_check_variable`  
+**Clinical covariates:** `r analysis_parameters$covariates`  
+**Correlation threshold:** `r analysis_parameters$correlation_threshold`  
+**Disease ID (Open target database):** `r analysis_parameters$disease_id` 
+**Chosen clusters:** `r cluster` 
+**Enrichment database:** `r database`  
+
+
+## Integration overview {.tabset}
+
+### Model
+
+```{r, echo=FALSE}
+
+plot_optimal_cluster(optk1=tuning$optk.i$CPI,
+                                 optk2=tuning$optk.i$Gapk,
+                                 try.N.clust)
+```
+
+Number of multi-omics clusters: `r tuning$optk.i$N.clust`  
+
+
+### Cluster demographics 
+
+```{r, echo=FALSE}
+table1::table1(~. | cluster, data=metadata[,c(covariates,"cluster")])
+
+```
+
+
+## Correlation heatmap {.tabset}
+
+```{r, echo=FALSE, results = FALSE}
+correlation_heatmap_clusters(model,
+                             metadata=metadata,
+                             covariates = covariates
+  )
+
+```
+
+## Multi-omics signatures
+
+### Weights distribution {.tabset}
+
+Weights here represent the posterior probability of features in the multi-omics clustering model
+
+#### Transcriptomics
+
+```{r, echo=FALSE}
+multiomic$weights$distribution_plot$rna
+```
+
+#### Proteomics
+
+```{r, echo=FALSE}
+weights$distribution_plot$protein
+```
+
+###  Differentially up-regulated features {.tabset}
+
+#### Transcriptomics 
+
+```{r, echo=FALSE}
+DT::datatable(data.frame(features=differential_expression[[cluster]]$rna$sig_feature$up))
+```
+
+#### Proteomics
+
+```{r, echo=FALSE}
+DT::datatable(data.frame(features=differential_expression[[cluster]]$proteins$sig_feature$up))
+```
+
+###  Differentially expressed features between clusters {.tabset}
+
+#### Transcriptomics 
+
+```{r, echo=FALSE}
+DT::datatable(differential_expression[[cluster]]$rna[[cluster]])
+```
+
+#### Proteomics
+
+```{r, echo=FALSE}
+DT::datatable(differential_expression[[cluster]]$proteins[[cluster]])
+```
+
+
+## Multi-omics heatmap {.tabset}
+
+### Transcriptomics 
+
+```{r, echo=FALSE, fig.height=10}
+
+multiomics_heatmap(multimodal_omics,
+                               metadata,
+                               integration_model = "iCluster",
+                               covariates=c(covariates,'cluster'),
+                               omic='rna',
+                               de_features = de_features,
+                               direction='both',
+                               cluster=cluster,
+                               num_features=30)
+
+```
+
+### Proteomics
+
+```{r, echo=FALSE ,fig.height=10}
+multiomics_heatmap(multimodal_omics,
+                               metadata,
+                               integration_model = "iCluster",
+                               covariates=c(covariates,'cluster'),
+                               omic='protein',
+                               de_features = de_features,
+                               direction='both',
+                               cluster=cluster,
+                               num_features=30)
+```
+
+
+## Multi-omics network {.tabset}
+
+### Up regulated features
+
+```{r, echo=FALSE}
+
+plot_communities(igraph= multiomic_networks[[cluster]]$up$graph,
+                   community_object=communities[[cluster]]$up$community_object)
+
+```
+
+### Down regulated features
+
+```{r, echo=FALSE}
+plot_communities(igraph= multiomic_networks[[cluster]]$down$graph,
+                   community_object=communities[[cluster]]$down$community_object)
+
+```
+
+## Interactive visualisation  {.tabset}
+
+### Up regulated features
+
+```{r, echo=FALSE}
+interactive_network(igraph=multiomic_networks[[cluster]]$up$graph,
+                      communities = TRUE,
+                      cluster=communities[[cluster]]$up)
+
+```
+
+### Down regulated features
+
+```{r, echo=FALSE}
+interactive_network(igraph=multiomic_networks[[cluster]]$down$graph,
+                      communities = TRUE,
+                      cluster=communities[[cluster]]$down)
+
+```
+
+
+## Multi-omics modules {.tabset}
+
+### Modules from up-regulated features
+
+```{r, echo=FALSE}
+moduleTraitCor=modules[[cluster]]$up$moduleTraitCor
+moduleTraitPvalue=modules[[cluster]]$up$moduleTraitPvalue
+
+corrplot::corrplot(t(moduleTraitCor[1:nrow(moduleTraitCor - 1), ]),
+                              p.mat = t(moduleTraitPvalue),
+                              insig = "label_sig",
+                              sig.level = c(0.001, 0.01, 0.05),
+                              diag = TRUE,
+                              tl.cex=0.9,
+                              pch.cex=2,
+                              col = colorRampPalette(c("#2166AC","#4393C3","#92C5DE","#D1E5F0","#FDDBC7","#F4A582", "#D6604D","#B2182B"))(50))
+```
+
+
+### Modules from down-regulated features
+
+```{r, echo=FALSE}
+
+moduleTraitCor=modules[[cluster]]$down$moduleTraitCor
+moduleTraitPvalue=modules[[cluster]]$down$moduleTraitPvalue
+
+corrplot::corrplot(t(moduleTraitCor[1:nrow(moduleTraitCor - 1), ]),
+                              p.mat = t(moduleTraitPvalue),
+                              insig = "label_sig",
+                              sig.level = c(0.001, 0.01, 0.05),
+                              diag = TRUE,
+                              tl.cex=0.9,
+                              pch.cex=2,
+                              col = colorRampPalette(c("#2166AC","#4393C3","#92C5DE","#D1E5F0","#FDDBC7","#F4A582", "#D6604D","#B2182B"))(50))
+
+```
+
+## Cell type enrichment {.tabset}
+
+### Positive weights
+
+```{r, echo=FALSE}
+
+cell_type[[cluster]]$up$plots
+```
+
+### Negative weights
+
+```{r, echo=FALSE}
+cell_type[[cluster]]$down$plots
+```
+
+## Functional enrichment {.tabset}
+
+### Positive weights
+
+```{r, echo=FALSE}
+
+plots=list()
+for (i in names(functional_enrichment[[cluster]]$up)){
+  plots[[i]]<-functional_enrichment[[cluster]]$up[[i]]$plot[[database]]
+}
+
+plots
+```
+
+### Negative weights
+
+```{r, echo=FALSE}
+plots=list()
+for (i in names(functional_enrichment[[cluster]]$down)){
+  plots[[i]]<-functional_enrichment[[cluster]]$down[[i]]$plot[[database]]
+}
+
+plots
+```
+
+## Transcription Factor enrichment {.tabset}
+
+### Positive weights
+
+```{r, echo=FALSE}
+TF=multiomic$TF
+TF=multiassay@metadata$integrative_results$iCluster$TF
+TF_pos=names(TF[[cluster]][["up"]]@gsetB)
+TF_neg=names(TF[[cluster]][["down"]]@gsetB)
+run_TF_pos= !is_empty(TF_pos) 
+run_TF_neg= !is_empty(TF_neg) 
+```
+
+#### Enrichment Heatmap
+
+```{r  echo=FALSE}
+
+if(run_TF_pos==TRUE ){
+  if(length(TF_pos)>1){
+GeneOverlap::drawHeatmap(TF[[cluster]]$up,what = c("odds.ratio"), log.scale = T, adj.p = F, cutoff = .05,
+                          ncolused = 7, grid.col = c("Blues"), note.col = "red")
+}else{
+cat("P values:")
+print(GeneOverlap::getMatrix(TF[[cluster]]$up,name='pval'))
+cat("Odds ratio:")
+print(GeneOverlap::getMatrix(TF[[cluster]]$up,name='odds.ratio'))
+}
+
+}else{
+  cat("No significant TF - gene target enrichment detected!")
+}
+
+
+
+```
+
+#### TF - target gene circular plot
+
+```{r echo=FALSE ,fig.height = 10, fig.width=10}
+if(run_TF_pos==TRUE ){
+TF_plot=TF[[cluster]]
+circos_TF(TF_plot$up)
+}
+```
+
+### Negative weights
+
+#### Enrichment Heatmap
+
+```{r  echo=FALSE}
+if(run_TF_neg==TRUE ){
+if(length(TF_neg)>1){
+GeneOverlap::drawHeatmap(TF[[cluster]]$down,what = c("odds.ratio"), log.scale = T, adj.p = F, cutoff = .05,
+                          ncolused = 7, grid.col = c("Blues"), note.col = "red")
+}else{
+cat("P values:")
+print(GeneOverlap::getMatrix(TF[[cluster]]$down,name='pval'))
+cat("Odds ratio:")
+print(GeneOverlap::getMatrix(TF[[cluster]]$down,name='odds.ratio'))
+}
+}else{
+  cat("No significant TF - gene target enrichment detected!")
+}
+
+
+```
+
+
+#### TF - target gene circular plot
+
+```{r  echo=FALSE , fig.height = 10, fig.width=10}
+if(run_TF_neg==TRUE ){
+circos_TF(TF_plot$down)
+}
+```
+
+## Open Targets (Positive weights) {.tabset}
+
+### Transcriptomics
+
+```{r, echo=FALSE,fig.height=10}
+
+OpenTargets[[cluster]]$up$rna$plot
+```
+
+### Proteomics
+
+```{r, echo=FALSE,fig.height=10}
+OpenTargets[[cluster]]$up$protein$plot
+```
+
+## Open Targets (Negative weights) {.tabset}
+
+### Transcriptomics
+
+```{r, echo=FALSE,fig.height=10}
+OpenTargets[[cluster]]$down$rna$plot
+```
+
+### Proteomics
+
+```{r, echo=FALSE,fig.height=10}
+OpenTargets[[cluster]]$down$protein$plot
+```
+
+<br>Omix v`r utils::packageVersion("Omix")` -- `r Sys.time()`
+

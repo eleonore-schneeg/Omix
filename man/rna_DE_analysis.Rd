@@ -9,7 +9,8 @@ rna_DE_analysis(
   dependent = "diagnosis",
   levels = NULL,
   filter_protein_coding = TRUE,
-  log2FoldChange = 0.5
+  log2FoldChange = 0.5,
+  padj = 0.05
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ first.}
 genes}
 
 \item{log2FoldChange}{log2 fold-change cutoff.}
+
+\item{padj}{adjusted p value threshold. Default to 0.05}
 }
 \value{
 Adds differential expression results to Multiassay object generated
@@ -36,6 +39,8 @@ Performs single omic analysis of transcriptomics layer.
 Other Single-omic: 
 \code{\link{DE_multiomics}()},
 \code{\link{protein_DE_analysis}()},
-\code{\link{single_omic_comparisons}()}
+\code{\link{single_omic_comparisons}()},
+\code{\link{spls_wrapper}()},
+\code{\link{wgcna_wrapper}()}
 }
 \concept{Single-omic}

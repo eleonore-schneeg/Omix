@@ -1,0 +1,1065 @@
+---
+title: "<b>Omix</b> - Quality Control report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    theme: "flatly"
+    toc: true
+    toc_float: true
+    highlight: tango
+    fig_caption: true
+    keep_md: false
+    css: !expr system.file("rmarkdown/css/style.css", package = "Omix")
+    includes:
+      in_header: header.html
+      after_body: !expr system.file("rmarkdown/html/footer.html", package = "Omix")
+params:
+  metadata_path: false
+---
+
+```{r style, echo=FALSE, warning=FALSE,results='hide', include=FALSE}
+library(DT)
+library(utils)
+library(knitr)
+library(htmltools)
+library(plotly)
+library(dplyr)
+library(Omix)
+library(MultiAssayExperiment)
+library(ggpubr)
+library(ggplot2)
+library(table1)
+library(data.table)
+library(pheatmap)
+BiocStyle::markdown()
+knitr::opts_chunk$set(tidy = FALSE,
+                      message = FALSE,
+                      warning = FALSE)
+options(knitr.duplicate.label = "allow")
+```
+
+
+```{r, load_data, results='hide', include=FALSE}
+data <- qs::qread(params$metadata_path)
+list2env(data, envir = environment())
+
+```
+
+## Quality control report overview 
+
+* **Cohort overview**
+* **Processing of transcriptomics**
+* **Processing of proteomics**
+* **Multi-omics object**
+
+
+Cohort overview
+=======================================================================
+
+
+## Table 1
+
+
+```{r, echo=FALSE}
+dependent_var=metadata[,dependent]
+table1::table1(~. | dependent_var, data=metadata[,c(clinical_covariates)])
+```
+
+## Dataframe 
+
+```{r, echo=FALSE}
+  DT::datatable(metadata,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+
+Transcriptomics
+=======================================================================
+
+
+## Processing parameters 
+
+**Minimum count:** `r param_rna$min_count`  
+**Minimum percentage of sample with transcript:** `r param_rna$min_sample`  
+**Filter for protein coding genes only:** `r param_rna$protein_coding`  
+**Transformation method:** `r param_rna$transformation`  
+**Apply batch correction:** `r param_rna$batch_correction`  
+**Batch variable name:** `r ifelse(is.null(param_rna$batch),'No batch',param_rna$batch)`  
+**Remove sample outliers:** `r param_rna$remove_sample_outliers`  
+**Dependent variable:** `r param_rna$dependent`  
+**Dependent variables levels:** `r param_rna$levels`  
+**Covariates:** `r param_rna$covariates`  
+
+## Metadata
+
+```{r, echo=F}
+
+df=data.frame(colData(data$rna_raw))
+df=data.table::setDT(df, keep.rownames = T)[]
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+## Raw data  {.tabset}
+
+### Mean value per feature
+
+```{r, echo=F}
+
+df=processing_rna$raw$mean_values_feature_df
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+### Missing value per sample
+
+```{r, echo=F}
+df=data.frame(mean_values=processing_rna$raw$mean_values_sample)
+df=setDT(df, keep.rownames = "sample_id")[]
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+## Protein coding genes filtering 
+
+**Keep only protein coding genes in the analysis:** `r param_rna$protein_coding`  
+**Number of non protein coding genes identified:** `r processing_rna$protein_coding_filtering$non_protein_coding`  
+**Percentage of genes filtered out:** `r processing_rna$protein_coding_filtering$percentage_protein_coding`  
+**Number of protein coding genes kept for analysis:** `r processing_rna$protein_coding_filtering$protein_coding_kept`  
+
+
+## Further Filtering  {.tabset}
+
+**Minimum count:** `r param_rna$min_count`  
+**Minimum percentage of sample with transcript:** `r param_rna$min_sample`  
+**Filter for protein coding genes only:** `r param_rna$protein_coding`  
+
+**Number of genes filtered:** `r processing_rna$filtering$gene_filtered`  
+**Percentage of genes filtered out:** `r processing_rna$filtering$percentage_filtered`  
+**Number of genes kept for analysis:** `r processing_rna$filtering$genes_kept`  
+
+### Mean values per feature after filtering 
+
+```{r, echo=F}
+df=processing_rna$raw$mean_values_feature_df
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+### Mean values per sample after filtering 
+
+```{r, echo=F}
+df=data.frame(mean_values=processing_rna$post_filtering$mean_values_sample)
+df=setDT(df, keep.rownames = "sample_id")[]
+DT::datatable(df,
+                rownames =FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+
+### Genes filtered out
+
+```{r, echo=F}
+df=data.frame(gene_filtered=processing_rna$post_filtering$genes_filtered_out_id)
+df=setDT(df, keep.rownames = TRUE)[]
+df$ensembl=processing_rna$post_filtering$genes_filtered_out
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+
+## Transformation
+
+**Transformation method:** `r param_rna$transformation`  
+
+
+## Batch correction
+
+**Apply batch correction:** `r param_rna$batch_correction`  
+**Batch variable name:** `r ifelse(is.null(param_rna$batch),'No batch',param_rna$batch)`  
+
+
+## Outliers {.tabset}
+
+**Remove sample outliers:** `r param_rna$remove_sample_outliers`  
+
+### Sample outliers
+
+**Number of sample outliers:** `r processing_rna$remove_sample_outliers$sample_outliers`  
+**Percentage of sample outliers:** `r processing_rna$remove_sample_outliers$percentage_outliers` 
+
+```{r, echo=F}
+df=data.frame(sample_outliers=processing_rna$remove_sample_outliers$detected_sample_outliers)
+df=setDT(df, keep.rownames = FALSE)[]
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+
+```
+
+`r ifelse(dim(df)[1]==0,'No sample outlier detected!',paste(dim(df)[1],'sample outliers detected!'))`
+
+## Overview pre/post processing  {.tabset}
+
+### Dimension of initial count matrix versus filtered matrix
+
+```{r echo=F}
+diff=multiomics$dimensions$dim_rna_raw[1]-multiomics$dimensions$dim_rna_processed[1]
+dim=multiomics$dimensions$dim_rna_processed
+```
+
+After filtering, `r diff` genes were removed from the analysis.
+The final matrix for analysis consisted of `r dim[1]` genes and `r dim[2]` samples.
+
+
+### Raw and processed counts
+
+
+#### Before processing 
+
+```{r, echo=F,warning=FALSE,message=FALSE}
+abundance=assay(data$rna_raw)
+metadata_sample=data.frame(data$rna_raw@colData)
+long1=data.frame(t(abundance), check.rows = FALSE)
+long1$mean=rowMeans(long1, na.rm = TRUE)
+long1$id=rownames(long1)
+
+
+long_data1=reshape2::melt(long1,key='gene',value="count")
+long_data1=long_data1[!is.na(long_data1$value),]
+keep1=long_data1%>%
+  group_by(id)%>%
+  summarise_at(vars(value), list(mean = mean))
+  
+
+b<-ggplot(long_data1, aes(x=id,y = log2(value))) +
+  geom_boxplot(outlier.shape = NA)+
+  ggtitle('Mean count')+
+  theme_classic()+
+  ylab('Mean raw count')+
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+ggplotly(b)
+```
+
+
+#### After processing 
+
+```{r,  echo=F,warning=FALSE,message=FALSE}
+abundance=data$rna_processed
+metadata_sample=data.frame(colData(data$rna_raw))
+long1=data.frame(t(abundance), check.rows = FALSE)
+long1$mean=rowMeans(long1, na.rm = TRUE)
+long1$id=rownames(long1)
+
+long_data1=reshape2::melt(long1,key='gene',value="count")
+long_data1=long_data1[!is.na(long_data1$value),]
+keep1=long_data1%>%
+  group_by(id)%>%
+  summarise_at(vars(value), list(mean = mean))
+
+b<-ggplot(long_data1, aes(x=id,y = value)) +
+  geom_boxplot(outlier.shape = NA)+
+  ggtitle('Processed counts')+
+  theme_classic()+
+  ylab('Processed counts')+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+ggplotly(b)
+```
+
+
+### PCA
+
+#### Before processing 
+
+```{r,  echo=F,warning=FALSE}
+abundance=assay(data$rna_raw)
+metadata_sample=data.frame(data$rna_raw@colData)
+metadata_sample=metadata_sample[colnames(abundance),]
+  
+pcaData_normalized = PCAtools::pca(na.omit(abundance), metadata_sample)
+pcaData_normalized$metadata=left_join(pcaData_normalized$metadata,metadata,by=map_by_column)
+sample_ID=pcaData_normalized$metadata[[map_by_column]]
+groups=pcaData_normalized$metadata[[dependent]]
+pca_plot_uncorrected <- ggplot(pcaData_normalized$rotated , aes(PC1, PC2,color=groups, label=sample_ID)) +
+  ggtitle('PCA of raw counts')+
+  geom_point(size = 4) +
+  xlim(c((min(pcaData_normalized$rotated$PC1)-10), (max(pcaData_normalized$rotated$PC1)+10)))+
+  ylim(c((min(pcaData_normalized$rotated$PC2)-10), (max(pcaData_normalized$rotated$PC2)+10)))+
+  xlab(paste0("PC1: ",round(pcaData_normalized$variance[1]),"% variance")) +
+  ylab(paste0("PC2: ",round(pcaData_normalized$variance[2]),"% variance")) + 
+  theme_bw()+
+  theme(axis.text.x = element_text(color = "black", size = 12),
+        axis.text.y = element_text(size = 10, colour = "black"),
+        axis.title = element_text(size = 12, colour = "black"),
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        plot.margin = margin(c(1,2,2,1), unit = "cm"))+
+  coord_fixed()
+
+ggplotly(pca_plot_uncorrected)
+```
+
+#### After processing 
+
+```{r,  echo=F,warning=FALSE}
+abundance=data$rna_processed
+metadata_sample=data.frame(data$rna_raw@colData)
+metadata_sample=metadata_sample[colnames(abundance),]
+pcaData_corrected = PCAtools::pca(abundance,  metadata_sample)
+
+pcaData_corrected = PCAtools::pca(na.omit(abundance), metadata_sample)
+pcaData_corrected$metadata=left_join(pcaData_corrected$metadata,metadata,by=map_by_column)
+sample_ID=pcaData_corrected$metadata[[map_by_column]]
+groups=pcaData_corrected$metadata[[dependent]]
+pca_plot_corrected <- ggplot(pcaData_corrected$rotated , aes(PC1, PC2, color = groups, label=sample_ID)) +
+  ggtitle('PCA of processed counts')+
+  geom_point(size = 4) +
+  xlim(c((min(pcaData_corrected$rotated$PC1)-10), (max(pcaData_corrected$rotated$PC1)+10)))+
+  ylim(c((min(pcaData_corrected$rotated$PC2)-10), (max(pcaData_corrected$rotated$PC2)+10)))+
+  xlab(paste0("PC1: ",round(pcaData_corrected$variance[1]),"% variance")) +
+  ylab(paste0("PC2: ",round(pcaData_corrected$variance[2]),"% variance")) + 
+  theme_bw()+
+  theme(axis.text.x = element_text(color = "black", size = 12),
+        axis.text.y = element_text(size = 10, colour = "black"),
+        axis.title = element_text(size = 12, colour = "black"),
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        plot.margin = margin(c(1,2,2,1), unit = "cm"))+
+  coord_fixed()
+
+ggplotly(pca_plot_corrected)
+
+```
+
+## Correlation to clinical data  {.tabset}
+
+### Screeplot
+
+```{r  echo=F,warning=FALSE}
+elbow <- PCAtools::findElbowPoint(pcaData_corrected$variance)
+```
+
+```{r  echo=F,warning=FALSE}
+PCAtools::screeplot(pcaData_corrected,component=PCAtools::getComponents(pcaData_corrected, 1:elbow))
+```
+
+### Correlation heatmap
+
+```{r,  echo=F,warning=FALSE}
+
+eigen_plot1= PCAtools::eigencorplot(pcaData_corrected,
+    components = PCAtools::getComponents(pcaData_corrected, 1:elbow),
+    metavars = clinical_covariates,
+    cexCorval = 0.7,
+    cexMain=1,
+    colCorval = 'white',
+    fontCorval = 2,
+    posLab = 'bottomleft',
+    rotLabX = 45,
+    posColKey = 'top',
+    cexLabColKey = 1.5,
+    scale = TRUE,
+    main = 'main PCs correlation to clinical features',
+    colFrame = 'white',
+    plotRsquared = FALSE)
+
+eigen_plot1
+```
+
+## Sample to sample distances
+
+```{r echo=FALSE, warning=FALSE, fig.height=10}
+abundance=data$rna_processed
+metadata_sample=data.frame(data$rna_raw@colData)
+metadata_sample=metadata_sample[colnames(abundance),]
+
+metadata_sample=left_join(metadata_sample,metadata,by=map_by_column, row.names=T)
+rownames(metadata_sample)=metadata_sample[,'sample_name']
+
+sampleDists <- dist(t(abundance))
+sampleDistMatrix <- as.matrix(sampleDists)
+anot=metadata_sample[dependent]
+pheatmap(sampleDistMatrix, cluster_rows=TRUE, show_colnames = TRUE,show_rownames=TRUE,cluster_cols=TRUE,annotation_col=anot)
+```
+
+
+## Highly expressed features  {.tabset}
+
+### Heatmap of the the 20 most expressed genes
+
+```{r, echo=F, warning=F}
+
+proteomics_filtered_batch_corrected=data$rna_processed
+select <- order(rowMeans(proteomics_filtered_batch_corrected),
+                decreasing=TRUE)[1:20]
+
+pheatmap::pheatmap(proteomics_filtered_batch_corrected[select, ], 
+         cluster_rows=FALSE, show_rownames=TRUE,cluster_cols=TRUE, show_colnames=TRUE,scale = "row")
+
+```
+
+### Violin plot
+
+
+```{r, echo=F, warning=F,message=FALSE}
+
+select <- order(rowMeans(proteomics_filtered_batch_corrected),
+                decreasing=TRUE)[1:20]
+
+data=proteomics_filtered_batch_corrected[select,]
+data$protein=rownames(data)
+long_data=melt(data)
+
+violin=ggplot(long_data, aes(x=protein, y=value,fill=protein)) + 
+  geom_violin(trim=FALSE)+
+  geom_boxplot(width=0.1, fill="white")+
+  labs(title="Violin plots of most expressed genes",x="Gene", y = "Gene expression")+
+  geom_jitter()+
+  theme_classic()+theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+
+ggplotly(violin)
+```
+
+## Highly variable genes  {.tabset}
+
+### Heatmap of the 20 most variable genes
+
+```{r, echo=F, warning=F}
+select <- order(apply(proteomics_filtered_batch_corrected, 1, var),
+                  decreasing = TRUE)[1:20]
+
+pheatmap::pheatmap(proteomics_filtered_batch_corrected[select, ], 
+         cluster_rows=FALSE, show_rownames=TRUE,cluster_cols=TRUE, show_colnames=TRUE,scale = "row")
+
+```
+
+### Violin plot
+
+```{r, echo=F, warning=F,message=FALSE}
+select <- order(apply(proteomics_filtered_batch_corrected, 1, var),
+                  decreasing = TRUE)[1:20]
+
+data=proteomics_filtered_batch_corrected[select,]
+data$protein=rownames(data)
+long_data=melt(data)
+
+violin=ggplot(long_data, aes(x=protein, y=value,fill=protein)) + 
+  geom_violin(trim=FALSE)+
+  geom_boxplot(width=0.1, fill="white")+
+  labs(title="Violin plots of the 20 most variable genes",x="Gene", y = "Gene expression")+
+  geom_jitter()+
+  theme_classic()+theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+
+ggplotly(violin)
+
+```
+
+ 
+
+Proteomics
+=======================================================================
+
+```{r, echo=F ,warning=FALSE,results='hide'}
+data <- qs::qread(params$metadata_path)
+list2env(data, envir = environment())
+```
+
+## Processing parameters 
+
+**Apply protein filtering:** `r param_protein$filter`  
+**Minimum percentage of sample with non missing protein abundance:** `r param_protein$min_sample`  
+**Imputation method:** `r param_protein$imputation`  **Apply batch correction:** `r param_protein$batch_correction`  
+**Batch correction method:** `r param_protein$correction_method`  
+**Batch variable name:** `r ifelse(is.null(param_rna$batch),'No batch',param_rna$batch)`  
+**Remove protein outliers:** `r param_protein$remove_feature_outliers`  
+**Remove sample outliers:** `r param_protein$remove_sample_outliers`  
+**Denoising:** `r param_protein$denoise`  
+**Dependent variable:** `r param_protein$dependent`  
+**Dependent variables levels:** `r param_protein$levels`  
+**Covariates for denoising:** `r param_protein$covariates`  
+
+
+## Metadata
+
+```{r, echo=F}
+
+df=data.frame(colData(data$protein_raw))
+df=data.table::setDT(df, keep.rownames = "id")[]
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+## Raw data  {.tabset}
+
+### Missing value per feature
+
+```{r, echo=F}
+df=data.frame(missing_values=processing_protein$raw$missing_values_per_feature)
+df=data.table::setDT(df, keep.rownames = 'protein')[]
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+### Missing value per sample
+
+```{r, echo=F}
+df=data.frame(missing_values=processing_protein$raw$missing_values_per_sample)
+df=setDT(df, keep.rownames = 'sample_id')[]
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+## Filtering  {.tabset}
+
+**Apply protein filtering:** `r param_protein$filter`  
+**Minimum percentage of sample with non missing protein abundance:** `r param_protein$min_sample`  
+
+The parameters chosen for filtering of proteins ensured that at least `r param_protein$min_sample *100` % of samples had abundance data for a single protein.
+
+**Number of protein filtered:** `r processing_protein$filtering$proteins_filtered`  
+**Percentage of protein filtered out:** `r processing_protein$filtering$percentage_filtered`  
+**Number of protein kept for analysis:** `r processing_protein$filtering$proteins_kept`  
+
+### Remaining missing values per feature after filtering 
+
+```{r, echo=F}
+df=data.frame(missing_values=processing_protein$post_filtering$missing_values_per_feature )
+df=setDT(df, keep.rownames = 'protein')[]
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+### Remaining missing values per sample after filtering 
+
+```{r, echo=F}
+df=data.frame(missing_values=processing_protein$post_filtering$missing_values_per_sample)
+df=setDT(df, keep.rownames = 'sample_id')[]
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+
+### Proteins filtered out 
+
+```{r, echo=F}
+df=data.frame(protein_filtered=processing_protein$post_filtering$proteins_filtered_out)
+df=setDT(df, keep.rownames = FALSE)[]
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+## Imputation  {.tabset}
+
+**Imputation method:** `r param_protein$imputation` 
+
+## Batch correction  {.tabset}
+
+**Batch correction method:** `r param_protein$correction_method`  
+**Batch variable name:** `r ifelse(is.null(param_rna$batch),'No batch',param_rna$batch)`  
+
+## Outliers {.tabset}
+
+**Remove protein outliers:** `r param_protein$remove_feature_outliers`  
+**Remove sample outliers:** `r param_protein$remove_sample_outliers`  
+
+### Feature outliers 
+
+**Number of protein outliers:** `r processing_protein$remove_feature_outliers$feature_outliers`  
+**Percentage of feature outliers:** `r processing_protein$remove_feature_outliers$percentage_outliers`  
+
+```{r, echo=F}
+df=data.frame(protein_outliers=processing_protein$remove_feature_outliers$detected_feature_outliers)
+df=setDT(df, keep.rownames = FALSE)[]
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+
+```
+
+### Sample outliers
+
+**Number of sample outliers:** `r processing_protein$remove_sample_outliers$sample_outliers`  
+**Percentage of sample outliers:** `r processing_protein$remove_sample_outliers$percentage_outliers`  
+
+```{r, echo=F}
+df=data.frame(protein_outliers=processing_protein$remove_sample_outliers$detected_sample_outliers)
+df=setDT(df, keep.rownames = FALSE)[]
+DT::datatable(df,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+
+```
+
+`r ifelse(dim(df)[1]==0,'No sample outlier detected!',paste(dim(df)[1],'sample outliers detected!'))`
+
+
+## Overview pre/post processing  {.tabset}
+
+### Dimension of initial protein abundance matrix versus filtered matrix
+
+```{r echo=F,warning=FALSE}
+diff=multiomics$dimensions$dim_protein_raw[1]-multiomics$dimensions$dim_protein_processed[1]
+dim=multiomics$dimensions$dim_protein_processed
+```
+
+After filtering, `r diff` proteins were removed from the analysis.
+The final matrix for analysis consisted of `r dim[1]` proteins and `r dim[2]` samples.
+
+
+### Log2 Protein abundance 
+
+
+#### Before processing 
+
+```{r, echo=F,warning=FALSE,message=FALSE}
+abundance=assay(data$protein_raw)
+metadata_sample=data.frame(data$protein_raw@colData)
+long1=data.frame(t(abundance), check.rows = FALSE)
+long1$mean=rowMeans(long1, na.rm = TRUE)
+long1$id=rownames(long1)
+long1$batch= metadata_sample[[param_protein$batch]][match(metadata_sample$sample_name,long1$id)]
+
+
+long_data1=reshape2::melt(long1,key='protein',value="protein_abundance")
+long_data1=long_data1[!is.na(long_data1$value),]
+keep1=long_data1%>%
+  group_by(id, batch)%>%
+  summarise_at(vars(value), list(mean = mean))
+  
+
+b<-ggplot(long_data1, aes(x=id,y = value, color=batch)) +
+  geom_boxplot(outlier.shape = NA)+
+  ggtitle('Mean protein intensity')+
+  theme_classic()+
+  ylab('Raw intensity')+
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+ggplotly(b)
+```
+
+
+#### After processing 
+
+```{r, echo=F,warning=FALSE,message=FALSE}
+abundance=data$protein_processed
+metadata_sample=data.frame(colData(data$protein_raw))
+long1=data.frame(t(abundance), check.rows = FALSE)
+long1$mean=rowMeans(long1, na.rm = TRUE)
+long1$id=rownames(long1)
+long1$batch= metadata_sample[[param_protein$batch]][match(metadata_sample$sample_name,long1$id)]
+
+long_data1=reshape2::melt(long1,key='protein',value="protein_abundance")
+long_data1=long_data1[!is.na(long_data1$value),]
+keep1=long_data1%>%
+  group_by(id, batch)%>%
+  summarise_at(vars(value), list(mean = mean))
+
+b<-ggplot(long_data1, aes(x=id,y = value, color=batch)) +
+  geom_boxplot(outlier.shape = NA)+
+  ggtitle('Mean protein log2(intensity)')+
+  theme_classic()+
+  ylab('log2(intensity)')+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+ggplotly(b)
+```
+
+
+### PCA
+
+#### Before processing 
+
+```{r, echo=F,warning=FALSE}
+abundance=assay(data$protein_raw)
+metadata_sample=data.frame(data$protein_raw@colData)
+metadata_sample=metadata_sample[colnames(abundance),]
+  
+pcaData_normalized = PCAtools::pca(na.omit(abundance), metadata_sample)
+
+Batch=pcaData_normalized$metadata$batch
+sample_ID=pcaData_normalized$metadata[[map_by_column]]
+pca_plot_uncorrected <- ggplot(pcaData_normalized$rotated , aes(PC1, PC2, color = Batch, label=sample_ID)) +
+  ggtitle('PCA of raw protein abundance')+
+  geom_point(size = 4) +
+  xlim(c((min(pcaData_normalized$rotated$PC1)-10), (max(pcaData_normalized$rotated$PC1)+10)))+
+  ylim(c((min(pcaData_normalized$rotated$PC2)-10), (max(pcaData_normalized$rotated$PC2)+10)))+
+  xlab(paste0("PC1: ",round(pcaData_normalized$variance[1]),"% variance")) +
+  ylab(paste0("PC2: ",round(pcaData_normalized$variance[2]),"% variance")) + 
+  theme_bw()+
+  theme(axis.text.x = element_text(color = "black", size = 12),
+        axis.text.y = element_text(size = 10, colour = "black"),
+        axis.title = element_text(size = 12, colour = "black"),
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        plot.margin = margin(c(1,2,2,1), unit = "cm"))+
+  coord_fixed()
+
+ggplotly(pca_plot_uncorrected)
+```
+
+#### After processing 
+
+```{r, echo=F,warning=FALSE}
+abundance=data$protein_processed
+metadata_sample=data.frame(data$protein_raw@colData)
+metadata_sample=metadata_sample[colnames(abundance),]
+
+pcaData_corrected = PCAtools::pca(abundance,  metadata_sample)
+
+Batch=pcaData_corrected$metadata$batch
+sample_ID=pcaData_corrected$metadata[[map_by_column]]
+pca_plot_corrected <- ggplot(pcaData_corrected$rotated , aes(PC1, PC2, color = Batch, label=sample_ID)) +
+  ggtitle('PCA of normalized and batch corrected protein abundance')+
+  geom_point(size = 4) +
+  xlim(c((min(pcaData_corrected$rotated$PC1)-10), (max(pcaData_corrected$rotated$PC1)+10)))+
+  ylim(c((min(pcaData_corrected$rotated$PC2)-10), (max(pcaData_corrected$rotated$PC2)+10)))+
+  xlab(paste0("PC1: ",round(pcaData_corrected$variance[1]),"% variance")) +
+  ylab(paste0("PC2: ",round(pcaData_corrected$variance[2]),"% variance")) + 
+  theme_bw()+
+  theme(axis.text.x = element_text(color = "black", size = 12),
+        axis.text.y = element_text(size = 10, colour = "black"),
+        axis.title = element_text(size = 12, colour = "black"),
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        plot.margin = margin(c(1,2,2,1), unit = "cm"))+
+  coord_fixed()
+
+ggplotly(pca_plot_corrected)
+
+```
+
+## Correlation to clinical data  {.tabset}
+
+### Screeplot
+
+```{r echo=F,warning=FALSE}
+elbow <- PCAtools::findElbowPoint(pcaData_corrected$variance)
+```
+
+```{r echo=F,warning=FALSE}
+PCAtools::screeplot(pcaData_corrected,component=PCAtools::getComponents(pcaData_corrected, 1:elbow))
+
+```
+
+### Correlation heatmap
+
+```{r, echo=F,warning=FALSE}
+pcaData_corrected$metadata=left_join(pcaData_corrected$metadata,metadata,by=map_by_column)
+eigen_plot1= PCAtools::eigencorplot(pcaData_corrected,
+    components = PCAtools::getComponents(pcaData_corrected, 1:elbow),
+    metavars = clinical_covariates,
+    cexCorval = 0.7,
+    cexMain=1,
+    colCorval = 'white',
+    fontCorval = 2,
+    posLab = 'bottomleft',
+    rotLabX = 45,
+    posColKey = 'top',
+    cexLabColKey = 1.5,
+    scale = TRUE,
+    main = 'main PCs correlation to clinical features',
+    colFrame = 'white',
+    plotRsquared = FALSE)
+
+eigen_plot1
+```
+
+## Sample to sample distances
+
+```{r echo=F, warning=FALSE, fig.height=10}
+abundance=data$protein_processed
+metadata_sample=data.frame(data$protein_raw@colData)
+metadata_sample=metadata_sample[colnames(abundance),]
+metadata_sample=left_join(metadata_sample,metadata,by=map_by_column, row.names=T)
+rownames(metadata_sample)=metadata_sample[,'sample_name']
+
+sampleDists <- dist(t(abundance))
+sampleDistMatrix <- as.matrix(sampleDists)
+anot=metadata_sample[dependent]
+pheatmap(sampleDistMatrix, cluster_rows=TRUE, show_colnames = TRUE,show_rownames=TRUE,cluster_cols=TRUE,annotation_col=anot)
+```
+
+
+## Highly abundant features  {.tabset}
+
+### Heatmap of the log2 abundance of the 20 most abundant proteins.
+
+```{r, echo=F, warning=F}
+
+proteomics_filtered_batch_corrected=data$protein_processed
+select <- order(rowMeans(proteomics_filtered_batch_corrected),
+                decreasing=TRUE)[1:20]
+
+pheatmap::pheatmap(proteomics_filtered_batch_corrected[select, ], 
+         cluster_rows=FALSE, show_rownames=TRUE,cluster_cols=TRUE, show_colnames=TRUE,scale = "row")
+
+```
+
+### Violin plot
+
+
+```{r, echo=F, warning=F,message=FALSE}
+
+select <- order(rowMeans(proteomics_filtered_batch_corrected),
+                decreasing=TRUE)[1:20]
+
+data=proteomics_filtered_batch_corrected[select,]
+data$protein=rownames(data)
+long_data=melt(data)
+
+violin=ggplot(long_data, aes(x=protein, y=value,fill=protein)) + 
+  geom_violin(trim=FALSE)+
+  geom_boxplot(width=0.1, fill="white")+
+  labs(title="Violin plots of most abundant proteins",x="Protein", y = "log2(protein abundance)")+
+  geom_jitter()+
+  theme_classic()+theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+
+ggplotly(violin)
+```
+
+## Highly variable features  {.tabset}
+
+### Heatmap of the log2 abundance of the 20 most variable proteins
+
+```{r, echo=F, warning=F}
+select <- order(apply(proteomics_filtered_batch_corrected, 1, var),
+                  decreasing = TRUE)[1:20]
+
+pheatmap::pheatmap(proteomics_filtered_batch_corrected[select, ], 
+         cluster_rows=FALSE, show_rownames=TRUE,cluster_cols=TRUE, show_colnames=TRUE,scale = "row")
+
+```
+
+### Violin plot
+
+```{r, echo=F, warning=F,message=FALSE}
+select <- order(apply(proteomics_filtered_batch_corrected, 1, var),
+                  decreasing = TRUE)[1:20]
+
+data=proteomics_filtered_batch_corrected[select,]
+data$protein=rownames(data)
+long_data=melt(data)
+
+violin=ggplot(long_data, aes(x=protein, y=value,fill=protein)) + 
+  geom_violin(trim=FALSE)+
+  geom_boxplot(width=0.1, fill="white")+
+  labs(title="Violin plots of 20 most variable proteins",x="Protein", y = "log2(protein abundance)")+
+  geom_jitter()+
+  theme_classic()+theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+
+ggplotly(violin)
+
+```
+
+Multimodal object 
+=======================================================================
+
+
+## Overview
+
+`r multiomics$summary[[1]][1]`    
+* `r multiomics$summary[[1]][2]`    
+* `r multiomics$summary[[1]][3]`    
+* `r multiomics$summary[[1]][4]`    
+* `r multiomics$summary[[1]][5]`
+
+## Transcriptomics & proteomics slots 
+
+```{r, echo= FALSE, warning=F}
+multiomics$plot
+```
+
+
+## Intersection of samples & genes
+
+```{r, echo=F, warning=F}
+
+p<-ggbarplot(multiomics$intersection_common_features, x="omic", y="# genes",
+  fill = "state", color = "state")
+ggplotly(p)
+```
+
+
+## Correlation of mRNA abundance and protein expression  {.tabset}
+
+### Dataframe
+
+```{r, echo=FALSE, warning=F}
+  DT::datatable(multiomics$correlations,
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+```
+
+
+### Distribution
+
+```{r, echo=F}
+
+p <- ggplot(multiomics$correlations, aes(x = corr)) +
+  stat_density(position="identity",geom="line")+theme_classic()+xlab('Pearsons correlation')
+
+ggplotly(p)
+```
+
+## Features with highest/lowest correlation  
+
+### Top 20 High
+
+```{r, echo=FALSE}
+
+multiomics$correlations%>%
+  arrange(desc(corr))%>%
+  slice_max(corr, n = 20)%>%
+  ggplot(., aes(x = gene, y = corr)) +
+  geom_point(size = 2) +
+  geom_segment(aes(xend = gene), linewidth = 0.75, yend = 0) +
+  scale_colour_gradient(low = "grey", high = "black") +
+  coord_flip() +
+  labs(y = "mRNA-Protein Correlation") +  theme_bw() +
+  theme(
+    axis.title.x = element_text(color = "black"),
+    axis.title.y = element_blank(),
+    axis.text.y = element_text(size = rel(1.1), hjust = 1, color = "black"),
+    axis.text.x = element_text(color = "black"),
+    axis.ticks.y = element_blank(),
+    axis.ticks.x = element_line(),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(color = "black"),
+    legend.key = element_rect(fill = "transparent"),
+
+    # facets
+    strip.text = element_text(size = rel(1.2)),
+    panel.background = element_blank(),
+    panel.spacing = unit(1, "lines"),
+
+    # gridlines
+    panel.grid.major.y = element_blank(),
+  )
+
+```
+
+### Top 20 Low
+
+```{r, echo=FALSE}
+multiomics$correlations%>%
+  arrange(desc(corr))%>%
+  slice_min(corr, n = 20)%>%
+  ggplot(., aes(x = gene, y = corr)) +
+  geom_point(size = 2) +
+  geom_segment(aes(xend = gene), linewidth = 0.75, yend = 0) +
+  scale_colour_gradient(low = "grey", high = "black") +
+  coord_flip() +
+  labs(y = "mRNA-Protein Correlation") +  theme_bw() +
+  theme(
+    axis.title.x = element_text(color = "black"),
+    axis.title.y = element_blank(),
+    axis.text.y = element_text(size = rel(1.1), hjust = 1, color = "black"),
+    axis.text.x = element_text(color = "black"),
+    axis.ticks.y = element_blank(),
+    axis.ticks.x = element_line(),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(color = "black"),
+    legend.key = element_rect(fill = "transparent"),
+
+    # facets
+    strip.text = element_text(size = rel(1.2)),
+    panel.background = element_blank(),
+    panel.spacing = unit(1, "lines"),
+
+    # gridlines
+    panel.grid.major.y = element_blank(),
+  )
+
+```
+
+
+### Top gene
+
+```{r, echo=FALSE}
+colnames(multiomics$feature_max_cor)=c('primary','mRNA','protein')
+gg=ggplot(multiomics$feature_max_cor, aes(x=mRNA, y=protein)) +
+    geom_point()+
+    ggtitle(paste0(multiomics$gene_max_cor,":highest mRNA/protein correlation"))+
+    xlab('log2(mRNA expression)')+
+    ylab('log2(protein abundance)')+
+    theme_classic()
+
+ggplotly(gg)
+```
+
+The maximum correlation between mRNA expression and protein abundance is achieved for the `r multiomics$gene_max_cor` gene with `r multiomics$max_cor` correlation.
+
+
+## Transcriptomics/proteomics PCA correlations
+
+```{r, echo=FALSE}
+pheatmap::pheatmap(multiomics$pca_cor)
+```
+
+
+
+<br>Omix v`r utils::packageVersion("Omix")` -- `r Sys.time()`
+

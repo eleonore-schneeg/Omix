@@ -60,9 +60,9 @@ vertical_integration <- function(multiassay,
                                  most_variable_feature = FALSE) {
 
   fargs <- c(as.list(environment()))
-
+  suppressMessages({
   multimodal <- do.call(get_multimodal_object, fargs)
-
+  })
   multimodal_omics <- multimodal[[1]]
 
   if (most_variable_feature == TRUE) {
@@ -85,7 +85,7 @@ vertical_integration <- function(multiassay,
   if (integration == "DIABLO") {
     Y <- factor(Y, levels = levels)
 
-    args1 <- list(
+    args <- list(
       multimodal_omics = multimodal_omics,
       Y = Y,
       design = fargs$design,
@@ -93,7 +93,7 @@ vertical_integration <- function(multiassay,
       range = fargs$range
     )
 
-    int <- do.call(integrate_with_DIABLO, args1)
+    int <- do.call(integrate_with_DIABLO, args)
     cli::cli_alert_success("VERTICAL INTEGRATION WITH DIABLO")
   }
 
@@ -101,7 +101,7 @@ vertical_integration <- function(multiassay,
     Y <- as.matrix(Y)
     rownames(Y) <- rownames(metadata)
 
-    args2 <- list(
+    args <- list(
       multimodal_omics = multimodal_omics,
       Y = Y,
       design = fargs$design,
@@ -109,37 +109,37 @@ vertical_integration <- function(multiassay,
       list.keepX = fargs$list.keepX
     )
 
-    int <- do.call(integrate_with_sMBPLS, args2)
+    int <- do.call(integrate_with_sMBPLS, args)
     cli::cli_alert_success("VERTICAL INTEGRATION WITH sMBPLS")
   }
   if (integration == "MBPLS") {
     Y <- as.matrix(Y)
     rownames(Y) <- rownames(metadata)
 
-    args3 <- list(
+    args <- list(
       multimodal_omics = multimodal_omics,
       Y = Y,
       design = fargs$design,
       ncomp = fargs$ncomp
     )
 
-    int <- do.call(integrate_with_MBPLS, args3)
+   int <- do.call(integrate_with_MBPLS, args)
     cli::cli_alert_success("VERTICAL INTEGRATION WITH MBPLS")
   }
   if (integration == "MOFA") {
-    args4 <- list(
+    args <- list(
       multimodal_omics = multimodal_omics,
       num_factors = fargs$num_factors,
       scale_views = fargs$scale_views,
       metadata = metadata
     )
 
-    int <- do.call(integrate_with_MOFA, args4)
+    suppressMessages({int <- do.call(integrate_with_MOFA, args)})
     cli::cli_alert_success("VERTICAL INTEGRATION WITH MOFA")
   }
 
   if (integration == "MEIFESTO") {
-    args5 <- list(
+    args <- list(
       multimodal_omics = multimodal_omics,
       num_factors = fargs$num_factors,
       scale_views = fargs$scale_views,
@@ -147,19 +147,18 @@ vertical_integration <- function(multiassay,
       time = fargs$time
     )
 
-    int <- do.call(integrate_with_MEIFESTO, args5)
-    cli::cli_alert_success("VERTICAL INTEGRATION WITH MEIFESTO")
+    int <- do.call(integrate_with_MEFISTO, args)
+    cli::cli_alert_success("VERTICAL INTEGRATION WITH MEFISTO")
   }
 
   if (integration == "iCluster") {
-    multimodal <- lapply(multimodal_omics, data.frame)
 
-    args6 <- list(
+    args <- list(
       multimodal_omics = multimodal_omics,
       try.N.clust = fargs$try.N.clust
     )
 
-    int <- do.call(integrate_with_iCluster, args6)
+    int <- do.call(integrate_with_iCluster, args)
     cli::cli_alert_success("VERTICAL INTEGRATION CLUSTERING WITH ICLUSTER")
   }
   names(multimodal[[1]]) <- c("mRNA", "proteins")
@@ -167,7 +166,15 @@ vertical_integration <- function(multiassay,
     omics = lapply(multimodal[[1]], as.data.frame),
     metadata = multimodal[[2]]
   )
+  suppressMessages({
+  MultiAssayExperiment::metadata(multiassay)$parameters$integration[[paste(integration)]] <- args
   multiassay@metadata$integration[[paste(integration)]] <- int[[2]]
+  if(integration=='iCluster'){
+  multiassay@metadata$parameters$integration[[paste(integration)]]$tuning <- int[[3]]
+
+  }
+  })
 
   return(multiassay)
 }
+

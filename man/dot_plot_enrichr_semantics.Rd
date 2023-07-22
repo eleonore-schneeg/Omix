@@ -12,7 +12,7 @@ dot_plot_enrichr_semantics(dt, semantics = "microglial")
 \item{semantics}{vector of biological terms}
 }
 \value{
-functional enrichement plot
+functional enrichment plot
 }
 \description{
 Curates dotplot for \code{pathway_analysis_enrichr()} on a required semantics

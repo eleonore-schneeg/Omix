@@ -4,12 +4,14 @@
 \alias{GSEA}
 \title{Performs functional gene set enrichment analysis}
 \usage{
-GSEA(gene_list, pval)
+GSEA(gene_list, pval, geneset)
 }
 \arguments{
 \item{gene_list}{vector of genes}
 
 \item{pval}{threshold for adjusted pvalue}
+
+\item{geneset}{path to GMT file}
 }
 \value{
 List of results
@@ -21,6 +23,7 @@ Performs functional gene set enrichment analysis
 Other Enrichment analysis: 
 \code{\link{cell_type_enrichment}()},
 \code{\link{enrichment_custom}()},
+\code{\link{integrated_enrichment_mutliGSEA}()},
 \code{\link{pathway_analysis_enrichr}()}
 }
 \concept{Enrichment analysis}

@@ -37,7 +37,13 @@
     <li>
       <a href="../articles/Omix_vignette_MAP_CV_pseudotemporal.html">Omix - Pseudotemporal multi-omics integration</a>
     </li>
+    <li>
+      <a href="../articles/demo.html">Omix - Sample reports</a>
+    </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -62,7 +68,8 @@
 <span>  dependent <span class="op">=</span> <span class="st">"diagnosis"</span>,</span>
 <span>  levels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  filter_protein_coding <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  log2FoldChange <span class="op">=</span> <span class="fl">0.5</span></span>
+<span>  log2FoldChange <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  padj <span class="op">=</span> <span class="fl">0.05</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -89,6 +96,10 @@ genes</p></dd>
 <dt>log2FoldChange</dt>
 <dd><p>log2 fold-change cutoff.</p></dd>
 
+
+<dt>padj</dt>
+<dd><p>adjusted p value threshold. Default to 0.05</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -102,7 +113,9 @@ by Omix</p>
     <div class="dont-index"><p>Other Single-omic: 
 <code><a href="DE_multiomics.html">DE_multiomics</a>()</code>,
 <code><a href="protein_DE_analysis.html">protein_DE_analysis</a>()</code>,
-<code><a href="single_omic_comparisons.html">single_omic_comparisons</a>()</code></p></div>
+<code><a href="single_omic_comparisons.html">single_omic_comparisons</a>()</code>,
+<code><a href="spls_wrapper.html">spls_wrapper</a>()</code>,
+<code><a href="wgcna_wrapper.html">wgcna_wrapper</a>()</code></p></div>
     </div>
 
   </div>

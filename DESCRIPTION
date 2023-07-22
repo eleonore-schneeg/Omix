@@ -1,5 +1,5 @@
 Package: Omix
-Title: A Multi-Omics Integration Toolkit
+Title: A Multi-Omics Integration Pipeline
 Version: 1.0.0
 Authors@R: 
     c(
@@ -15,7 +15,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-6481-6266"))
     )
 Maintainer: Eleonore Schneegans <eleonore.schneegans17@imperial.ac.uk>
-Description: Generalisable framework that can effectively process, integrate and analyse patient-specific multi-omic data in an end-to-end manner. 
+Description: *Omix* provides a generalisable framework to efficiently process, integrate and analyse multi-omics data in an end-to-end manner. 
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -45,6 +45,9 @@ Imports:
       ggplot2,
       ggpubr,
       ggrepel,
+      ggridges,
+      ggsignif,
+      grDevices,
       httr,
       igraph,
       jsonlite,
@@ -61,14 +64,17 @@ Imports:
       psych,
       purrr,
       proBatch,
+      qs,
       readr,
       reshape2,
       reticulate,
+      RColorBrewer,
       S4Vectors,
       slingshot,
       stats,
       statmod,
       stringr,
+      table1,
       tibble,
       tidyr,
       viridis,
@@ -82,5 +88,10 @@ Imports:
       ActivePathways,
       iClusterPlus,
       mogsa,
-      SNFtool
+      SNFtool,
+      synapser,
+      GeneOverlap,
+      multiGSEA,
+      pheatmap,
+      PCAtools
 VignetteBuilder: knitr
