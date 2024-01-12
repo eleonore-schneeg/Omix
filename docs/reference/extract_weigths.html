@@ -71,7 +71,7 @@ defined absolute threshold</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">extract_weigths</span><span class="op">(</span></span>
 <span>  <span class="va">model</span>,</span>
 <span>  factor <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  threshold <span class="op">=</span> <span class="fl">0.3</span>,</span>
+<span>  threshold <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>  sense_check_variable <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -88,7 +88,7 @@ defined absolute threshold</p>
 
 
 <dt>threshold</dt>
-<dd><p>Absolute threshold to filter weights</p></dd>
+<dd><p>Number of standard deviation away from the mean weight</p></dd>
 
 
 <dt>sense_check_variable</dt>

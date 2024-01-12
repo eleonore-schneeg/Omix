@@ -81,13 +81,12 @@
 <!-- badges: start -->
 
 <div class="section level2">
-<h2 id="pipeline-overview">Pipeline overview<a class="anchor" aria-label="anchor" href="#pipeline-overview"></a>
+<h2 id="omix-a-transcriptomics-proteomics-integration-pipeline">Omix: A Transcriptomics-Proteomics Integration Pipeline<a class="anchor" aria-label="anchor" href="#omix-a-transcriptomics-proteomics-integration-pipeline"></a>
 </h2>
-<p>The <code>Omix</code> pipeline offers an integration and analysis framework for multi-omics intended to pre-process, analyse, and visualise multimodal data flexibly to address research questions. Omix is built on four consecutive blocks, (1) preparation of the multimodal container, (2) processing and quality control, (3) single omic analyses, and (4) multi-omics vertical integration.</p>
+<p>The <code>Omix</code> pipeline is a specialised framework for pre-processing, analysing, integrating, and visualising bulk transcriptomics and proteomics data. By embedding state of the art bioinformatics tools with novel features into a user-friendly wrapper, Omix streamlines the integrative analysis of bulk transcriptomics and proteomics data, thereby facilitating complex biological investigations, from biomarker discovery to patient stratification.</p>
 <p>Pipeline outputs are standardised and include publication-quality plots, tables, and interactive reports.</p>
-<p><img src="reference/figures/Omix-pipeline.png" width="100%"></p>
-<p>Omix offers a range of state-of-the-art processing functions and integrative models, equipped with versatile parameters and quality control features. This empowers researchers to explore different integration strategies easily, enhancing the speed, scalability, and flexibility of multi-omics analyses.</p>
-<p>While the current version focuses on bulk transcriptomics and proteomics, future iterations aim to encompass a broader range of omics types, expanding the software’s applicability and usefulness.</p>
+<p><img src="reference/figures/Omix-pipeline.jpg" width="100%"></p>
+<p>The Omix pipeline offers an integration and analysis framework for multi-omics intended to pre-process, analyse, and visualise multimodal data flexibly to address research questions. Omix is a wrapper tool built on five consecutive blocks, (1) preparation of the multimodal container, (2) data processing and quality control, (3) single omic analyses, and (4) Transcriptomics-Proteomics vertical integration, (5) Joint Transcriptomics-Proteomics post-integration downstream analyses</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -154,99 +153,6 @@
 <p>Omix implements these modular steps and displays results in interactive reports.</p>
 </div>
 <div class="section level2">
-<h2 id="benchmark-of-multi-omics-integration-softwares">Benchmark of multi-omics integration softwares<a class="anchor" aria-label="anchor" href="#benchmark-of-multi-omics-integration-softwares"></a>
-</h2>
-<table class="table">
-<colgroup>
-<col width="3%">
-<col width="11%">
-<col width="5%">
-<col width="7%">
-<col width="15%">
-<col width="4%">
-<col width="32%">
-<col width="9%">
-<col width="3%">
-<col width="8%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Tool</th>
-<th align="left">Supported omics</th>
-<th align="left">Pre-processing</th>
-<th align="left">Single omic analysis</th>
-<th align="left">Integrative models</th>
-<th align="left">Use case</th>
-<th align="left">Downstream analyses</th>
-<th align="left">Interactive visualisations</th>
-<th align="left">Language</th>
-<th align="left">Ref</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">Miodin</td>
-<td align="left">SNP, RNA, methylation, Proteins,</td>
-<td align="left">+</td>
-<td align="left">-</td>
-<td align="left">MOFA</td>
-<td align="left">BM</td>
-<td align="left">-</td>
-<td align="left">-</td>
-<td align="left">R</td>
-<td align="left">Ulfenborg, B. (2019).</td>
-</tr>
-<tr class="even">
-<td align="left">MiBiOmics</td>
-<td align="left">miRNA, RNA, Proteins</td>
-<td align="left">-</td>
-<td align="left">-</td>
-<td align="left">Co-inertia analysis</td>
-<td align="left">BD</td>
-<td align="left">Multi-omics networks</td>
-<td align="left">+</td>
-<td align="left">Web</td>
-<td align="left">(Zoppi et al., 2021)</td>
-</tr>
-<tr class="odd">
-<td align="left">Muon</td>
-<td align="left">Single cell omics</td>
-<td align="left">-</td>
-<td align="left">-</td>
-<td align="left">MOFA, WNN</td>
-<td align="left">NA</td>
-<td align="left">-</td>
-<td align="left">-</td>
-<td align="left">Python</td>
-<td align="left">(Bredikhin et al., 2022)</td>
-</tr>
-<tr class="even">
-<td align="left">Movics</td>
-<td align="left">SNP, RNA, methylation, Proteins</td>
-<td align="left">-</td>
-<td align="left">-</td>
-<td align="left">Range of clustering algorithm</td>
-<td align="left">STR</td>
-<td align="left">Survival analysis, enrichment</td>
-<td align="left">-</td>
-<td align="left">R</td>
-<td align="left">(Lu, 2020)</td>
-</tr>
-<tr class="odd">
-<td align="left">Omix</td>
-<td align="left">RNA, Proteins</td>
-<td align="left">+</td>
-<td align="left">+</td>
-<td align="left">MOFA,MEIFESTO, sMBPLS, MBPLS, DIABLO, iCluster</td>
-<td align="left">BD, BM, STR</td>
-<td align="left">Multi-omics signatures, networks, modules, functional/ cell type/ TF enrichment, pseudotime, etc</td>
-<td align="left">+</td>
-<td align="left">R</td>
-<td align="left">NA</td>
-</tr>
-</tbody>
-</table>
-<p>Biomarker Discovery (BD), Biological Mechanisms (BM), Sample stratification (STR)</p>
-</div>
-<div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
 <p>The Getting Started section of the documentation contains downloadable examples on how to use Omix.</p>
@@ -260,7 +166,8 @@
 </h4>
 <ul>
 <li>Get started data: syn51533729</li>
-<li>Pseudo-temporal multi-omics integration data: syn51516099</li>
+<li>Pseudo-temporal multi-omics integration data: syn51516099 <a href="https://doi.org/10.7303/syn51516099" class="external-link uri">https://doi.org/10.7303/syn51516099</a>
+</li>
 </ul>
 </div>
 </div>
@@ -278,7 +185,7 @@
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <p>Please cite <code>Omix</code> as:</p>
-<p>Eléonore Schneegans, Nurun Fancy, Michael Thomas, Nanet Willumsen, Paul M Matthews, Johanna Jackson (2023) Omix: A Multi-Omics Integration Pipeline</p>
+<p>Eléonore Schneegans, Nurun Fancy, Michael Thomas, Nanet Willumsen, Paul M Matthews, Johanna Jackson (2023) Omix: A Transcriptomics-Proteomics Integration Pipeline</p>
 </div>
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>

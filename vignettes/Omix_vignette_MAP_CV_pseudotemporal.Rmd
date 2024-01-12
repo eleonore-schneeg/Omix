@@ -289,6 +289,7 @@ multiomics_object=vertical_integration(multiassay=multiomics_object,
                                 most_variable_feature=TRUE)
 ```
 
+
 The integration process is successful and all integration related object are stored in the `integration` slot of the multi-omics object.
 
 ```{r}
