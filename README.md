@@ -9,29 +9,28 @@
 v3](https://img.shields.io/badge/License-GPLv3-green.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
 
-## Pipeline overview
+## Omix: A Transcriptomics-Proteomics Integration Pipeline
 
-The `Omix` pipeline offers an integration and analysis framework for
-multi-omics intended to pre-process, analyse, and visualise multimodal
-data flexibly to address research questions. Omix is built on four
-consecutive blocks, (1) preparation of the multimodal container, (2)
-processing and quality control, (3) single omic analyses, and (4)
-multi-omics vertical integration.
+The `Omix` pipeline is a specialised framework for pre-processing,
+analysing, integrating, and visualising bulk transcriptomics and
+proteomics data. By embedding state of the art bioinformatics tools with
+novel features into a user-friendly wrapper, Omix streamlines the
+integrative analysis of bulk transcriptomics and proteomics data,
+thereby facilitating complex biological investigations, from biomarker
+discovery to patient stratification.
 
 Pipeline outputs are standardised and include publication-quality plots,
 tables, and interactive reports.
 
-<img src="man/figures/Omix-pipeline.png" width="100%" />
+<img src="man/figures/Omix-pipeline.jpg" width="100%" />
 
-Omix offers a range of state-of-the-art processing functions and
-integrative models, equipped with versatile parameters and quality
-control features. This empowers researchers to explore different
-integration strategies easily, enhancing the speed, scalability, and
-flexibility of multi-omics analyses.
-
-While the current version focuses on bulk transcriptomics and
-proteomics, future iterations aim to encompass a broader range of omics
-types, expanding the software’s applicability and usefulness.
+The Omix pipeline offers an integration and analysis framework for
+multi-omics intended to pre-process, analyse, and visualise multimodal
+data flexibly to address research questions. Omix is a wrapper tool
+built on five consecutive blocks, (1) preparation of the multimodal
+container, (2) data processing and quality control, (3) single omic
+analyses, and (4) Transcriptomics-Proteomics vertical integration, (5)
+Joint Transcriptomics-Proteomics post-integration downstream analyses
 
 ## Installation
 
@@ -102,19 +101,6 @@ devtools::install_github("eleonore-schneeg/Omix")
 Omix implements these modular steps and displays results in interactive
 reports.
 
-## Benchmark of multi-omics integration softwares
-
-| Tool      | Supported omics                  | Pre-processing | Single omic analysis | Integrative models                             | Use case    | Downstream analyses                                                                              | Interactive visualisations | Language | Ref                      |
-|:----------|:---------------------------------|:---------------|:---------------------|:-----------------------------------------------|:------------|:-------------------------------------------------------------------------------------------------|:---------------------------|:---------|:-------------------------|
-| Miodin    | SNP, RNA, methylation, Proteins, | \+             | \-                   | MOFA                                           | BM          | \-                                                                                               | \-                         | R        | Ulfenborg, B. (2019).    |
-| MiBiOmics | miRNA, RNA, Proteins             | \-             | \-                   | Co-inertia analysis                            | BD          | Multi-omics networks                                                                             | \+                         | Web      | (Zoppi et al., 2021)     |
-| Muon      | Single cell omics                | \-             | \-                   | MOFA, WNN                                      | NA          | \-                                                                                               | \-                         | Python   | (Bredikhin et al., 2022) |
-| Movics    | SNP, RNA, methylation, Proteins  | \-             | \-                   | Range of clustering algorithm                  | STR         | Survival analysis, enrichment                                                                    | \-                         | R        | (Lu, 2020)               |
-| Omix      | RNA, Proteins                    | \+             | \+                   | MOFA,MEIFESTO, sMBPLS, MBPLS, DIABLO, iCluster | BD, BM, STR | Multi-omics signatures, networks, modules, functional/ cell type/ TF enrichment, pseudotime, etc | \+                         | R        | NA                       |
-
-Biomarker Discovery (BD), Biological Mechanisms (BM), Sample
-stratification (STR)
-
 ## Getting started
 
 The Getting Started section of the documentation contains downloadable
@@ -131,6 +117,7 @@ registered users. (Project SynID: syn36812517)
 
 -   Get started data: syn51533729
 -   Pseudo-temporal multi-omics integration data: syn51516099
+    <https://doi.org/10.7303/syn51516099>
 
 ## Docker image
 
@@ -157,8 +144,8 @@ localhost:8787 using Username: rstudio and Password: password
 Please cite `Omix` as:
 
 Eléonore Schneegans, Nurun Fancy, Michael Thomas, Nanet Willumsen, Paul
-M Matthews, Johanna Jackson (2023) Omix: A Multi-Omics Integration
-Pipeline
+M Matthews, Johanna Jackson (2023) Omix: A Transcriptomics-Proteomics
+Integration Pipeline
 
 ## Contributing
 

@@ -8,7 +8,7 @@ Transcription_Factor_enrichment(
   communities,
   weights,
   TF_gmt = "Enrichr_Queries.gmt",
-  threshold = 0.2,
+  threshold = 1.5,
   direction = "negative"
 )
 }

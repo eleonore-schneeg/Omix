@@ -37,6 +37,8 @@ Generate a report for single omic analysis
 \seealso{
 Other Report: 
 \code{\link{multi_omics_qc}()},
+\code{\link{pathway_report}()},
+\code{\link{proteomics_report}()},
 \code{\link{qc_report}()},
 \code{\link{single_omic_report}()}
 }

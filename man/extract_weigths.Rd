@@ -8,7 +8,7 @@ defined absolute threshold}
 extract_weigths(
   model,
   factor = 1,
-  threshold = 0.3,
+  threshold = 1.5,
   sense_check_variable = NULL
 )
 }
@@ -18,7 +18,7 @@ extract_weigths(
 
 \item{factor}{Factor to extract weight from}
 
-\item{threshold}{Absolute threshold to filter weights}
+\item{threshold}{Number of standard deviation away from the mean weight}
 
 \item{sense_check_variable}{default to \code{NULL}. High weights should
 coincide with stronger correlation if the sense_check_variable is an

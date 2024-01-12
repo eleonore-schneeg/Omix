@@ -1,0 +1,134 @@
+---
+title: "<b>Omix</b> - Pathway report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    theme: "flatly"
+    toc: true
+    toc_float: true
+    highlight: tango
+    fig_caption: true
+    keep_md: false
+    css: !expr system.file("rmarkdown/css/style.css", package = "Omix")
+    includes:
+      in_header: header.html
+      after_body: !expr system.file("rmarkdown/html/footer.html", package = "Omix")
+params:
+  metadata_path: false
+---
+
+```{r style, echo=FALSE, results='asis', message=TRUE, warning=FALSE}
+library(DT)
+library(utils)
+library(knitr)
+library(htmltools)
+library(plotly)
+library(dplyr)
+library(Omix)
+library(table1)
+library(purrr)
+library(markdown)
+
+
+BiocStyle::markdown()
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, results='asis')
+data.frame() %>%
+  DT::datatable() %>%
+  knitr::knit_print() %>%
+  attr('knit_meta') %>%
+  knitr::knit_meta_add() %>%
+  invisible()
+df_list=pathways[database]
+```
+
+```{css, echo=FALSE}
+.dataTables_wrapper {
+  max-height: 500px; /* Adjust as needed */
+  overflow-y: auto;
+}
+```
+
+```{r, load_data, results='hide', include=FALSE}
+data <- qs::qread(params$metadata_path)
+list2env(data, envir = environment())
+database=param$database
+num_path=as.numeric(param$num_path)
+pathways=param$pathways
+
+```
+
+## Pathway report overview 
+
+* **Functional enrichment**
+* **Enrichment database:** `r database`  
+
+
+Functional enrichment results  
+=======================================================================
+
+## Data tables 
+
+```{r, , results='asis'}
+
+if (is.null(pathways[database])){
+  cat( 'No pathways were found to be significantly up regulated')
+}else{
+  imap(df_list, ~ {
+  datatable_title <- .y # .y accesses the name of the list element
+  DT::datatable(.x,
+                options = list(scrollX = TRUE,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'),
+                caption = datatable_title) %>%
+    htmltools::tagList() %>%
+    print()
+})
+  
+} 
+
+```
+
+
+<div style="page-break-after: always;"></div>
+
+Functional enrichment plot
+=======================================================================
+
+
+## Pathways
+
+```{r, echo=FALSE}
+
+if (is.null(pathways$plot)){
+  cat( 'No pathways were found to be significantly up regulated')
+}else{
+pathways$plot[database]
+} 
+
+```
+
+<div style="page-break-after: always;"></div>
+
+Functional enrichment results as networks
+=======================================================================
+
+## Networks 
+
+
+```{r, echo=FALSE}
+
+if (is.null(pathways[database])){
+  cat( 'No pathways were found to be significantly down regulated')
+}else{
+
+path=lapply(pathways[database],function(x){x$genes=x$Genes
+return(x)})
+all_path= do.call("rbind",path)
+
+visualise_pathway(pathways=all_path,num_path=num_path)
+} 
+
+```
+
+<br>Omix v`r utils::packageVersion("Omix")` -- `r Sys.time()`
+

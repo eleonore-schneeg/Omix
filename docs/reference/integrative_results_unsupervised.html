@@ -69,7 +69,7 @@
 <span>  dependent <span class="op">=</span> <span class="st">"diagnosis"</span>,</span>
 <span>  sense_check_variable <span class="op">=</span> <span class="st">"PHF1"</span>,</span>
 <span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PHF1"</span>, <span class="st">"amyloid"</span>, <span class="st">"AT8"</span><span class="op">)</span>,</span>
-<span>  weights_threshold <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  weights_threshold <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>  correlation_threshold <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>  community_detection <span class="op">=</span> <span class="st">"leading_eigen"</span>,</span>
 <span>  pseudotime_analysis <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -87,7 +87,7 @@
 
 
 <dt>integration_model</dt>
-<dd><p>Possible unsupervised integration methods are <code>MOFA</code>,</p></dd>
+<dd><p>Possible unsupervised integration methods are <code>MOFA</code></p></dd>
 
 
 <dt>dependent</dt>
@@ -103,7 +103,7 @@
 
 
 <dt>weights_threshold</dt>
-<dd><p>weights threshold</p></dd>
+<dd><p>weights threshold (+/- SD from the mean)</p></dd>
 
 
 <dt>correlation_threshold</dt>

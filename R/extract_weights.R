@@ -4,7 +4,7 @@
 #' @param model MOFA model from integration in
 #' `multiassay@metadata$integration$MOFA`
 #' @param factor Factor to extract weight from
-#' @param threshold Absolute threshold to filter weights
+#' @param threshold Number of standard deviation away from the mean weight
 #' @param sense_check_variable default to `NULL`. High weights should
 #' coincide with stronger correlation if the sense_check_variable is an
 #' important driver of variation in the designated factor. Will be used to
@@ -26,7 +26,7 @@
 #'
 extract_weigths <- function(model,
                             factor = 1,
-                            threshold = 0.3,
+                            threshold = 1.5,
                             sense_check_variable = NULL) {
   weights_rna_1 <- MOFA2::get_weights(model,
     view = "mRNA",
@@ -35,7 +35,6 @@ extract_weigths <- function(model,
     scale = TRUE,
     as.data.frame = FALSE
   )
-
 
   weights_prot_1 <- MOFA2::get_weights(model,
     view = "proteins",
@@ -56,6 +55,12 @@ extract_weigths <- function(model,
 
   rna_1$model_feature <- rownames(rna_1)
   protein_1$model_feature <- rownames(protein_1)
+  
+  mean_weight <- mean(rna_1$Weights)
+  sd_weight <- sd(rna_1$Weights)
+  
+  # Identify rows where Weight is over 2 SD above the mean
+  threshold <- mean_weight + threshold * sd_weight
 
   protein_positive <- protein_1 %>%
     dplyr::arrange(dplyr::desc(Weights), dplyr::desc(Feature)) %>%

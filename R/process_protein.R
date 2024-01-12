@@ -228,7 +228,7 @@ process_protein <- function(multiassay,
       outliers
 
     processing_outputs[["remove_sample_outliers"]]=list(sample_outliers= dim5 - dim6,
-                                                         percentage_outliers= (dim5 - dim6)/dim4,
+                                                         percentage_outliers= (dim5 - dim6)/dim5,
                                                          detected_sample_outliers= outliers)
   }
 
