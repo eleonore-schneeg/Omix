@@ -38,10 +38,13 @@ knitr::opts_chunk$set(
 
 [Single omic report](../demo/single_omic_report_Omix.html)
 
+## Pathway report 
+
+[Pathway report](../demo/pathway_report.html)
+
 ## Multi-omics report demo (clustering)
 
 [Multi-omics report 1](../demo/multi_omic_report_Omix_iCluster.html)
-
 
 ## Multi-omics report demo (unsupervised integration)
 

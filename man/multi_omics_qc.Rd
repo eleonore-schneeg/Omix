@@ -19,6 +19,8 @@ Generate multi-omics QC results
 \seealso{
 Other Report: 
 \code{\link{multi_omic_report}()},
+\code{\link{pathway_report}()},
+\code{\link{proteomics_report}()},
 \code{\link{qc_report}()},
 \code{\link{single_omic_report}()}
 }

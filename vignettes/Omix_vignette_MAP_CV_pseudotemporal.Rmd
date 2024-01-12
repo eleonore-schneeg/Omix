@@ -88,13 +88,13 @@ TF_fp <- file.path(outputDir, "Enrichr_Queries.gmt.txt")
 GO_fp <- file.path(outputDir, "GO_Biological_Process_2021.txt")
 
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp ,headers = c(Authorization = paste("token", Sys.getenv("GH_TOKEN"))))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ctd-2.rds",destfile=ctd_fp)
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp ,headers = c(Authorization = paste("token", Sys.getenv("GH_TOKEN"))))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/ensembl_mappings_human.tsv",destfile=ensembl_fp)
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/Enrichr_Queries.gmt.txt",destfile=TF_fp ,headers = c(Authorization = paste("token", Sys.getenv("GH_TOKEN"))))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/Enrichr_Queries.gmt.txt",destfile=TF_fp)
 
-download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/GO_Biological_Process_2021.txt",destfile=GO_fp ,headers = c(Authorization = paste("token", Sys.getenv("GH_TOKEN"))))
+download.file(url = "https://raw.githubusercontent.com/eleonore-schneeg/OmixData/main/GO_Biological_Process_2021.txt",destfile=GO_fp)
 
 
 synapser::synLogin(email=Sys.getenv("SYNAPSE_ID"), password=Sys.getenv("SYNAPSE_PASSWORD"))
@@ -427,7 +427,7 @@ It also returns QC plots
 ```{r}
 weights=extract_weigths(integrated_object,
                            factor=6,
-                           threshold=0.2,
+                           threshold=1.5,
                            sense_check_variable='PHF1')
 ```
 

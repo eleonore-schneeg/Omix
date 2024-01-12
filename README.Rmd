@@ -12,7 +12,6 @@ knitr::opts_chunk$set(
 )
 library(readr)
 library(badger)
-comparison_table <- read_csv("man/figures/comparison_table_new.csv")
 ```
 
 <img src="man/figures/Omix_logo.png" width=200 style="align:left;" />
@@ -22,19 +21,17 @@ comparison_table <- read_csv("man/figures/comparison_table_new.csv")
 <!-- badges: end -->
 
 
-## Pipeline overview
+## Omix: A Transcriptomics-Proteomics Integration Pipeline
 
-The `Omix` pipeline offers an integration and analysis framework for multi-omics intended to pre-process, analyse, and visualise multimodal data flexibly to address research questions. Omix is built on four consecutive blocks, (1) preparation of the multimodal container, (2) processing and quality control, (3) single omic analyses, and (4) multi-omics vertical integration.
+The `Omix` pipeline is a specialised framework for pre-processing, analysing, integrating, and visualising bulk transcriptomics and proteomics data. By embedding state of the art bioinformatics tools with novel features into a user-friendly wrapper, Omix streamlines the integrative analysis of bulk transcriptomics and proteomics data, thereby facilitating complex biological investigations, from biomarker discovery to patient stratification. 
 
 Pipeline outputs are standardised and include publication-quality plots, tables, and interactive reports. 
 
 ```{r out.width = '100%', echo = FALSE}
-knitr::include_graphics("man/figures/Omix-pipeline.png")
+knitr::include_graphics("man/figures/Omix-pipeline.jpg")
 ```
 
-Omix offers a range of state-of-the-art processing functions and integrative models, equipped with versatile parameters and quality control features. This empowers researchers to explore different integration strategies easily, enhancing the speed, scalability, and flexibility of multi-omics analyses. 
-
-While the current version focuses on bulk transcriptomics and proteomics, future iterations aim to encompass a broader range of omics types, expanding the software’s applicability and usefulness. 
+The Omix pipeline offers an integration and analysis framework for multi-omics intended to pre-process, analyse, and visualise multimodal data flexibly to address research questions. Omix is a wrapper tool built on five consecutive blocks, (1) preparation of the multimodal container, (2) data processing and quality control, (3) single omic analyses, and (4) Transcriptomics-Proteomics vertical integration, (5) Joint Transcriptomics-Proteomics post-integration downstream analyses
 
 ## Installation
 
@@ -82,16 +79,6 @@ devtools::install_github("eleonore-schneeg/Omix")
   Omix implements these modular steps and displays results in interactive reports.
   
   
-## Benchmark of multi-omics integration softwares
-  
-```{r, echo=F}
-library(knitr)
-colnames(comparison_table)[1]='Tool'
-kable(head(comparison_table))
-```
-
-Biomarker Discovery (BD), Biological Mechanisms (BM), Sample stratification (STR)
-
 ## Getting started
 
 The Getting Started section of the documentation contains downloadable examples on how to use Omix.
@@ -128,7 +115,7 @@ An RStudio server session can be accessed via a browser at localhost:8787 using 
 
 Please cite `Omix` as:
 
-Eléonore Schneegans, Nurun Fancy, Michael Thomas, Nanet Willumsen, Paul M Matthews, Johanna Jackson (2023) Omix: A Multi-Omics Integration Pipeline
+Eléonore Schneegans, Nurun Fancy, Michael Thomas, Nanet Willumsen, Paul M Matthews, Johanna Jackson (2023) Omix: A Transcriptomics-Proteomics Integration Pipeline
 
 
 ## Contributing

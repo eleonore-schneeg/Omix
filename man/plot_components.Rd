@@ -41,6 +41,7 @@ Other Plotting:
 \code{\link{plot_communities}()},
 \code{\link{plot_loadings}()},
 \code{\link{plot_optimal_cluster}()},
+\code{\link{visualise_pathway}()},
 \code{\link{volcano_interactive_comparison}()},
 \code{\link{volcano_interactive}()},
 \code{\link{volcano_plot_deseq}()},

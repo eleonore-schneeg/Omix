@@ -19,12 +19,19 @@
 Transcription_Factor_enrichment <- function(communities,
                                             weights,
                                             TF_gmt = "Enrichr_Queries.gmt",
-                                            threshold = 0.2,
+                                            threshold = 1.5,
                                             direction = "negative") {
   TF_genelist <- ActivePathways::read.GMT(TF_gmt)
   TF_genelist_list <- lapply(TF_genelist, function(x) {
     x$genes
   })
+  
+  mean_weight <- mean(weights$weights_df$protein$Weights)
+  sd_weight <- sd(weights$weights_df$protein$Weights)
+  
+  # Identify rows where Weight is over 2 SD above the mean
+  threshold <- mean_weight + threshold * sd_weight
+  
 
   if (direction == "negative") {
     TF_targets <- names(TF_genelist_list)[names(TF_genelist_list) %in% weights$weights_df$protein$Feature[which(weights$weights_df$protein$Weights <= -threshold)]]

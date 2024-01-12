@@ -1,0 +1,226 @@
+---
+title: "<b>Omix</b> - Single Omic analyses report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    theme: "flatly"
+    toc: true
+    toc_float: true
+    highlight: tango
+    fig_caption: true
+    keep_md: false
+    css: !expr system.file("rmarkdown/css/style.css", package = "Omix")
+    includes:
+      in_header: header.html
+      after_body: !expr system.file("rmarkdown/html/footer.html", package = "Omix")
+params:
+  metadata_path: false
+---
+
+```{r style, echo=FALSE, results='asis', message=TRUE, warning=FALSE}
+library(DT)
+library(utils)
+library(knitr)
+library(htmltools)
+library(plotly)
+library(dplyr)
+library(Omix)
+library(table1)
+
+
+BiocStyle::markdown()
+knitr::opts_chunk$set(tidy = FALSE,
+                      message = FALSE,
+                      warning = FALSE)
+options(knitr.duplicate.label = "allow")
+```
+
+
+```{r, load_data, results='hide', include=FALSE}
+data <- qs::qread(params$metadata_path)
+list2env(data, envir = environment())
+slot=param$slot
+database=param$database
+num_path=as.numeric(param$num_path)
+
+dependent=parameters_processing_protein$dependent
+design_prot=paste(as.character(parameters_analysis_protein$design), collapse = '')
+```
+
+## Single omic report overview 
+
+* **Cohort overview**
+* **Proteomics**
+* **Functional enrichment**
+
+
+### Analysis summary
+
+**Analysis name:** `r slot`  
+**Enrichment database:** `r database`  
+
+Cohort overview
+=======================================================================
+
+## Table1
+
+```{r, echo=FALSE}
+dependent_var=metadata[,dependent]
+table1::table1(~. | dependent_var, data=metadata[,c(clinical_covariates)])
+
+```
+
+
+Proteomics
+=======================================================================
+
+
+```{r echo=FALSE}
+if(parameters_processing_protein$denoise==TRUE){
+exp=paste(parameters_processing_protein$covariates,collapse = ' + ')
+ans=paste(design_prot,'+',exp)
+}else{ ans= 'No denoising, design is shown above'}
+```
+
+## Analysis parameters 
+
+**Dependent variable:** `r parameters_analysis_protein$dependent`   
+**Differential expression design:** `r design_prot`   
+**Actual design (if denoising in processing step):** `r ans`   
+**Log2 Fold Change threshold:** `r parameters_analysis_protein$log2FoldChange`  
+**Adjusted p value threshold:** `r parameters_analysis_protein$padj`    
+
+
+## Differential expression {.tabset}
+
+
+### Results
+
+```{r, echo=FALSE}
+
+  DT::datatable(DEP[[slot]],
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+
+```
+
+### Volcano plot
+
+```{r, echo=FALSE}
+
+  plot=volcano_interactive(DEP[[slot]], padj=0.05)
+  plot
+
+```
+
+
+Functional enrichment results  
+=======================================================================
+
+## Proteomics {.tabset}
+
+### Up regulated proteins
+
+```{r, echo=FALSE}
+
+if (is.null(DEP$functional_enrichment[[slot]]$up)){
+  cat( 'No pathways were found to be significantly up regulated')
+}else{
+  DT::datatable(DEP$functional_enrichment[[slot]]$up[[database]],
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+} 
+
+```
+
+### Down regulated proteins
+
+```{r, echo=FALSE}
+
+if (is.null(DEP$functional_enrichment[[slot]]$down)){
+  cat( 'No pathways were found to be significantly down regulated')
+}else{
+  DT::datatable(DEP$functional_enrichment[[slot]]$down[[database]],
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(scrollX=T,
+                               autoWidth = TRUE,
+                               dom = 'Blfrtip'))
+} 
+
+```
+
+Functional enrichment plot
+=======================================================================
+
+## Proteomics {.tabset}
+
+### Up regulated proteins
+
+```{r, echo=FALSE}
+
+if (is.null(DEP$functional_enrichment[[slot]]$up)){
+  cat( 'No pathways were found to be significantly up regulated')
+}else{
+  plot=DEP$functional_enrichment[[slot]]$up$plot[[database]]
+  plot
+} 
+
+```
+
+### Down regulated proteins
+
+```{r, echo=FALSE}
+
+if (is.null(DEP$functional_enrichment[[slot]]$down)){
+  cat( 'No pathways were found to be significantly down regulated')
+}else{
+  plot=DEP$functional_enrichment[[slot]]$down$plot[[database]]
+  plot
+} 
+
+```
+
+Functional enrichment results as networks
+=======================================================================
+
+## Networks 
+
+### Up regulated proteins
+
+```{r, echo=FALSE}
+
+if (is.null(DEP$functional_enrichment[[slot]]$up)){
+  cat( 'No pathways were found to be significantly up regulated')
+}else{
+enr_path=DEP$functional_enrichment[[slot]]$up[[database]]
+enr_path$genes=DEP$functional_enrichment[[slot]]$up[[database]]$Genes
+
+
+visualise_pathway(pathways=enr_path,num_path=num_path)
+} 
+
+```
+
+### Down regulated proteins
+
+```{r, echo=FALSE}
+
+if (is.null(DEP$functional_enrichment[[slot]]$down)){
+  cat( 'No pathways were found to be significantly down regulated')
+}else{
+enr_path=DEP$functional_enrichment[[slot]]$down[[database]]
+enr_path$genes=DEP$functional_enrichment[[slot]]$down[[database]]$Genes
+visualise_pathway(pathways=enr_path,num_path=num_path)
+} 
+
+```
+
+<br>Omix v`r utils::packageVersion("Omix")` -- `r Sys.time()`
+
