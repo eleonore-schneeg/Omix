@@ -42,6 +42,21 @@ You can install the development version of Omix from
 devtools::install_github("eleonore-schneeg/Omix")
 ```
 
+Devtools may not work on your machine, in that case use remotes:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("eleonore-schneeg/Omix")
+```
+
+If you’re facing difficulties to download SynapseR, run the following
+before reinstalling Omix
+
+``` r
+# install.packages("remotes")
+remotes::install_github("Sage-Bionetworks/synapser", ref = '1.0')
+```
+
 ## Overview of Omix features
 
 -   Multi-omics data container
